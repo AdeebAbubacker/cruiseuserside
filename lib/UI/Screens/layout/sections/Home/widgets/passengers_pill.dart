@@ -3,9 +3,12 @@ import 'package:flutter_svg/svg.dart';
 
 class PassengersPill extends StatefulWidget {
   final String image;
+  final ValueChanged<int> onChanged; // Callback to notify parent of value changes
+
   const PassengersPill({
     super.key,
     required this.image,
+    required this.onChanged,
   });
 
   @override
@@ -14,6 +17,14 @@ class PassengersPill extends StatefulWidget {
 
 class _PassengersPillState extends State<PassengersPill> {
   int counter = 0;
+
+  void _updateCounter(int newValue) {
+    setState(() {
+      counter = newValue;
+      widget.onChanged(counter); // Notify parent
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,27 +40,19 @@ class _PassengersPillState extends State<PassengersPill> {
       ),
       child: Row(
         children: [
-          SizedBox(
-            width: 15,
-          ),
+          SizedBox(width: 15),
           SvgPicture.asset(widget.image),
           Spacer(),
           IconButton(
             onPressed: () {
-              if (counter > 0) {
-                setState(() {
-                  counter--;
-                });
-              }
+              if (counter > 0) _updateCounter(counter - 1);
             },
             icon: Icon(Icons.remove),
           ),
           Text("$counter"),
           IconButton(
             onPressed: () {
-              setState(() {
-                counter++;
-              });
+              _updateCounter(counter + 1);
             },
             icon: Icon(Icons.add),
           ),

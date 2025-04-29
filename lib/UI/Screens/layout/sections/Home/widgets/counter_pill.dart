@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CounterPill extends StatefulWidget {
+  class CounterPill extends StatefulWidget {
+  final Function(int)? onRoomCountChanged; // 👈 Add this callback
+
   const CounterPill({
     super.key,
+    this.onRoomCountChanged,  // 👈 Add this to the constructor
   });
 
   @override
@@ -11,6 +14,7 @@ class CounterPill extends StatefulWidget {
 
 class _CounterPillState extends State<CounterPill> {
   int counter = 0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,6 +37,7 @@ class _CounterPillState extends State<CounterPill> {
                 setState(() {
                   counter--;
                 });
+                widget.onRoomCountChanged?.call(counter); // 👈 Call the callback when counter changes
               }
             },
             icon: Icon(Icons.remove),
@@ -43,6 +48,7 @@ class _CounterPillState extends State<CounterPill> {
               setState(() {
                 counter++;
               });
+              widget.onRoomCountChanged?.call(counter); // 👈 Call the callback when counter changes
             },
             icon: Icon(Icons.add),
           ),

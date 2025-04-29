@@ -10,12 +10,28 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SearchResultsScreen extends StatefulWidget {
-  final String filterCriteria;
+  final String? filterCriteria;
   final String? location;
+  final String? startDate;
+  final String? endDate;
+  final String? maxAmount;
+  final String? minAMount;
+  final String? typeOfCruise;
+  final String? noOfPassengers;
+  final String? noOfRooms;
+  final String? premiumOrDeluxe;
   const SearchResultsScreen({
     super.key,
-    required this.filterCriteria,
+    this.filterCriteria,
     this.location,
+    this.startDate,
+    this.endDate,
+    this.typeOfCruise,
+    this.noOfPassengers,
+    this.noOfRooms,
+    this.premiumOrDeluxe,
+    this.maxAmount,
+    this.minAMount,
   });
 
   @override
@@ -29,10 +45,29 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       BlocProvider.of<GetSeachedCruiseresultsBloc>(context).add(
         GetSeachedCruiseresultsEvent.SeachedCruise(
-          location: widget.location.toString(),
-          filterCriteria: widget.filterCriteria,
-          maxAmount: '10000000',
-          minAmount: '0',
+          location:
+              widget.location?.isNotEmpty == true ? widget.location : null,
+          filterCriteria: widget.filterCriteria?.isNotEmpty == true
+              ? widget.filterCriteria
+              : null,
+          maxAmount:
+              widget.maxAmount?.isNotEmpty == true ? widget.maxAmount : null,
+          minAmount:
+              widget.minAMount?.isNotEmpty == true ? widget.minAMount : null,
+          startDate:
+              widget.startDate?.isNotEmpty == true ? widget.startDate : null,
+          endDate: widget.endDate?.isNotEmpty == true ? widget.endDate : null,
+          typeOfCruise: widget.typeOfCruise?.isNotEmpty == true
+              ? widget.typeOfCruise
+              : null,
+          noOfPassengers: widget.noOfPassengers?.isNotEmpty == true
+              ? widget.noOfPassengers
+              : null,
+          noOfRooms:
+              widget.noOfRooms?.isNotEmpty == true ? widget.noOfRooms : null,
+          premiumOrDeluxe: widget.premiumOrDeluxe?.isNotEmpty == true
+              ? widget.premiumOrDeluxe
+              : null,
         ),
       );
     });
@@ -204,8 +239,9 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                     bottom: 15,
                                   ),
                                   child: SearchResultsContainer(
-                                    cruisename:
-                                        '${value.packagesearchresults.data?[index].cruise?.name ?? "ff"}',
+                                    cruisename: value.packagesearchresults
+                                            .data?[index].cruise?.name ??
+                                        "N/A",
                                     imageUrl:
                                         '${value.packagesearchresults.data?[index].cruise?.images?[0].cruiseImg}',
                                     price:

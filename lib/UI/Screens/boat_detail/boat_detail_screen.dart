@@ -17,6 +17,15 @@ class BoatDetailScreen extends StatefulWidget {
 }
 
 class _BoatDetailScreenState extends State<BoatDetailScreen> {
+  String selectedBookingType = "Day Cruise"; // Default booking type
+
+  // Method to handle booking type selection
+  void _onBookingTypeSelected(String bookingType) {
+    setState(() {
+      selectedBookingType = bookingType;
+    });
+  }
+
   final List<String> imageUrls = [
     'assets/image/boat_details_img/boat_detail_img.png',
     'assets/image/boat_details_img/boat_detail_img.png',
@@ -170,7 +179,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
-                  BookingSelectionWidget(),
+                  BookingSelectionWidget(
+                    onBookingTypeSelected: _onBookingTypeSelected,
+                  ),
                   SizedBox(height: 16),
                   Row(
                     children: [

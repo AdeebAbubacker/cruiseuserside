@@ -16,10 +16,15 @@ class GetSeachedCruiseresultsBloc
 
       try {
         final result = await userService.getSearchResultsList(
-          filterCriteria: event.filterCriteria,
+          cruiseType: event.filterCriteria,
           location: event.location,
           maxAmount: event.maxAmount,
           minAmount: event.minAmount,
+         // bookingType: "closed",
+          // premiumOrDeluxe: event.premiumOrDeluxe,
+          //cruiseModelName: event.typeOfCruise,
+           startDate: event.startDate,
+          endDate: event.endDate,
         );
 
         await result.fold((failure) async {

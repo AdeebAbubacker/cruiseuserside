@@ -1,14 +1,140 @@
+// import 'package:flutter/material.dart';
+
+// class BookingSelectionWidget extends StatefulWidget {
+//   const BookingSelectionWidget({super.key});
+
+//   @override
+//   State<BookingSelectionWidget> createState() => _BookingSelectionWidgetState();
+// }
+
+// class _BookingSelectionWidgetState extends State<BookingSelectionWidget> {
+//   String selectedCruise = "Premium";
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: double.infinity,
+//       height: 50,
+//       decoration: BoxDecoration(
+//         color: Color(0XFFFAFFFF),
+//         borderRadius: BorderRadius.circular(12),
+//         border: Border.all(
+//           color: Colors.black12,
+//         ),
+//       ),
+//       child: Stack(
+//         children: [
+//           // Render the unselected option first
+//           if (selectedCruise == "Premium") _buildFullCruiseOption(),
+//           if (selectedCruise == "Deluxe") _buildDayCruiseOption(),
+
+//           // Render the selected option last to bring it to the top
+//           if (selectedCruise == "Premium") _buildDayCruiseOption(),
+//           if (selectedCruise == "Deluxe") _buildFullCruiseOption(),
+//         ],
+//       ),
+//     );
+//   }
+
+//   Widget _buildDayCruiseOption() {
+//     return Positioned(
+//       left: 0,
+//       child: GestureDetector(
+//         onTap: () {
+//           setState(() {
+//             selectedCruise = "Premium";
+//           });
+//         },
+//         child: Container(
+//           height: 48,
+//           width: MediaQuery.of(context).size.width / 2 - 5,
+//           decoration: BoxDecoration(
+//             color: Color(0XFFFAFFFF),
+//             borderRadius: BorderRadius.circular(12),
+//             border: Border.all(
+//               color: selectedCruise == "Premium" ? Colors.blue : Colors.black12,
+//             ),
+//             boxShadow: selectedCruise == "Premium"
+//                 ? [
+//                     BoxShadow(
+//                       color: Colors.blue.withOpacity(0.3),
+//                       blurRadius: 4,
+//                       offset: const Offset(0, 2),
+//                     ),
+//                   ]
+//                 : null,
+//           ),
+//           alignment: Alignment.center,
+//           child: Text(
+//             "Premium",
+//             style: TextStyle(
+//               fontSize: 16,
+//               fontWeight: FontWeight.w500,
+//               color: selectedCruise == "Premium" ? Colors.blue : Colors.black,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildFullCruiseOption() {
+//     return Positioned(
+//       right: 0,
+//       child: GestureDetector(
+//         onTap: () {
+//           setState(() {
+//             selectedCruise = "Deluxe";
+//           });
+//         },
+//         child: Container(
+//           height: 48,
+//           width: MediaQuery.of(context).size.width / 2 - 5,
+//           decoration: BoxDecoration(
+//             color: Color(0XFFFAFFFF),
+//             borderRadius: BorderRadius.circular(12),
+//             border: Border.all(
+//               color: selectedCruise == "Deluxe" ? Colors.blue : Colors.black12,
+//             ),
+//             boxShadow: selectedCruise == "Deluxe"
+//                 ? [
+//                     BoxShadow(
+//                       color: Colors.blue.withOpacity(0.3),
+//                       blurRadius: 4,
+//                       offset: const Offset(0, 2),
+//                     ),
+//                   ]
+//                 : null,
+//           ),
+//           alignment: Alignment.center,
+//           child: Text(
+//             "Deluxe",
+//             style: TextStyle(
+//               fontSize: 16,
+//               fontWeight: FontWeight.w500,
+//               color: selectedCruise == "Deluxe" ? Colors.blue : Colors.black,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
 import 'package:flutter/material.dart';
 
 class BookingSelectionWidget extends StatefulWidget {
-  const BookingSelectionWidget({super.key});
+  final Function(String) onBookingTypeSelected; // Callback to pass the booking type
+
+  const BookingSelectionWidget({super.key, required this.onBookingTypeSelected});
 
   @override
   State<BookingSelectionWidget> createState() => _BookingSelectionWidgetState();
 }
 
 class _BookingSelectionWidgetState extends State<BookingSelectionWidget> {
-  String selectedCruise = "Premium";
+  String selectedCruise = "Day Cruise"; // Default selected cruise
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +151,12 @@ class _BookingSelectionWidgetState extends State<BookingSelectionWidget> {
       child: Stack(
         children: [
           // Render the unselected option first
-          if (selectedCruise == "Premium") _buildFullCruiseOption(),
-          if (selectedCruise == "Deluxe") _buildDayCruiseOption(),
+          if (selectedCruise == "Day Cruise") _buildDayCruiseOption(),
+          if (selectedCruise == "Full Cruise") _buildFullCruiseOption(),
 
           // Render the selected option last to bring it to the top
-          if (selectedCruise == "Premium") _buildDayCruiseOption(),
-          if (selectedCruise == "Deluxe") _buildFullCruiseOption(),
+          if (selectedCruise == "Day Cruise") _buildFullCruiseOption(),
+          if (selectedCruise == "Full Cruise") _buildDayCruiseOption(),
         ],
       ),
     );
@@ -42,7 +168,8 @@ class _BookingSelectionWidgetState extends State<BookingSelectionWidget> {
       child: GestureDetector(
         onTap: () {
           setState(() {
-            selectedCruise = "Premium";
+            selectedCruise = "Day Cruise";
+            widget.onBookingTypeSelected("Day Cruise"); // Pass selected type back to parent
           });
         },
         child: Container(
@@ -52,9 +179,9 @@ class _BookingSelectionWidgetState extends State<BookingSelectionWidget> {
             color: Color(0XFFFAFFFF),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: selectedCruise == "Premium" ? Colors.blue : Colors.black12,
+              color: selectedCruise == "Day Cruise" ? Colors.blue : Colors.black12,
             ),
-            boxShadow: selectedCruise == "Premium"
+            boxShadow: selectedCruise == "Day Cruise"
                 ? [
                     BoxShadow(
                       color: Colors.blue.withOpacity(0.3),
@@ -66,11 +193,11 @@ class _BookingSelectionWidgetState extends State<BookingSelectionWidget> {
           ),
           alignment: Alignment.center,
           child: Text(
-            "Premium",
+            "Day Cruise",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: selectedCruise == "Premium" ? Colors.blue : Colors.black,
+              color: selectedCruise == "Day Cruise" ? Colors.blue : Colors.black,
             ),
           ),
         ),
@@ -84,7 +211,8 @@ class _BookingSelectionWidgetState extends State<BookingSelectionWidget> {
       child: GestureDetector(
         onTap: () {
           setState(() {
-            selectedCruise = "Deluxe";
+            selectedCruise = "Full Cruise";
+            widget.onBookingTypeSelected("Full Cruise"); // Pass selected type back to parent
           });
         },
         child: Container(
@@ -94,9 +222,9 @@ class _BookingSelectionWidgetState extends State<BookingSelectionWidget> {
             color: Color(0XFFFAFFFF),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: selectedCruise == "Deluxe" ? Colors.blue : Colors.black12,
+              color: selectedCruise == "Full Cruise" ? Colors.blue : Colors.black12,
             ),
-            boxShadow: selectedCruise == "Deluxe"
+            boxShadow: selectedCruise == "Full Cruise"
                 ? [
                     BoxShadow(
                       color: Colors.blue.withOpacity(0.3),
@@ -108,11 +236,11 @@ class _BookingSelectionWidgetState extends State<BookingSelectionWidget> {
           ),
           alignment: Alignment.center,
           child: Text(
-            "Deluxe",
+            "Full Cruise",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: selectedCruise == "Deluxe" ? Colors.blue : Colors.black,
+              color: selectedCruise == "Full Cruise" ? Colors.blue : Colors.black,
             ),
           ),
         ),

@@ -42,39 +42,88 @@ class SearchResultsContainer extends StatelessWidget {
             child: Stack(
               children: [
                 ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(13),
-                      topRight: Radius.circular(13),
-                    ),
-                    child: Image.network(
-                      imageUrl,
-                      width: double.infinity,
-                      height: 160,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Container(
-                          width: double.infinity,
-                          height: 130,
-                          color: Colors.grey[300], // Placeholder background
-                          child:
-                              const Center(child: CircularProgressIndicator()),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          width: double.infinity,
-                          height: 130,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/image/boat_details_img/boat_detail_img.png'),
-                              fit: BoxFit.cover,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(13),
+                    topRight: Radius.circular(13),
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    height: 160, // Consistent height for all states
+                    child: imageUrl == null || imageUrl.isEmpty
+                        ? Container(
+                            width: double.infinity,
+                            height: 160, // Same height
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/image/boat_details_img/boat_detail_img.png'),
+                                fit: BoxFit.cover,
+                              ),
                             ),
+                          )
+                        : Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              }
+                              return Container(
+                                width: double.infinity,
+                                height: 160, // Same height
+                                color: Colors
+                                    .grey[300], // Background during loading
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: double.infinity,
+                                height: 160, // Same height
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        'assets/image/boat_details_img/boat_detail_img.png'),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    )),
+                  ),
+
+                  // Image.network(
+                  //   imageUrl,
+                  //   width: double.infinity,
+                  //   height: 160,
+                  //   fit: BoxFit.cover,
+                  //   loadingBuilder: (context, child, loadingProgress) {
+                  //     if (loadingProgress == null) return child;
+                  //     return Container(
+                  //       width: double.infinity,
+                  //       height: 130,
+                  //       color: Colors.grey[300], // Placeholder background
+                  //       child:
+                  //           const Center(child: CircularProgressIndicator()),
+                  //     );
+                  //   },
+                  //   errorBuilder: (context, error, stackTrace) {
+                  //     return Container(
+                  //       width: double.infinity,
+                  //       height: 130,
+                  //       decoration: BoxDecoration(
+                  //         image: DecorationImage(
+                  //           image: AssetImage(
+                  //               'assets/image/boat_details_img/boat_detail_img.png'),
+                  //           fit: BoxFit.cover,
+                  //         ),
+                  //       ),
+                  //     );
+                  //   },
+                  // )),
+                ),
                 Positioned(
                   top: 8,
                   right: 8,
