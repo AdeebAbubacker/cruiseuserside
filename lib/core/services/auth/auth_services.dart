@@ -97,7 +97,7 @@ class AuthServices {
         return Left('Error: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      print('${e.toString()}');
+      print(e.toString());
       // Handle any other errors (e.g., network error)
       return Left('Request failed: $e');
     }
@@ -163,7 +163,7 @@ class AuthServices {
       }
     } catch (e) {
       print('Left bject ${e.toString()}');
-      print('Left bject ${e}');
+      print('Left bject $e');
       return Left('0');
     }
   }

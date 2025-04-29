@@ -1,8 +1,11 @@
+import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
+import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
 import 'package:cruise_buddy/core/services/user/user_service.dart';
-import 'package:cruise_buddy/core/view_model/bookMyCruise/book_my_cruise_bloc.dart';
 import 'package:cruise_buddy/core/view_model/getUserProfile/get_user_profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class ApiTest extends StatelessWidget {
   const ApiTest({super.key});
@@ -45,6 +48,24 @@ class ApiTest extends StatelessWidget {
                 );
               },
               child: Text("data"),
+            ),
+            ValueListenableBuilder(
+              valueListenable: userDetailsBox.listenable(),
+              builder: (context, Box box, _) {
+                final userDetails = box.get('user') as UserDetailsDB?;
+
+                if (userDetails == null) {
+                  return Text(
+                    "User",
+                    style: TextStyles.ubuntu32blue86w700,
+                  );
+                }
+
+                return Text(
+                  userDetails.phone.toString(),
+                  style: TextStyles.ubuntu32blue86w700,
+                );
+              },
             ),
           ],
         ),

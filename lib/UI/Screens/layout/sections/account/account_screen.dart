@@ -100,9 +100,9 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
         const SizedBox(height: 20),
         if (isEditing) ...[
-          _buildEditableField(nameController),
-          _buildEditableField(emailController),
-          _buildEditableField(phoneController),
+          BuildEditableField(textEditingController: nameController),
+          BuildEditableField(textEditingController: emailController),
+          BuildEditableField(textEditingController: phoneController),
         ] else ...[
           Text(nameController.text,
               style:
@@ -197,37 +197,6 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  Widget _buildEditableField(TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      child: Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25))),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-              borderSide: BorderSide(
-                color: Color(0xff555555),
-                width: 2.0,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-              borderSide: BorderSide(
-                color: Color(0xffE2E2E2),
-                width: 1.0,
-              ),
-            ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 15),
-          ),
-        ),
-      ),
-    );
-  }
-
   void handlePaymentErrorResponse(PaymentFailureResponse response) {
     showAlertDialog(context, "Payment Failed",
         "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()}");
@@ -296,4 +265,44 @@ class DottedBorderPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class BuildEditableField extends StatelessWidget {
+  TextEditingController textEditingController = TextEditingController();
+  BuildEditableField({
+    super.key,
+    required this.textEditingController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: TextField(
+          controller: textEditingController,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25))),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+              borderSide: BorderSide(
+                color: Color(0xff555555),
+                width: 2.0,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+              borderSide: BorderSide(
+                color: Color(0xffE2E2E2),
+                width: 1.0,
+              ),
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 15),
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -1,5 +1,7 @@
 import 'package:cruise_buddy/UI/Screens/Splash/splash_screen.dart';
 import 'package:cruise_buddy/core/constants/functions/error/custom_error.dart';
+import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
+import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
 import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';
 import 'package:cruise_buddy/core/view_model/bookMyCruise/book_my_cruise_bloc.dart';
 import 'package:cruise_buddy/core/view_model/getCruiseTypes/get_cruise_types_bloc.dart';
@@ -15,9 +17,7 @@ import 'package:cruise_buddy/core/view_model/regsiter/register_bloc.dart';
 import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
 import 'package:cruise_buddy/core/view_model/updateUserProfile/update_user_profile_bloc.dart';
 import 'package:cruise_buddy/firebase_options.dart';
-import 'package:cruise_buddy/test_folder/api_test.dart';
-import 'package:cruise_buddy/test_folder/gpay_tedst.dart';
-
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +29,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserDetailsDBAdapter());
+  userDetailsBox = await Hive.openBox<UserDetailsDB>('userDetailsBox');
+
   runApp(const MyApp());
 }
 

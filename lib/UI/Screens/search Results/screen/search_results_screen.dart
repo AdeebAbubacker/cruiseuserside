@@ -248,8 +248,8 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   }
 
   void _showFilterPopup(BuildContext context) {
-    double _minPrice = 0; // Default minimum price
-    double _maxPrice = 120000; // Default maximum price
+    double minPrice = 0; // Default minimum price
+    double maxPrice = 120000; // Default maximum price
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -290,7 +290,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                             style: TextStyles.ubuntu16black15w500,
                           ),
                           Text(
-                            '₹ ${_minPrice.toInt()} - ${_maxPrice.toInt()}',
+                            '₹ ${minPrice.toInt()} - ${maxPrice.toInt()}',
                             style: TextStyles.ubuntu14black55w400,
                           ),
                           SliderTheme(
@@ -311,18 +311,18 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                       10), // Customize the thumb
                             ),
                             child: RangeSlider(
-                              values: RangeValues(_minPrice, _maxPrice),
+                              values: RangeValues(minPrice, maxPrice),
                               min: 0,
                               max: 120000,
                               divisions: 5000000,
                               labels: RangeLabels(
-                                _minPrice.toInt().toString(),
-                                _maxPrice.toInt().toString(),
+                                minPrice.toInt().toString(),
+                                maxPrice.toInt().toString(),
                               ),
                               onChanged: (RangeValues values) {
                                 setState(() {
-                                  _minPrice = values.start;
-                                  _maxPrice = values.end;
+                                  minPrice = values.start;
+                                  maxPrice = values.end;
                                 });
                               },
                             ),
@@ -410,8 +410,8 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                           .SeachedCruise(
                                     filterCriteria: 'closed',
                                     location: widget.location.toString(),
-                                    maxAmount: _maxPrice.toInt().toString(),
-                                    minAmount: _minPrice.toInt().toString(),
+                                    maxAmount: maxPrice.toInt().toString(),
+                                    minAmount: minPrice.toInt().toString(),
                                   ));
                                   Navigator.of(context).pop();
                                 },

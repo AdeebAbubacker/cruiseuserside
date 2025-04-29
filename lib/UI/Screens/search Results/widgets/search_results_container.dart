@@ -149,7 +149,7 @@ class SearchResultsContainer extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "₹${(price == null || price == 'null') ? "1000" : price}",
+                      "₹${(price == 'null') ? "1000" : price}",
                       style: TextStyles.ubuntu18bluew700,
                     ),
                     Spacer(),

@@ -262,7 +262,7 @@ class _LocationsBasedCruiseScreenState
                       Navigator.of(context).pop();
                     },
                     icon: Icon(Icons.arrow_back_ios)),
-                title: Text('${widget.location}',
+                title: Text(widget.location,
                     style: TextStyles.ubuntu32black15w700),
               ),
               body: BlocBuilder<ListCruiseonLocationBloc,
@@ -408,8 +408,9 @@ class _LocationsBasedCruiseScreenState
                                             fit: BoxFit.cover,
                                             loadingBuilder: (context, child,
                                                 loadingProgress) {
-                                              if (loadingProgress == null)
+                                              if (loadingProgress == null) {
                                                 return child;
+                                              }
                                               return Container(
                                                 width: double.infinity,
                                                 height: 160,
@@ -728,7 +729,7 @@ class BuildLocationsCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "${name}",
+                    name,
                     style: TextStyles.ubuntu16black15w500,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

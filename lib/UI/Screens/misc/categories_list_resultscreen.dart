@@ -484,8 +484,9 @@ class _CategoriesListResultscreenState
                                                                 (context, child,
                                                                     loadingProgress) {
                                                               if (loadingProgress ==
-                                                                  null)
+                                                                  null) {
                                                                 return child;
+                                                              }
                                                               return Container(
                                                                 width: double
                                                                     .infinity,
@@ -674,7 +675,7 @@ class _CategoriesListResultscreenState
                                                       Row(
                                                         children: [
                                                           Text(
-                                                            "₹${('${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}' == null || '${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}' == 'null') ? "1000" : '${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}'}",
+                                                            "₹${('${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}' == 'null') ? "1000" : '${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}'}",
                                                             style: TextStyles
                                                                 .ubuntu18bluew700,
                                                           ),
@@ -775,8 +776,8 @@ class _CategoriesListResultscreenState
     BuildContext context, {
     required Function(String minAmount, String maxAmount) onApplyPressed,
   }) {
-    double _minPrice = 0; // Default minimum price
-    double _maxPrice = 120000; // Default maximum price
+    double minPrice = 0; // Default minimum price
+    double maxPrice = 120000; // Default maximum price
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -817,7 +818,7 @@ class _CategoriesListResultscreenState
                             style: TextStyles.ubuntu16black15w500,
                           ),
                           Text(
-                            '₹ ${_minPrice.toInt()} - ${_maxPrice.toInt()}',
+                            '₹ ${minPrice.toInt()} - ${maxPrice.toInt()}',
                             style: TextStyles.ubuntu14black55w400,
                           ),
                           SliderTheme(
@@ -838,18 +839,18 @@ class _CategoriesListResultscreenState
                                       10), // Customize the thumb
                             ),
                             child: RangeSlider(
-                              values: RangeValues(_minPrice, _maxPrice),
+                              values: RangeValues(minPrice, maxPrice),
                               min: 0,
                               max: 120000,
                               divisions: 5000000,
                               labels: RangeLabels(
-                                _minPrice.toInt().toString(),
-                                _maxPrice.toInt().toString(),
+                                minPrice.toInt().toString(),
+                                maxPrice.toInt().toString(),
                               ),
                               onChanged: (RangeValues values) {
                                 setState(() {
-                                  _minPrice = values.start;
-                                  _maxPrice = values.end;
+                                  minPrice = values.start;
+                                  maxPrice = values.end;
                                 });
                               },
                             ),
@@ -933,9 +934,9 @@ class _CategoriesListResultscreenState
                                 onPressed: () {
                                   // Convert min and max prices to strings of integers
                                   String minAmount =
-                                      _minPrice.toInt().toString();
+                                      minPrice.toInt().toString();
                                   String maxAmount =
-                                      _maxPrice.toInt().toString();
+                                      maxPrice.toInt().toString();
 
                                   // Pass the selected min and max amounts back to the caller
                                   onApplyPressed(minAmount, maxAmount);

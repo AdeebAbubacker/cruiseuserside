@@ -37,7 +37,7 @@ class _CounterPillState extends State<CounterPill> {
             },
             icon: Icon(Icons.remove),
           ),
-          Text("${counter}"),
+          Text("$counter"),
           IconButton(
             onPressed: () {
               setState(() {

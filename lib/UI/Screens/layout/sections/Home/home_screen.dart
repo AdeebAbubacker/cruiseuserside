@@ -1,13 +1,15 @@
-import 'package:cruise_buddy/UI/Screens/layout/main_layout/main_layout.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/categories_section.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/explore_destination.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/location_search_delgate.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/featured_boats_container.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
+import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
 import 'package:cruise_buddy/core/view_model/getUserProfile/get_user_profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,7 +26,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-  
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       BlocProvider.of<GetUserProfileBloc>(context)
           .add(GetUserProfileEvent.getUserProfile());
@@ -75,44 +76,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                       style: TextStyles.ubuntu32black15w700,
                                     ),
                                     SizedBox(width: 5),
-                                    BlocBuilder<GetUserProfileBloc,
-                                        GetUserProfileState>(
-                                      builder: (context, state) {
-                                        return state.map(
-                                          initial: (value) {
-                                            return SizedBox.shrink();
-                                          },
-                                          loading: (value) {
-                                            return Shimmer.fromColors(
-                                              baseColor: Colors.grey[300]!,
-                                              highlightColor: Colors.grey[100]!,
-                                              child: Text(
-                                                "Loading...",
-                                                style: TextStyles
-                                                    .ubuntu32blue86w700,
-                                              ),
-                                            );
-                                          },
-                                          getuseruccess: (value) {
-                                            return Text(
-                                              truncateString(
-                                                  value.userprofilemodel.data
-                                                      ?.name,
-                                                  11),
-                                              style:
-                                                  TextStyles.ubuntu32blue86w700,
-                                            );
-                                          },
-                                          getuserFailure: (value) {
-                                            return Text(
-                                              "User",
-                                              style:
-                                                  TextStyles.ubuntu32blue86w700,
-                                            );
-                                          },
-                                          noInternet: (value) {
-                                            return SizedBox.shrink();
-                                          },
+                                    ValueListenableBuilder(
+                                      valueListenable:
+                                          userDetailsBox.listenable(),
+                                      builder: (context, Box box, _) {
+                                        final userDetails =
+                                            box.get('user') as UserDetailsDB?;
+
+                                        if (userDetails == null) {
+                                          return Text(
+                                            "User",
+                                            style:
+                                                TextStyles.ubuntu32blue86w700,
+                                          );
+                                        }
+
+                                        return Text(
+                                          truncateString(
+                                              userDetails.name?.toString(), 11),
+                                          style: TextStyles.ubuntu32blue86w700,
                                         );
                                       },
                                     ),

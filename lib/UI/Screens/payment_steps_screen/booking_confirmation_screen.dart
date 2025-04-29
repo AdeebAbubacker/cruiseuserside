@@ -389,7 +389,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                 String formattedDate = DateFormat('yyyy-MM-dd')
                                     .format(_selectedDate);
 
-                                print('ddddddddddddd ${formattedDate}');
+                                print('ddddddddddddd $formattedDate');
                                 context
                                     .read<BookMyCruiseBloc>()
                                     .add(BookMyCruiseEvent.createNewbookings(

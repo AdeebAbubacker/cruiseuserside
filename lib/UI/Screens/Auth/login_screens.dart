@@ -1,5 +1,7 @@
 import 'package:cruise_buddy/UI/Widgets/Button/full_width_bluebutton.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
+import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
 import 'package:cruise_buddy/core/routes/app_routes.dart';
 import 'package:cruise_buddy/core/view_model/login/login_bloc.dart';
 import 'package:cruise_buddy/core/view_model/postGoogleId/post_google_bloc.dart';
@@ -9,7 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -108,15 +109,30 @@ class _LoginScreenState extends State<LoginScreen> {
       child: MultiBlocListener(
         listeners: [
           BlocListener<LoginBloc, LoginState>(
-            listener: (context, state) {
-              state.map(
+            listener: (context, state) async {
+              await state.map(
                 initial: (_) {
                   print('initial');
                 },
                 loading: (_) {
                   print('loading');
                 },
-                loginSuccess: (success) {
+                loginSuccess: (success) async {
+                  final loginModel = success
+                      .loginModel; // assuming you have loginModel inside state
+
+                  if (loginModel.user != null) {
+                    // Create UserDetailsDB from LoginModel's user
+                    final userDetails = UserDetailsDB(
+                      name: loginModel.user?.name ?? "",
+                      email: loginModel.user?.email ?? '',
+                      phone: loginModel.user?.phoneNumber,
+                      image: '', // Assuming you don't have an image in User
+                    );
+
+                    // Save it to Hive
+                    await userDetailsBox.put('user', userDetails);
+                  }
                   AppRoutes.navigateToMainLayoutScreen(context);
                 },
                 loginFailure: (failure) {

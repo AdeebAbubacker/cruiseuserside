@@ -11,7 +11,7 @@ class BookingDateselection extends StatefulWidget {
 }
 
 class _BookingDateselectionState extends State<BookingDateselection> {
-  TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
 
   @override
   void dispose() {

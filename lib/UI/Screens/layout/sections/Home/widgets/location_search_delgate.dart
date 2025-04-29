@@ -27,7 +27,7 @@ class _LocationSearchDelegateState extends State<LocationSearchDelegate> {
   String query = "";
   List<String> filteredLocations = [];
   Timer? _debounce;
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
   bool isItemSelected = false; // Add this flag
 
   @override
@@ -162,7 +162,7 @@ class _LocationSearchDelegateState extends State<LocationSearchDelegate> {
                 height: 45,
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
+                    backgroundColor: WidgetStateProperty.all(
                       const Color(0XFF1F8386),
                     ),
                   ),

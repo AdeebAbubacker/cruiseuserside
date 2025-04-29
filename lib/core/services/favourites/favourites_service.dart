@@ -114,7 +114,7 @@ class FavouritesService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
         final locationDetails = PostedFavouritemItemModel.fromJson(data);
-        print('${data}');
+        print('$data');
         return Right(locationDetails);
       } else {
         print('Request failed with status: ${response.statusCode}');

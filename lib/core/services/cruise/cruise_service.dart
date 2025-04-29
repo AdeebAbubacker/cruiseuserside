@@ -116,10 +116,10 @@ class CruiseService {
       }
 
       _headers['Authorization'] = 'Bearer $token';
-      print('my location ${location}');
+      print('my location $location');
       final response = await http.get(
         Uri.parse(
-            '$url/package?filter[priceRange][min]=${minAmount}&filter[priceRange][max]=${maxAmount}&filter[cruise.location.name]=${location}&include=cruise.location,cruise.cruisesImages,bookingTypes'),
+            '$url/package?filter[priceRange][min]=$minAmount&filter[priceRange][max]=$maxAmount&filter[cruise.location.name]=$location&include=cruise.location,cruise.cruisesImages,bookingTypes'),
         headers: _headers,
       );
 
@@ -134,7 +134,7 @@ class CruiseService {
         return Left('Failed to get cruise type: ${response.statusCode}');
       }
     } catch (e) {
-      print('e ${e}');
+      print('e $e');
       return Left('Error: $e');
     }
   }

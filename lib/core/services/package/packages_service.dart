@@ -36,7 +36,7 @@ class PackagesService {
 
       final response = await http.get(
         Uri.parse(
-            '$url/package?include=cruise.location&filter[cruise.location.name]=${location},cruise.cruisesImages,bookingTypes&filter[cruiseType.type]=closed'),
+            '$url/package?include=cruise.location&filter[cruise.location.name]=$location,cruise.cruisesImages,bookingTypes&filter[cruiseType.type]=closed'),
         headers: _headers,
       );
 

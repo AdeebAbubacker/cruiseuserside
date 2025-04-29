@@ -81,7 +81,7 @@ class BookingService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
         final bookingDetails = BookingResponseModel.fromJson(data);
-        print('Response Data: ${data}');
+        print('Response Data: $data');
         return Right(bookingDetails);
       } else {
         print('Request failed with status: ${response.statusCode}');

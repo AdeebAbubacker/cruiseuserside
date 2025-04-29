@@ -440,8 +440,9 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                                 (context, child,
                                                                     loadingProgress) {
                                                               if (loadingProgress ==
-                                                                  null)
+                                                                  null) {
                                                                 return child;
+                                                              }
                                                               return Container(
                                                                 width: double
                                                                     .infinity,
