@@ -19,21 +19,24 @@ mixin _$UpdateUserProfileEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String? name, String? email, String? image)
+    required TResult Function(
+            String? name, String? email, String? phone, String? image)
         updateprofile,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String? name, String? email, String? image)?
+    TResult? Function(
+            String? name, String? email, String? phone, String? image)?
         updateprofile,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String? name, String? email, String? image)? updateprofile,
+    TResult Function(String? name, String? email, String? phone, String? image)?
+        updateprofile,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -122,7 +125,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String? name, String? email, String? image)
+    required TResult Function(
+            String? name, String? email, String? phone, String? image)
         updateprofile,
   }) {
     return started();
@@ -132,7 +136,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String? name, String? email, String? image)?
+    TResult? Function(
+            String? name, String? email, String? phone, String? image)?
         updateprofile,
   }) {
     return started?.call();
@@ -142,7 +147,8 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String? name, String? email, String? image)? updateprofile,
+    TResult Function(String? name, String? email, String? phone, String? image)?
+        updateprofile,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -193,7 +199,7 @@ abstract class _$$RemoveItemFavouritesImplCopyWith<$Res> {
           $Res Function(_$RemoveItemFavouritesImpl) then) =
       __$$RemoveItemFavouritesImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String? name, String? email, String? image});
+  $Res call({String? name, String? email, String? phone, String? image});
 }
 
 /// @nodoc
@@ -212,6 +218,7 @@ class __$$RemoveItemFavouritesImplCopyWithImpl<$Res>
   $Res call({
     Object? name = freezed,
     Object? email = freezed,
+    Object? phone = freezed,
     Object? image = freezed,
   }) {
     return _then(_$RemoveItemFavouritesImpl(
@@ -222,6 +229,10 @@ class __$$RemoveItemFavouritesImplCopyWithImpl<$Res>
       email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
+              as String?,
+      phone: freezed == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
               as String?,
       image: freezed == image
           ? _value.image
@@ -234,18 +245,21 @@ class __$$RemoveItemFavouritesImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$RemoveItemFavouritesImpl implements _RemoveItemFavourites {
-  const _$RemoveItemFavouritesImpl({this.name, this.email, this.image});
+  const _$RemoveItemFavouritesImpl(
+      {this.name, this.email, this.phone, this.image});
 
   @override
   final String? name;
   @override
   final String? email;
   @override
+  final String? phone;
+  @override
   final String? image;
 
   @override
   String toString() {
-    return 'UpdateUserProfileEvent.updateprofile(name: $name, email: $email, image: $image)';
+    return 'UpdateUserProfileEvent.updateprofile(name: $name, email: $email, phone: $phone, image: $image)';
   }
 
   @override
@@ -255,11 +269,12 @@ class _$RemoveItemFavouritesImpl implements _RemoveItemFavourites {
             other is _$RemoveItemFavouritesImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
+            (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.image, image) || other.image == image));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name, email, image);
+  int get hashCode => Object.hash(runtimeType, name, email, phone, image);
 
   /// Create a copy of UpdateUserProfileEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -275,31 +290,34 @@ class _$RemoveItemFavouritesImpl implements _RemoveItemFavourites {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String? name, String? email, String? image)
+    required TResult Function(
+            String? name, String? email, String? phone, String? image)
         updateprofile,
   }) {
-    return updateprofile(name, email, image);
+    return updateprofile(name, email, phone, image);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String? name, String? email, String? image)?
+    TResult? Function(
+            String? name, String? email, String? phone, String? image)?
         updateprofile,
   }) {
-    return updateprofile?.call(name, email, image);
+    return updateprofile?.call(name, email, phone, image);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String? name, String? email, String? image)? updateprofile,
+    TResult Function(String? name, String? email, String? phone, String? image)?
+        updateprofile,
     required TResult orElse(),
   }) {
     if (updateprofile != null) {
-      return updateprofile(name, email, image);
+      return updateprofile(name, email, phone, image);
     }
     return orElse();
   }
@@ -340,10 +358,12 @@ abstract class _RemoveItemFavourites implements UpdateUserProfileEvent {
   const factory _RemoveItemFavourites(
       {final String? name,
       final String? email,
+      final String? phone,
       final String? image}) = _$RemoveItemFavouritesImpl;
 
   String? get name;
   String? get email;
+  String? get phone;
   String? get image;
 
   /// Create a copy of UpdateUserProfileEvent

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:cruise_buddy/core/model/user_update_succes_model/user_update_succes_model.dart';
 import 'package:cruise_buddy/core/services/user/user_service.dart';
@@ -15,7 +17,12 @@ class UpdateUserProfileBloc
       emit(const UpdateUserProfileState.loading());
 
       try {
-        final result = await userService.updateUserProfile();
+        final result = await userService.updateUserProfile(
+          name: event.name,
+          email: event.email,
+          image: event.image,
+          phone: event.phone,
+        );
 
         await result.fold((failure) async {
           if (failure == "No internet") {

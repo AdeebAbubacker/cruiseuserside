@@ -61,7 +61,7 @@ class UserService {
     String? name,
     String? email,
     String? phone,
-    File? image,
+    String? image,
   }) async {
     try {
       final hasInternet = await _connectivityChecker.hasInternetAccess();
@@ -90,11 +90,10 @@ class UserService {
       if (phone != null) {
         request.fields['phone'] = phone;
       }
-      if (image != null) {
-        request.files.add(
-          await http.MultipartFile.fromPath('image', image.path),
-        );
-      }
+     if (image != null && image.isNotEmpty) {
+      final file = File(image); // convert string path to File
+      request.files.add(await http.MultipartFile.fromPath('image', file.path));
+    }
 
       request.headers.addAll({
         'Accept': 'application/json',
