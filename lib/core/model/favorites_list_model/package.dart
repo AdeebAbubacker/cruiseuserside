@@ -1,9 +1,7 @@
 import 'amenity.dart';
 import 'booking_type.dart';
 import 'cruise.dart';
-import 'food.dart';
 import 'image.dart';
-import 'itinerary.dart';
 
 class Package {
 	int? id;
@@ -14,8 +12,8 @@ class Package {
 	List<Image>? images;
 	Cruise? cruise;
 	List<Amenity>? amenities;
-	List<Food>? food;
-	List<Itinerary>? itineraries;
+	List<dynamic>? food;
+	List<dynamic>? itineraries;
 	List<BookingType>? bookingTypes;
 
 	Package({
@@ -47,12 +45,8 @@ class Package {
 				amenities: (json['amenities'] as List<dynamic>?)
 						?.map((e) => Amenity.fromJson(e as Map<String, dynamic>))
 						.toList(),
-				food: (json['food'] as List<dynamic>?)
-						?.map((e) => Food.fromJson(e as Map<String, dynamic>))
-						.toList(),
-				itineraries: (json['itineraries'] as List<dynamic>?)
-						?.map((e) => Itinerary.fromJson(e as Map<String, dynamic>))
-						.toList(),
+				food: json['food'] as List<dynamic>?,
+				itineraries: json['itineraries'] as List<dynamic>?,
 				bookingTypes: (json['bookingTypes'] as List<dynamic>?)
 						?.map((e) => BookingType.fromJson(e as Map<String, dynamic>))
 						.toList(),
@@ -67,8 +61,8 @@ class Package {
 				'images': images?.map((e) => e.toJson()).toList(),
 				'cruise': cruise?.toJson(),
 				'amenities': amenities?.map((e) => e.toJson()).toList(),
-				'food': food?.map((e) => e.toJson()).toList(),
-				'itineraries': itineraries?.map((e) => e.toJson()).toList(),
+				'food': food,
+				'itineraries': itineraries,
 				'bookingTypes': bookingTypes?.map((e) => e.toJson()).toList(),
 			};
 }

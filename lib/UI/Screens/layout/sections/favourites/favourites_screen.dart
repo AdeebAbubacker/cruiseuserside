@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
+import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/featured_boats_container.dart';
 import 'package:cruise_buddy/UI/Widgets/noDataCondition/no_data_screen.dart';
-import 'package:cruise_buddy/core/model/favourites_list_model/favourites_list_model.dart';
+
 import 'package:cruise_buddy/core/view_model/getFavouritesList/get_favourites_list_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
@@ -22,8 +24,8 @@ class FavouritesScreen extends StatefulWidget {
 }
 
 class _FavouritesScreenState extends State<FavouritesScreen> {
-  final StreamController<FavouritesListModel> _favoritesController =
-      StreamController<FavouritesListModel>();
+  final StreamController<FavoritesListModel> _favoritesController =
+      StreamController<FavoritesListModel>();
 
   List<bool> isFavoriteList = [];
   Set<String> loadingFavorites = {};
@@ -46,7 +48,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
     final token = await GetSharedPreferences.getAccessToken();
     final response = await http.get(
       Uri.parse(
-          'https://cruisebuddy.in/api/v1/favorite?include=package.cruise'),
+          'https://cruisebuddy.in/api/v1/favorite?include=user,package.cruise,package.cruise.cruiseType,package.cruise.ratings,package.itineraries,package.amenities,package.food,package.packageImages,package.bookingTypes,package.cruise.cruisesImages,'),
       headers: {
         'Accept': 'application/json',
         'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',
@@ -56,8 +58,8 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       final Map<String, dynamic> decodedJson = json.decode(response.body);
-      final FavouritesListModel jsonResponse =
-          FavouritesListModel.fromJson(decodedJson);
+      final FavoritesListModel jsonResponse =
+          FavoritesListModel.fromJson(decodedJson);
       _favoritesController.add(jsonResponse);
 
       favoritePackageMap = {
@@ -72,7 +74,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<FavouritesListModel>(
+    return StreamBuilder<FavoritesListModel>(
       stream: _favoritesController.stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -221,8 +223,8 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                               topLeft: Radius.circular(13),
                               topRight: Radius.circular(13),
                             ),
-                            child: Image.asset(
-                              "assets/image/fav_screen_img2.png",
+                            child: Image.network(
+                              favourite?.package?.cruise?.images?[0].cruiseImg ?? "",
                               fit: BoxFit.cover,
                               width: double.infinity,
                               height: 160,
@@ -361,23 +363,33 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                PillWidget(
-                                  image: 'assets/icons/wifi.svg',
-                                  text: 'Wifi',
-                                ),
-                                const SizedBox(width: 5),
-                                PillWidget(
-                                  image: 'assets/icons/heater.svg',
-                                  text: 'Heater',
-                                ),
-                              ],
+                            // Row(
+                            //   children: [
+                            //     PillWidget(
+                            //       image: 'assets/icons/wifi.svg',
+                            //       text: 'Wifi',
+                            //     ),
+                            //     const SizedBox(width: 5),
+                            //     PillWidget(
+                            //       image: 'assets/icons/heater.svg',
+                            //       text: 'Heater',
+                            //     ),
+                            //   ],
+                            // ),
+                            AmenityRow(
+                              amenities: favourite?.package?.amenities!
+                                      .map((e) => {
+                                            "name": e.name,
+                                            "icon":
+                                                'assets/icons/heater.svg', // Replace with dynamic logic if needed
+                                          })
+                                      .toList() ??
+                                  [],
                             ),
+
                             const SizedBox(height: 8),
                             Text(
-                              "${snapshot.data?.data?[0].package?.name}" ??
-                                  "N/A",
+                              favourite?.package?.cruise?.name ?? "",
                               style: TextStyles.ubuntu16black15w500,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -389,7 +401,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "₹5000",
+                                      "₹ ${favourite?.package?.bookingTypes?[0].defaultPrice ?? ""}",
                                       style: TextStyles.ubuntu18bluew700,
                                     ),
                                     const Text(
@@ -441,189 +453,190 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
     );
   }
 }
+// }
 
-class BuildFavouritesCard extends StatelessWidget {
-  final String name;
-  final String imageurl;
-  const BuildFavouritesCard({
-    super.key,
-    required this.name,
-    required this.imageurl,
-  });
+// class BuildFavouritesCard extends StatelessWidget {
+//   final String name;
+//   final String imageurl;
+//   const BuildFavouritesCard({
+//     super.key,
+//     required this.name,
+//     required this.imageurl,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Card(
-        color: Color(0xffFFFFFF),
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(13),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(13),
-                      topRight: Radius.circular(13),
-                    ),
-                    child: Image.network(
-                      imageurl,
-                      width: double.infinity,
-                      height: 160,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Container(
-                          width: double.infinity,
-                          height: 160,
-                          color: Colors.grey[300], // Placeholder background
-                          child:
-                              const Center(child: CircularProgressIndicator()),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          width: double.infinity,
-                          height: 160,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/image/boat_details_img/boat_detail_img.png'),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        );
-                      },
-                    )),
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: GestureDetector(
-                    //  onTap: () => _toggleFavorite(index),
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.favorite,
-                          color: const Color(0xff4FC2C5),
-                          size: 24,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 10,
-                  right: 10,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                          size: 16,
-                        ),
-                        Text("4.3"),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      PillWidget(
-                        image: 'assets/icons/wifi.svg',
-                        text: 'Wifi',
-                      ),
-                      const SizedBox(width: 5),
-                      PillWidget(
-                        image: 'assets/icons/heater.svg',
-                        text: 'Heater',
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    name,
-                    style: TextStyles.ubuntu16black15w500,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "₹5000",
-                            style: TextStyles.ubuntu18bluew700,
-                          ),
-                          const Text(
-                            "per night",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BoatDetailScreen(
-                                        packageId: '51',
-                                      )));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0XFF1F8386),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                        ),
-                        child: Text(
-                          "Book Now",
-                          style: TextStyles.ubuntu12whiteFFw400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       child: Card(
+//         color: Color(0xffFFFFFF),
+//         margin: const EdgeInsets.symmetric(vertical: 10),
+//         elevation: 2,
+//         shape: RoundedRectangleBorder(
+//           borderRadius: BorderRadius.circular(13),
+//         ),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Stack(
+//               children: [
+//                 ClipRRect(
+//                     borderRadius: const BorderRadius.only(
+//                       topLeft: Radius.circular(13),
+//                       topRight: Radius.circular(13),
+//                     ),
+//                     child: Image.network(
+//                       imageurl,
+//                       width: double.infinity,
+//                       height: 160,
+//                       fit: BoxFit.cover,
+//                       loadingBuilder: (context, child, loadingProgress) {
+//                         if (loadingProgress == null) return child;
+//                         return Container(
+//                           width: double.infinity,
+//                           height: 160,
+//                           color: Colors.grey[300], // Placeholder background
+//                           child:
+//                               const Center(child: CircularProgressIndicator()),
+//                         );
+//                       },
+//                       errorBuilder: (context, error, stackTrace) {
+//                         return Container(
+//                           width: double.infinity,
+//                           height: 160,
+//                           decoration: BoxDecoration(
+//                             image: DecorationImage(
+//                               image: AssetImage(
+//                                   'assets/image/boat_details_img/boat_detail_img.png'),
+//                               fit: BoxFit.cover,
+//                             ),
+//                           ),
+//                         );
+//                       },
+//                     )),
+//                 Positioned(
+//                   top: 10,
+//                   right: 10,
+//                   child: GestureDetector(
+//                     //  onTap: () => _toggleFavorite(index),
+//                     child: Container(
+//                       width: 30,
+//                       height: 30,
+//                       decoration: const BoxDecoration(
+//                         shape: BoxShape.circle,
+//                         color: Colors.white,
+//                       ),
+//                       child: Center(
+//                         child: Icon(
+//                           Icons.favorite,
+//                           color: const Color(0xff4FC2C5),
+//                           size: 24,
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//                 Positioned(
+//                   bottom: 10,
+//                   right: 10,
+//                   child: Container(
+//                     padding:
+//                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+//                     decoration: BoxDecoration(
+//                       color: Colors.white,
+//                       borderRadius: BorderRadius.circular(24),
+//                     ),
+//                     child: Row(
+//                       mainAxisSize: MainAxisSize.min,
+//                       children: const [
+//                         Icon(
+//                           Icons.star,
+//                           color: Colors.amber,
+//                           size: 16,
+//                         ),
+//                         Text("4.3"),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             Padding(
+//               padding: const EdgeInsets.all(12.0),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Row(
+//                     children: [
+//                       PillWidget(
+//                         image: 'assets/icons/wifi.svg',
+//                         text: 'Wifi',
+//                       ),
+//                       const SizedBox(width: 5),
+//                       PillWidget(
+//                         image: 'assets/icons/heater.svg',
+//                         text: 'Heater',
+//                       ),
+//                     ],
+//                   ),
+//                   const SizedBox(height: 8),
+//                   Text(
+//                     name,
+//                     style: TextStyles.ubuntu16black15w500,
+//                     maxLines: 2,
+//                     overflow: TextOverflow.ellipsis,
+//                   ),
+//                   const SizedBox(height: 8),
+//                   Row(
+//                     children: [
+//                       Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Text(
+//                             "₹5000",
+//                             style: TextStyles.ubuntu18bluew700,
+//                           ),
+//                           const Text(
+//                             "per night",
+//                             style: TextStyle(
+//                               color: Colors.grey,
+//                               fontSize: 12,
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                       const Spacer(),
+//                       ElevatedButton(
+//                         onPressed: () {
+//                           Navigator.push(
+//                               context,
+//                               MaterialPageRoute(
+//                                   builder: (context) => BoatDetailScreen(
+//                                         packageId: '51',
+//                                       )));
+//                         },
+//                         style: ElevatedButton.styleFrom(
+//                           backgroundColor: const Color(0XFF1F8386),
+//                           shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(8),
+//                           ),
+//                           padding: const EdgeInsets.symmetric(
+//                             horizontal: 16,
+//                             vertical: 12,
+//                           ),
+//                         ),
+//                         child: Text(
+//                           "Book Now",
+//                           style: TextStyles.ubuntu12whiteFFw400,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

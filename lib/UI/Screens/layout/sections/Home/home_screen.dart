@@ -143,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SvgPicture.asset('assets/icons/search.svg'),
                                 SizedBox(width: 5),
                                 Text(
-                                  "Where dou you want to go?",
+                                  "Where do you want to go?",
                                   style: TextStyles.ubuntu14black55w400,
                                 ),
                               ],

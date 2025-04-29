@@ -1,5 +1,6 @@
 import 'cruise_type.dart';
-import 'location.dart';
+import 'image.dart';
+import 'rating.dart';
 
 class Cruise {
   int? id;
@@ -10,8 +11,7 @@ class Cruise {
   bool? isActive;
   CruiseType? cruiseType;
   List<CruiseImage>? images;
-  Location? location;
-  List<dynamic>? ratings;
+  List<Rating>? ratings;
 
   Cruise({
     this.id,
@@ -22,7 +22,6 @@ class Cruise {
     this.isActive,
     this.cruiseType,
     this.images,
-    this.location,
     this.ratings,
   });
 
@@ -36,14 +35,12 @@ class Cruise {
         cruiseType: json['cruiseType'] == null
             ? null
             : CruiseType.fromJson(json['cruiseType'] as Map<String, dynamic>),
-        images: json["images"] == null
-            ? []
-            : List<CruiseImage>.from(
-                json["images"]!.map((x) => CruiseImage.fromJson(x))),
-        location: json['location'] == null
-            ? null
-            : Location.fromJson(json['location'] as Map<String, dynamic>),
-        ratings: json['ratings'] as List<dynamic>?,
+        images: (json['images'] as List<dynamic>?)
+            ?.map((e) => CruiseImage.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        ratings: (json['ratings'] as List<dynamic>?)
+            ?.map((e) => Rating.fromJson(e as Map<String, dynamic>))
+            .toList(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -55,16 +52,15 @@ class Cruise {
         'isActive': isActive,
         'cruiseType': cruiseType?.toJson(),
         'images': images?.map((e) => e.toJson()).toList(),
-        'location': location?.toJson(),
-        'ratings': ratings,
+        'ratings': ratings?.map((e) => e.toJson()).toList(),
       };
 }
 
 class CruiseImage {
-  int? id;
-  int? cruiseId;
-  String? cruiseImg;
-  dynamic alt;
+  final int? id;
+  final int? cruiseId;
+  final String? cruiseImg;
+  final String? alt;
 
   CruiseImage({
     this.id,
@@ -73,17 +69,21 @@ class CruiseImage {
     this.alt,
   });
 
-  factory CruiseImage.fromJson(Map<String, dynamic> json) => CruiseImage(
-        id: json["id"],
-        cruiseId: json["cruiseId"],
-        cruiseImg: json["cruiseImg"],
-        alt: json["alt"],
-      );
+  factory CruiseImage.fromJson(Map<String, dynamic> json) {
+    return CruiseImage(
+      id: json['id'] as int?,
+      cruiseId: json['cruiseId'] as int?,
+      cruiseImg: json['cruiseImg'] as String?,
+      alt: json['alt'] as String?,
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "cruiseId": cruiseId,
-        "cruiseImg": cruiseImg,
-        "alt": alt,
-      };
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'cruiseId': cruiseId,
+      'cruiseImg': cruiseImg,
+      'alt': alt,
+    };
+  }
 }

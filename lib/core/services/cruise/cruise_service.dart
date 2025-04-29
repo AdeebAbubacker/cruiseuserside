@@ -78,7 +78,7 @@ class CruiseService {
 
       final response = await http.get(
         Uri.parse(
-            '$url/featured/package?limit=10&include=cruise.location%2CbookingTypes%2CpackageImages&limit=10'),
+            '$url/featured/package?include=cruise.cruiseType,cruise.ratings,cruise.cruisesImages,cruise.location,itineraries,amenities,food,packageImages,bookingTypes,unavailableDates'),
         headers: _headers,
       );
 
@@ -110,16 +110,39 @@ class CruiseService {
       }
 
       final token = await GetSharedPreferences.getAccessToken();
-
       if (token == null) {
         return const Left('No access token found.');
       }
 
       _headers['Authorization'] = 'Bearer $token';
       print('my location $location');
+
+      // Build the URL dynamically based on available parameters
+      String urlString =
+          '$url/package?include=cruise.cruiseType,cruise.ratings,cruise.cruisesImages,cruise.location,itineraries,amenities,food,packageImages,bookingTypes,unavailableDates,';
+
+      if (minAmount.isNotEmpty) {
+        urlString += '&filter[priceRange][min]=$minAmount';
+      }
+
+      if (maxAmount.isNotEmpty) {
+        urlString += '&filter[priceRange][max]=$maxAmount';
+      }
+
+      if (location.isNotEmpty) {
+        urlString += '&filter[cruise.location.name]=$location';
+      }
+
+      if (filterCriteria.isNotEmpty) {
+        urlString += '&filter[bookingTypes.name]=full_day_cruise';
+      }
+
+      // Adding dateRange filters
+      urlString +=
+          '&filter[dateRange][start]=2025-05-01&filter[dateRange][end]=2029-05-01';
+
       final response = await http.get(
-        Uri.parse(
-            '$url/package?filter[priceRange][min]=$minAmount&filter[priceRange][max]=$maxAmount&filter[cruise.location.name]=$location&include=cruise.location,cruise.cruisesImages,bookingTypes'),
+        Uri.parse(urlString),
         headers: _headers,
       );
 

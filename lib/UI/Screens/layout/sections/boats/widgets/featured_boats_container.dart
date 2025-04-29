@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
+import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/featured_shimmer_card.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
-import 'package:cruise_buddy/core/model/favourites_list_model/favourites_list_model.dart';
+
 import 'package:cruise_buddy/core/routes/app_routes.dart';
 import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';
 import 'package:cruise_buddy/core/view_model/getFeaturedBoats/get_featured_boats_bloc.dart';
@@ -49,12 +52,14 @@ class PillWidget extends StatelessWidget {
             width: 14,
             height: 14,
           ),
-          SizedBox(width: 8),
+          SizedBox(width: 4),
           Text(
             text,
-            style: TextStyle(color: Colors.black, fontSize: 14),
+            style: GoogleFonts.ubuntu(
+              fontSize: 9,
+            ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 3),
         ],
       ),
     );
@@ -76,8 +81,8 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
   List<double> _scales = [];
   List<bool> isFavoriteList = [];
 
-  final StreamController<FavouritesListModel> _favoritesController =
-      StreamController<FavouritesListModel>();
+  final StreamController<FavoritesListModel> _favoritesController =
+      StreamController<FavoritesListModel>();
 
   Set<String> loadingFavorites = {};
   Map<String, String> favoritePackageMap = {};
@@ -107,8 +112,8 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       final Map<String, dynamic> decodedJson = json.decode(response.body);
-      final FavouritesListModel jsonResponse =
-          FavouritesListModel.fromJson(decodedJson);
+      final FavoritesListModel jsonResponse =
+          FavoritesListModel.fromJson(decodedJson);
       _favoritesController.add(jsonResponse);
 
       favoritePackageMap = {
@@ -170,7 +175,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<FavouritesListModel>(
+    return StreamBuilder<FavoritesListModel>(
       stream: _favoritesController.stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -431,7 +436,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                                     13),
                                                           ),
                                                           child: Image.network(
-                                                            "${value.featuredBoats.data?[index].images?[0].packageImg}",
+                                                            "${value.featuredBoats.data?[index].cruise?.images?[0].cruiseImg ?? ""}",
                                                             width:
                                                                 double.infinity,
                                                             height: 130,
@@ -501,8 +506,9 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                                       .amber,
                                                                   size: 24,
                                                                 ),
-                                                                const Text(
-                                                                    "4.3"),
+                                                                Text(
+                                                                  "${(value.featuredBoats.data?[index].avgRating != null && value.featuredBoats.data?[index].avgRating.toString() != "null") ? double.parse(value.featuredBoats.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3"}",
+                                                                ),
                                                                 const SizedBox(
                                                                     width: 10),
                                                               ],
@@ -552,40 +558,37 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                         children: [
                                                           const SizedBox(
                                                               height: 10),
-                                                          Row(
-                                                            children: [
-                                                              PillWidget(
-                                                                image:
-                                                                    'assets/icons/wifi.svg',
-                                                                text: 'Wifi',
-                                                              ),
-                                                              const SizedBox(
-                                                                  width: 5),
-                                                              PillWidget(
-                                                                image:
-                                                                    'assets/icons/heater.svg',
-                                                                text: 'Heater',
-                                                              ),
-                                                            ],
+                                                          AmenityRow(
+                                                            amenities: value
+                                                                    .featuredBoats
+                                                                    .data?[
+                                                                        index]
+                                                                    .amenities!
+                                                                    .map(
+                                                                        (e) => {
+                                                                              "name": e.name,
+                                                                              "icon": 'assets/icons/heater.svg'
+                                                                            })
+                                                                    .toList() ??
+                                                                [],
                                                           ),
                                                           SizedBox(
                                                             height: 10,
                                                           ),
                                                           Text(
-                                                            (value.featuredBoats.data?[index].cruise?.name ??
-                                                                            '')
-                                                                        .length >
-                                                                    24
-                                                                ? "${value.featuredBoats.data?[index].cruise?.name?.substring(0, 24)}..."
-                                                                : (value
-                                                                        .featuredBoats
-                                                                        .data?[
-                                                                            index]
-                                                                        .cruise
-                                                                        ?.name ??
-                                                                    ''),
+                                                            value
+                                                                    .featuredBoats
+                                                                    .data?[
+                                                                        index]
+                                                                    .cruise
+                                                                    ?.name ??
+                                                                "",
                                                             style: TextStyles
                                                                 .ubuntu16black15w500,
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
                                                           SizedBox(
                                                             height: 10,

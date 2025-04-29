@@ -294,8 +294,7 @@ mixin _$GetFavouritesListState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(FavouritesListModel favourites)
-        getfavouritesBoats,
+    required TResult Function(FavoritesListModel favourites) getfavouritesBoats,
     required TResult Function(String error) getfavouritesFailure,
     required TResult Function() noInternet,
   }) =>
@@ -304,7 +303,7 @@ mixin _$GetFavouritesListState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult? Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult? Function(String error)? getfavouritesFailure,
     TResult? Function()? noInternet,
   }) =>
@@ -313,7 +312,7 @@ mixin _$GetFavouritesListState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult Function(String error)? getfavouritesFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -414,8 +413,7 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(FavouritesListModel favourites)
-        getfavouritesBoats,
+    required TResult Function(FavoritesListModel favourites) getfavouritesBoats,
     required TResult Function(String error) getfavouritesFailure,
     required TResult Function() noInternet,
   }) {
@@ -427,7 +425,7 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult? Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult? Function(String error)? getfavouritesFailure,
     TResult? Function()? noInternet,
   }) {
@@ -439,7 +437,7 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult Function(String error)? getfavouritesFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -538,8 +536,7 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(FavouritesListModel favourites)
-        getfavouritesBoats,
+    required TResult Function(FavoritesListModel favourites) getfavouritesBoats,
     required TResult Function(String error) getfavouritesFailure,
     required TResult Function() noInternet,
   }) {
@@ -551,7 +548,7 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult? Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult? Function(String error)? getfavouritesFailure,
     TResult? Function()? noInternet,
   }) {
@@ -563,7 +560,7 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult Function(String error)? getfavouritesFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -625,7 +622,7 @@ abstract class _$$GetfavouritesBoatsImplCopyWith<$Res> {
           $Res Function(_$GetfavouritesBoatsImpl) then) =
       __$$GetfavouritesBoatsImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({FavouritesListModel favourites});
+  $Res call({FavoritesListModel favourites});
 }
 
 /// @nodoc
@@ -647,7 +644,7 @@ class __$$GetfavouritesBoatsImplCopyWithImpl<$Res>
       favourites: null == favourites
           ? _value.favourites
           : favourites // ignore: cast_nullable_to_non_nullable
-              as FavouritesListModel,
+              as FavoritesListModel,
     ));
   }
 }
@@ -658,7 +655,7 @@ class _$GetfavouritesBoatsImpl implements _GetfavouritesBoats {
   const _$GetfavouritesBoatsImpl({required this.favourites});
 
   @override
-  final FavouritesListModel favourites;
+  final FavoritesListModel favourites;
 
   @override
   String toString() {
@@ -691,8 +688,7 @@ class _$GetfavouritesBoatsImpl implements _GetfavouritesBoats {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(FavouritesListModel favourites)
-        getfavouritesBoats,
+    required TResult Function(FavoritesListModel favourites) getfavouritesBoats,
     required TResult Function(String error) getfavouritesFailure,
     required TResult Function() noInternet,
   }) {
@@ -704,7 +700,7 @@ class _$GetfavouritesBoatsImpl implements _GetfavouritesBoats {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult? Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult? Function(String error)? getfavouritesFailure,
     TResult? Function()? noInternet,
   }) {
@@ -716,7 +712,7 @@ class _$GetfavouritesBoatsImpl implements _GetfavouritesBoats {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult Function(String error)? getfavouritesFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -770,10 +766,10 @@ class _$GetfavouritesBoatsImpl implements _GetfavouritesBoats {
 
 abstract class _GetfavouritesBoats implements GetFavouritesListState {
   const factory _GetfavouritesBoats(
-          {required final FavouritesListModel favourites}) =
+          {required final FavoritesListModel favourites}) =
       _$GetfavouritesBoatsImpl;
 
-  FavouritesListModel get favourites;
+  FavoritesListModel get favourites;
 
   /// Create a copy of GetFavouritesListState
   /// with the given fields replaced by the non-null parameter values.
@@ -855,8 +851,7 @@ class _$GetfavouritesFailureImpl implements GetfavouritesFailure {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(FavouritesListModel favourites)
-        getfavouritesBoats,
+    required TResult Function(FavoritesListModel favourites) getfavouritesBoats,
     required TResult Function(String error) getfavouritesFailure,
     required TResult Function() noInternet,
   }) {
@@ -868,7 +863,7 @@ class _$GetfavouritesFailureImpl implements GetfavouritesFailure {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult? Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult? Function(String error)? getfavouritesFailure,
     TResult? Function()? noInternet,
   }) {
@@ -880,7 +875,7 @@ class _$GetfavouritesFailureImpl implements GetfavouritesFailure {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult Function(String error)? getfavouritesFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -988,8 +983,7 @@ class _$NoInternetImpl implements _NoInternet {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(FavouritesListModel favourites)
-        getfavouritesBoats,
+    required TResult Function(FavoritesListModel favourites) getfavouritesBoats,
     required TResult Function(String error) getfavouritesFailure,
     required TResult Function() noInternet,
   }) {
@@ -1001,7 +995,7 @@ class _$NoInternetImpl implements _NoInternet {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult? Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult? Function(String error)? getfavouritesFailure,
     TResult? Function()? noInternet,
   }) {
@@ -1013,7 +1007,7 @@ class _$NoInternetImpl implements _NoInternet {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(FavouritesListModel favourites)? getfavouritesBoats,
+    TResult Function(FavoritesListModel favourites)? getfavouritesBoats,
     TResult Function(String error)? getfavouritesFailure,
     TResult Function()? noInternet,
     required TResult orElse(),

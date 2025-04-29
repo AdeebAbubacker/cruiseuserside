@@ -1,6 +1,5 @@
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
@@ -15,12 +14,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 252, 255, 248),
         forceMaterialTransparency: true,
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-          ),
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios_new),
         ),
         title: Text(
           "Privacy Policy",
@@ -31,113 +26,100 @@ class PrivacyPolicyScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SectionHeader(title: "Introduction"),
-              PrivacyPoints(
-                text: "A brief description of the purpose of the policy:",
-              ),
-              PrivacyPoints(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            SectionHeader(title: "Introduction"),
+            PrivacyPoint(
+                number: 1,
                 text:
-                    '"Your privacy is important to us. This policy explains how we collect, use, and protect your data."',
-              ),
-              SectionHeader(title: "1. Sections"),
-              PrivacyPoints(
+                    "Your privacy is important to us. This policy explains how we collect, use, and safeguard your information."),
+            PrivacyPoint(
+                number: 2,
                 text:
-                    "Organized as collapsible or scrollable sections for easy navigation:",
-              ),
-              SectionHeader(title: "2. Data Collection"),
-              PrivacyPoints(
+                    "By using our app, you consent to the practices described in this policy."),
+            SectionHeader(title: "Data Collection"),
+            PrivacyPoint(
+                number: 3,
                 text:
-                    "Information on what data is collected (e.g., name, contact details, payment info, location data).",
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                title: Text(
-                  'Privacy Policy',
-                  style: TextStyles.ubuntu16black23wBold,
-                ),
-                trailing: SvgPicture.asset(
-                  'assets/image/profile/arrow_right.svg',
-                ),
-                onTap: () {},
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                title: Text(
-                  'Data Sharing',
-                  style: TextStyles.ubuntu16black23wBold,
-                ),
-                trailing: SvgPicture.asset(
-                  'assets/image/profile/arrow_right.svg',
-                ),
-                onTap: () {},
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                title: Text(
-                  ' Security Measures',
-                  style: TextStyles.ubuntu16black23wBold,
-                ),
-                trailing: SvgPicture.asset(
-                  'assets/image/profile/arrow_right.svg',
-                ),
-                onTap: () {},
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                title: Text(
-                  'User Rights',
-                  style: TextStyles.ubuntu16black23wBold,
-                ),
-                trailing: SvgPicture.asset(
-                  'assets/image/profile/arrow_right.svg',
-                ),
-                onTap: () {},
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                title: Text(
-                  'Contact Information',
-                  style: TextStyles.ubuntu16black23wBold,
-                ),
-                trailing: SvgPicture.asset(
-                  'assets/image/profile/arrow_right.svg',
-                ),
-                onTap: () {},
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                title: Text(
-                  'Call-to-Actions',
-                  style: TextStyles.ubuntu16black23wBold,
-                ),
-                trailing: SvgPicture.asset(
-                  'assets/image/profile/arrow_right.svg',
-                ),
-                onTap: () {},
-              ),
-              SizedBox(
-                height: 100,
-              ),
-            ],
-          ),
+                    "We may collect personal information such as your name, email, and contact number."),
+            PrivacyPoint(
+                number: 4,
+                text:
+                    "We also collect app usage data, crash reports, and device information for performance improvements."),
+            PrivacyPoint(
+                number: 5,
+                text:
+                    "Location data may be collected to provide region-specific services."),
+            SectionHeader(title: "Use of Data"),
+            PrivacyPoint(
+                number: 6,
+                text:
+                    "We use collected data to enhance user experience and improve our services."),
+            PrivacyPoint(
+                number: 7,
+                text:
+                    "Data may be used for analytics, feature development, and customer support."),
+            PrivacyPoint(
+                number: 8,
+                text: "We do not sell your personal data to third parties."),
+            SectionHeader(title: "Data Sharing"),
+            PrivacyPoint(
+                number: 9,
+                text:
+                    "We may share your data with service providers who assist in app functionality."),
+            PrivacyPoint(
+                number: 10,
+                text:
+                    "Your data may be disclosed to legal authorities if required by law."),
+            SectionHeader(title: "Security"),
+            PrivacyPoint(
+                number: 11,
+                text:
+                    "We use encryption and secure storage to protect your information."),
+            PrivacyPoint(
+                number: 12,
+                text:
+                    "Access to personal data is restricted to authorized personnel only."),
+            SectionHeader(title: "User Rights"),
+            PrivacyPoint(
+                number: 13,
+                text:
+                    "You can access and update your personal data through the app settings."),
+            PrivacyPoint(
+                number: 14,
+                text:
+                    "You can request deletion of your account and associated data."),
+            PrivacyPoint(
+                number: 15,
+                text:
+                    "You can opt out of receiving promotional communications at any time."),
+            SectionHeader(title: "Cookies and Tracking"),
+            PrivacyPoint(
+                number: 16,
+                text:
+                    "We may use cookies or similar technologies to enhance your user experience."),
+            PrivacyPoint(
+                number: 17,
+                text:
+                    "You can manage cookie preferences through your device settings."),
+            SectionHeader(title: "Policy Updates"),
+            PrivacyPoint(
+                number: 18,
+                text: "This privacy policy may be updated from time to time."),
+            PrivacyPoint(
+                number: 19,
+                text:
+                    "Significant changes will be communicated through the app or email."),
+            SectionHeader(title: "Contact Information"),
+            PrivacyPoint(
+                number: 20,
+                text:
+                    "If you have questions about this policy, contact us at info.cruisebuddy@gmail.com."),
+            SizedBox(height: 100),
+          ],
         ),
       ),
     );
@@ -146,15 +128,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
 class SectionHeader extends StatelessWidget {
   final String title;
-  const SectionHeader({
-    super.key,
-    required this.title,
-  });
+  const SectionHeader({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.only(top: 16.0, bottom: 6.0),
       child: Text(
         title,
         style: GoogleFonts.ubuntu(
@@ -166,35 +145,29 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-class PrivacyPoints extends StatelessWidget {
+class PrivacyPoint extends StatelessWidget {
+  final int number;
   final String text;
-  const PrivacyPoints({
-    super.key,
-    required this.text,
-  });
+  const PrivacyPoint({super.key, required this.number, required this.text});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 9.0),
-            child: Container(
-              width: 5,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(50),
-              ),
+          Text(
+            "$number. ",
+            style: GoogleFonts.ubuntu(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(width: 10),
           Expanded(
             child: Text(
               text,
+              textAlign: TextAlign.left,
               style: GoogleFonts.ubuntu(
                 fontSize: 15,
                 fontWeight: FontWeight.w400,

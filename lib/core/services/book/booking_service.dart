@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:cruise_buddy/core/constants/functions/connection/connectivity_checker.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/booking_response_model/booking_response_model.dart';
-import 'package:cruise_buddy/core/model/favourites_list_model/favourites_list_model.dart';
+
 import 'package:cruise_buddy/core/model/posted_favouritem_item_model/posted_favouritem_item_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;

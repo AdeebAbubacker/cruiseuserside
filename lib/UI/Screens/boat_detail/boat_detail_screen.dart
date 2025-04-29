@@ -44,6 +44,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     return Scaffold(
       backgroundColor: Color(0XFFFFFFFF),
       appBar: AppBar(
+        forceMaterialTransparency: true,
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);

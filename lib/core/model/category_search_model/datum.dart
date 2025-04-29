@@ -1,5 +1,7 @@
+import 'amenity.dart';
 import 'booking_type.dart';
 import 'cruise.dart';
+import 'image.dart';
 
 class Datum {
 	int? id;
@@ -7,9 +9,14 @@ class Datum {
 	String? description;
 	bool? isActive;
 	int? cruiseId;
-	String? avgRating;
+	List<Image>? images;
 	Cruise? cruise;
+	List<Amenity>? amenities;
+	List<dynamic>? food;
+	List<dynamic>? itineraries;
 	List<BookingType>? bookingTypes;
+	List<dynamic>? unavailableDate;
+	String? avgRating;
 
 	Datum({
 		this.id, 
@@ -17,9 +24,14 @@ class Datum {
 		this.description, 
 		this.isActive, 
 		this.cruiseId, 
-		this.avgRating, 
+		this.images, 
 		this.cruise, 
+		this.amenities, 
+		this.food, 
+		this.itineraries, 
 		this.bookingTypes, 
+		this.unavailableDate, 
+		this.avgRating, 
 	});
 
 	factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -28,13 +40,22 @@ class Datum {
 				description: json['description'] as String?,
 				isActive: json['isActive'] as bool?,
 				cruiseId: json['cruiseId'] as int?,
-				avgRating: json['avgRating'] as String?,
+				images: (json['images'] as List<dynamic>?)
+						?.map((e) => Image.fromJson(e as Map<String, dynamic>))
+						.toList(),
 				cruise: json['cruise'] == null
 						? null
 						: Cruise.fromJson(json['cruise'] as Map<String, dynamic>),
+				amenities: (json['amenities'] as List<dynamic>?)
+						?.map((e) => Amenity.fromJson(e as Map<String, dynamic>))
+						.toList(),
+				food: json['food'] as List<dynamic>?,
+				itineraries: json['itineraries'] as List<dynamic>?,
 				bookingTypes: (json['bookingTypes'] as List<dynamic>?)
 						?.map((e) => BookingType.fromJson(e as Map<String, dynamic>))
 						.toList(),
+				unavailableDate: json['unavailableDate'] as List<dynamic>?,
+				avgRating: json['avgRating'] as String?,
 			);
 
 	Map<String, dynamic> toJson() => {
@@ -43,8 +64,13 @@ class Datum {
 				'description': description,
 				'isActive': isActive,
 				'cruiseId': cruiseId,
-				'avgRating': avgRating,
+				'images': images?.map((e) => e.toJson()).toList(),
 				'cruise': cruise?.toJson(),
+				'amenities': amenities?.map((e) => e.toJson()).toList(),
+				'food': food,
+				'itineraries': itineraries,
 				'bookingTypes': bookingTypes?.map((e) => e.toJson()).toList(),
+				'unavailableDate': unavailableDate,
+				'avgRating': avgRating,
 			};
 }

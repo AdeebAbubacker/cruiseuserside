@@ -5,7 +5,8 @@ import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/featured_shimmer_card.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
-import 'package:cruise_buddy/core/model/favourites_list_model/favourites_list_model.dart';
+import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
+
 import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';
 import 'package:cruise_buddy/core/view_model/getSearchCruiseResults/get_seached_cruiseresults_bloc.dart';
 import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
@@ -36,8 +37,8 @@ class CategoriesListResultscreen extends StatefulWidget {
 
 class _CategoriesListResultscreenState
     extends State<CategoriesListResultscreen> {
-  final StreamController<FavouritesListModel> _favoritesController =
-      StreamController<FavouritesListModel>();
+  final StreamController<FavoritesListModel> _favoritesController =
+      StreamController<FavoritesListModel>();
   Map<String, String> favoritePackageMap = {};
   Set<String> loadingFavorites = {};
   List<bool> isFavoriteList = [];
@@ -71,8 +72,8 @@ class _CategoriesListResultscreenState
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       final Map<String, dynamic> decodedJson = json.decode(response.body);
-      final FavouritesListModel jsonResponse =
-          FavouritesListModel.fromJson(decodedJson);
+      final FavoritesListModel jsonResponse =
+          FavoritesListModel.fromJson(decodedJson);
       _favoritesController.add(jsonResponse);
 
       favoritePackageMap = {
@@ -186,7 +187,7 @@ class _CategoriesListResultscreenState
                 const SizedBox(height: 20),
                 SizedBox(
                   height: availableHeight,
-                  child: StreamBuilder<FavouritesListModel>(
+                  child: StreamBuilder<FavoritesListModel>(
                       stream: _favoritesController.stream,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -465,20 +466,85 @@ class _CategoriesListResultscreenState
                                                   child: Stack(
                                                     children: [
                                                       ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius.only(
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    13),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    13),
-                                                          ),
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  13),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  13),
+                                                        ),
+                                                        child:
+                                                            // Image.network(
+                                                            //   '${value.packagesearchresults.data?[index].cruise?.images?[0].cruiseImg}',
+                                                            //   width:
+                                                            //       double.infinity,
+                                                            //   height: 160,
+                                                            //   fit: BoxFit.cover,
+                                                            //   loadingBuilder:
+                                                            //       (context, child,
+                                                            //           loadingProgress) {
+                                                            //     if (loadingProgress ==
+                                                            //         null) {
+                                                            //       return child;
+                                                            //     }
+                                                            //     return Container(
+                                                            //       width: double
+                                                            //           .infinity,
+                                                            //       height: 130,
+                                                            //       color: Colors
+                                                            //               .grey[
+                                                            //           300], // Placeholder background
+                                                            //       child: const Center(
+                                                            //           child:
+                                                            //               CircularProgressIndicator()),
+                                                            //     );
+                                                            //   },
+                                                            //   errorBuilder:
+                                                            //       (context, error,
+                                                            //           stackTrace) {
+                                                            //     return Container(
+                                                            //       width: double
+                                                            //           .infinity,
+                                                            //       height: 130,
+                                                            //       decoration:
+                                                            //           BoxDecoration(
+                                                            //         image:
+                                                            //             DecorationImage(
+                                                            //           image: AssetImage(
+                                                            //               'assets/image/boat_details_img/boat_detail_img.png'),
+                                                            //           fit: BoxFit
+                                                            //               .cover,
+                                                            //         ),
+                                                            //       ),
+                                                            //     );
+                                                            //   },
+                                                            // )),
+                                                            Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height:
+                                                              160, // Consistent height for all states
                                                           child: Image.network(
-                                                            '${value.packagesearchresults.data?[index].cruise?.images?[0].cruiseImg}',
-                                                            width:
-                                                                double.infinity,
-                                                            height: 160,
+                                                            value
+                                                                        .packagesearchresults
+                                                                        .data?[
+                                                                            index]
+                                                                        .cruise
+                                                                        ?.images
+                                                                        ?.isNotEmpty ==
+                                                                    true
+                                                                ? value
+                                                                        .packagesearchresults
+                                                                        .data![
+                                                                            index]
+                                                                        .cruise!
+                                                                        .images![
+                                                                            0]
+                                                                        .cruiseImg ??
+                                                                    ''
+                                                                : '',
                                                             fit: BoxFit.cover,
                                                             loadingBuilder:
                                                                 (context, child,
@@ -490,13 +556,16 @@ class _CategoriesListResultscreenState
                                                               return Container(
                                                                 width: double
                                                                     .infinity,
-                                                                height: 130,
+                                                                height:
+                                                                    160, // Same height
                                                                 color: Colors
                                                                         .grey[
-                                                                    300], // Placeholder background
-                                                                child: const Center(
-                                                                    child:
-                                                                        CircularProgressIndicator()),
+                                                                    300], // Background during loading
+                                                                child:
+                                                                    const Center(
+                                                                  child:
+                                                                      CircularProgressIndicator(),
+                                                                ),
                                                               );
                                                             },
                                                             errorBuilder:
@@ -505,9 +574,10 @@ class _CategoriesListResultscreenState
                                                               return Container(
                                                                 width: double
                                                                     .infinity,
-                                                                height: 130,
+                                                                height:
+                                                                    160, // Same height
                                                                 decoration:
-                                                                    BoxDecoration(
+                                                                    const BoxDecoration(
                                                                   image:
                                                                       DecorationImage(
                                                                     image: AssetImage(
@@ -518,7 +588,9 @@ class _CategoriesListResultscreenState
                                                                 ),
                                                               );
                                                             },
-                                                          )),
+                                                          ),
+                                                        ),
+                                                      ),
                                                       Positioned(
                                                         top: 8,
                                                         right: 8,

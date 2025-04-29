@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cruise_buddy/core/constants/functions/connection/connectivity_checker.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
-import 'package:cruise_buddy/core/model/favourites_list_model/favourites_list_model.dart';
+import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 import 'package:cruise_buddy/core/model/posted_favouritem_item_model/posted_favouritem_item_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +18,7 @@ class FavouritesService {
     // Bearer token will be added dynamically to the headers
   };
 
-  Future<Either<String, FavouritesListModel>> getFavouriteDetails(
+  Future<Either<String, FavoritesListModel>> getFavouriteDetails(
       {String? locationName}) async {
     try {
       final hasInternet = await _connectivityChecker.hasInternetAccess();
@@ -52,7 +52,7 @@ class FavouritesService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
-        final locationDetails = FavouritesListModel.fromJson(data);
+        final locationDetails = FavoritesListModel.fromJson(data);
         print(locationDetails.data?.length);
         return Right(locationDetails);
       } else {

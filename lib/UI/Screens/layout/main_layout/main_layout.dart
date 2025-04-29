@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-
+import 'package:in_app_update/in_app_update.dart';
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
 
@@ -27,6 +27,9 @@ class MainLayoutState extends State<MainLayout> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      checkForUpdate();
+    });
     _screens = [
       HomeScreen(changetab: () {
         onItemTapped(2);
@@ -42,6 +45,16 @@ class MainLayoutState extends State<MainLayout> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future<void> checkForUpdate() async {
+    try {
+      final updateInfo = await InAppUpdate.checkForUpdate();
+
+      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        InAppUpdate.performImmediateUpdate().catchError((e) {});
+      }
+    } catch (e) {}
   }
 
   final GlobalKey<MainLayoutState> mainLayoutKey = GlobalKey();

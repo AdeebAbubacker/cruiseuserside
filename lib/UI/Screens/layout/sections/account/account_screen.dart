@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cruise_buddy/UI/Screens/Auth/login_screens.dart';
 import 'package:cruise_buddy/UI/Screens/misc/privacy_policy.dart';
+import 'package:cruise_buddy/UI/Screens/misc/terms_and_c_screen.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
 import 'package:cruise_buddy/core/services/auth/auth_services.dart';
@@ -205,12 +206,7 @@ class _AccountScreenState extends State<AccountScreen> {
                           : null, // Default if no image
                   child: _pickedImage == null && imageUrl == null
                       ? ClipOval(
-                          child: Image.asset(
-                            'assets/image/profile/profile_img.png', // Default profile image
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
+                          child: Icon(Icons.person),
                         )
                       : null,
                 ),
@@ -273,16 +269,36 @@ class _AccountScreenState extends State<AccountScreen> {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
+                  // ListTile(
+                  //   leading: SvgPicture.asset(
+                  //     'assets/image/profile/change_password.svg',
+                  //   ),
+                  //   title: const Text('Change Password'),
+                  //   trailing: SvgPicture.asset(
+                  //     'assets/image/profile/arrow_right.svg',
+                  //   ),
+                  //   onTap: () {},
+                  // ),
+                  // const Divider(),
                   ListTile(
-                    leading: SvgPicture.asset(
-                      'assets/image/profile/change_password.svg',
-                    ),
-                    title: const Text('Change Password'),
+                    leading: const Icon(Icons
+                        .description), // or Icons.rule, Icons.article, Icons.gavel
+                    title: const Text('T & C'),
                     trailing: SvgPicture.asset(
                       'assets/image/profile/arrow_right.svg',
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return TermsAndConditionsScreen();
+                          },
+                        ),
+                      );
+                    },
                   ),
+
                   const Divider(),
                   ListTile(
                     leading: SvgPicture.asset(

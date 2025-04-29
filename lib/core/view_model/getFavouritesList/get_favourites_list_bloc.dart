@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:cruise_buddy/core/model/favourites_list_model/favourites_list_model.dart';
+import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 import 'package:cruise_buddy/core/services/favourites/favourites_service.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -36,7 +36,5 @@ class GetFavouritesListBloc
             error: 'An error occurred: $e'));
       }
     });
-  
-  
   }
 }

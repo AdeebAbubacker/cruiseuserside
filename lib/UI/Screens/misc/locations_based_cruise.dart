@@ -4,7 +4,7 @@ import 'package:cruise_buddy/UI/Screens/layout/sections/favourites/favourites_sc
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
-import 'package:cruise_buddy/core/model/favourites_list_model/favourites_list_model.dart';
+import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';
 import 'package:cruise_buddy/core/view_model/listCruiseonLocation/list_cruiseon_location_bloc.dart';
 import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
@@ -33,8 +33,8 @@ class LocationsBasedCruiseScreen extends StatefulWidget {
 
 class _LocationsBasedCruiseScreenState
     extends State<LocationsBasedCruiseScreen> {
-  final StreamController<FavouritesListModel> _favoritesController =
-      StreamController<FavouritesListModel>();
+  final StreamController<FavoritesListModel> _favoritesController =
+      StreamController<FavoritesListModel>();
   Map<String, String> favoritePackageMap = {};
   Set<String> loadingFavorites = {};
   List<bool> isFavoriteList = [];
@@ -63,8 +63,8 @@ class _LocationsBasedCruiseScreenState
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       final Map<String, dynamic> decodedJson = json.decode(response.body);
-      final FavouritesListModel jsonResponse =
-          FavouritesListModel.fromJson(decodedJson);
+      final FavoritesListModel jsonResponse =
+          FavoritesListModel.fromJson(decodedJson);
       _favoritesController.add(jsonResponse);
 
       favoritePackageMap = {
@@ -99,7 +99,7 @@ class _LocationsBasedCruiseScreenState
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<FavouritesListModel>(
+    return StreamBuilder<FavoritesListModel>(
         stream: _favoritesController.stream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

@@ -193,13 +193,19 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                               itemCount:
                                   value.packagesearchresults.data?.length,
                               itemBuilder: (context, index) {
+                                print(
+                                    '-name-----${value.packagesearchresults.data?[index].cruise?.name}');
+                                print(
+                                    '------${value.packagesearchresults.data?[index].avgRating}');
+                                print(
+                                    '------${value.packagesearchresults.data?[index].name}');
                                 return Padding(
                                   padding: const EdgeInsets.only(
                                     bottom: 15,
                                   ),
                                   child: SearchResultsContainer(
                                     cruisename:
-                                        '${value.packagesearchresults.data?[index].name}',
+                                        '${value.packagesearchresults.data?[index].cruise?.name ?? "ff"}',
                                     imageUrl:
                                         '${value.packagesearchresults.data?[index].cruise?.images?[0].cruiseImg}',
                                     price:
