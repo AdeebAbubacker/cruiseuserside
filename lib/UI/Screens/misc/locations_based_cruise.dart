@@ -521,6 +521,26 @@ class _LocationsBasedCruiseScreenState
                                           ),
                                         ),
                                       ),
+                                      Positioned(
+                                          top: 10,
+                                          left: 10,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  6,
+                                                )),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                "${value.cruisemodel.data![index].name}",
+                                                style: TextStyles
+                                                    .ubuntu12blue23w700,
+                                              ),
+                                            ),
+                                          )),
                                     ],
                                   ),
                                   Padding(
@@ -544,8 +564,9 @@ class _LocationsBasedCruiseScreenState
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
-                                          value.cruisemodel.data![index].name
-                                              .toString(),
+                                          value.cruisemodel.data?[index]?.cruise
+                                                  ?.name ??
+                                              "N/A",
                                           style: TextStyles.ubuntu16black15w500,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
