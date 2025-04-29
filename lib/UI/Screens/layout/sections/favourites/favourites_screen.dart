@@ -223,12 +223,29 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                               topLeft: Radius.circular(13),
                               topRight: Radius.circular(13),
                             ),
-                            child: Image.network(
-                              favourite?.package?.cruise?.images?[0].cruiseImg ?? "",
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: 160,
-                            ),
+                            child: favourite?.package?.cruise?.images != null &&
+                                    favourite!
+                                        .package!.cruise!.images!.isNotEmpty &&
+                                    favourite.package!.cruise!.images![0]
+                                            .cruiseImg !=
+                                        null &&
+                                    favourite.package!.cruise!.images![0]
+                                        .cruiseImg!.isNotEmpty
+                                ? Image.network(
+                                    favourite
+                                        .package!.cruise!.images![0].cruiseImg!,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: 160,
+                                  )
+                                : Container(
+                                    width: double.infinity,
+                                    height: 160,
+                                    color: Colors.grey[300],
+                                    alignment: Alignment.center,
+                                    child: Icon(Icons.image_not_supported,
+                                        color: Colors.grey[700]),
+                                  ),
                           ),
                           Positioned(
                             top: 10,
