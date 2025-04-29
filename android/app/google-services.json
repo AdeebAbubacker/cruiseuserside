@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "261245076643",
+    "project_id": "cruisebuddy-e3b41",
+    "storage_bucket": "cruisebuddy-e3b41.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261245076643:android:17acf4a51777917114ab16",
+        "android_client_info": {
+          "package_name": "com.leburacruisebuddy.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "261245076643-6fa94m9de0nmbe118f5b1j80vc7e6oe8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.leburacruisebuddy.app",
+            "certificate_hash": "0d0ecd1274951c4e2bca14554fde0ce7c3387a77"
+          }
+        },
+        {
+          "client_id": "261245076643-2j4guotigd87shlbbkdivcp5jbnjst8k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6RPgGV4xZTDoF6hWUTDytqjOF_uizCaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "261245076643-2j4guotigd87shlbbkdivcp5jbnjst8k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "261245076643-u3i3iacidsaorbo02nag82l9h7913u0u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cruiseBuddy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
