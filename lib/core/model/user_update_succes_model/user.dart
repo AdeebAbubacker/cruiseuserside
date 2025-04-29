@@ -1,4 +1,4 @@
-class Data {
+class User {
 	int? id;
 	String? name;
 	String? email;
@@ -7,7 +7,7 @@ class Data {
 	String? countryCode;
 	String? imagePath;
 
-	Data({
+	User({
 		this.id, 
 		this.name, 
 		this.email, 
@@ -17,7 +17,7 @@ class Data {
 		this.imagePath, 
 	});
 
-	factory Data.fromJson(Map<String, dynamic> json) => Data(
+	factory User.fromJson(Map<String, dynamic> json) => User(
 				id: json['id'] as int?,
 				name: json['name'] as String?,
 				email: json['email'] as String?,

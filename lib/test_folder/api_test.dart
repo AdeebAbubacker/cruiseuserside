@@ -1,4 +1,6 @@
+import 'package:cruise_buddy/core/services/user/user_service.dart';
 import 'package:cruise_buddy/core/view_model/bookMyCruise/book_my_cruise_bloc.dart';
+import 'package:cruise_buddy/core/view_model/getUserProfile/get_user_profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,7 +13,7 @@ class ApiTest extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            BlocBuilder<BookMyCruiseBloc, BookMyCruiseState>(
+            BlocBuilder<GetUserProfileBloc, GetUserProfileState>(
               builder: (context, state) {
                 return state.map(
                   initial: (value) {
@@ -20,10 +22,11 @@ class ApiTest extends StatelessWidget {
                   loading: (value) {
                     return Text("hhhhhhhhhhhhhhhhhhhhhhh");
                   },
-                  getBookedBoats: (value) {
-                    return Text("ttttttttttttttttttttt");
+                  getuseruccess: (value) {
+                    return Text(
+                        "ttttttttttttttttttttt ${value.userprofilemodel.data?.name ?? "d"}");
                   },
-                  getBookedFailure: (value) {
+                  getuserFailure: (value) {
                     return Text("cghfgjcgfj");
                   },
                   noInternet: (value) {
@@ -34,10 +37,12 @@ class ApiTest extends StatelessWidget {
             ),
             SizedBox(height: 100),
             ElevatedButton(
-              onPressed: () {
-                BlocProvider.of<BookMyCruiseBloc>(context).add(
-                    BookMyCruiseEvent.createNewbookings(
-                        date: 'd', packageId: '51'));
+              onPressed: () async {
+                await UserService().updateUserProfile(
+                  name: 'name',
+                  email: 'peter@gmail.com',
+                  phone: '+919834567826',
+                );
               },
               child: Text("data"),
             ),
