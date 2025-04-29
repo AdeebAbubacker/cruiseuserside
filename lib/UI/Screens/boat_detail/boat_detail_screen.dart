@@ -3,14 +3,16 @@ import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmatio
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:latlong2/latlong.dart';
+import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
 class BoatDetailScreen extends StatefulWidget {
   final String packageId;
-  const BoatDetailScreen({
-    super.key,
-    required this.packageId,
-  });
+  final Datum? datum;
+  const BoatDetailScreen({super.key, required this.packageId, this.datum});
 
   @override
   State<BoatDetailScreen> createState() => _BoatDetailScreenState();
@@ -50,6 +52,26 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final location = widget.datum?.cruise?.location;
+
+    final address = [
+      location?.district,
+      location?.name,
+      location?.state,
+      location?.country
+    ].where((part) => part != null && part.trim().isNotEmpty).join(', ');
+    Future<LatLng?> _getCoordinatesFromAddress(String address) async {
+      try {
+        List locations = await locationFromAddress(address);
+        if (locations.isNotEmpty) {
+          return LatLng(locations.first.latitude, locations.first.longitude);
+        }
+      } catch (e) {
+        print("Geocoding failed: $e");
+      }
+      return null;
+    }
+
     return Scaffold(
       backgroundColor: Color(0XFFFFFFFF),
       appBar: AppBar(
@@ -133,7 +155,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          '₹5000 / day',
+                          '₹ ${widget.datum?.bookingTypes?[0].pricePerDay} / day',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -152,8 +174,15 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                             Icon(Icons.star, size: 16, color: Colors.amber),
                             SizedBox(width: 4),
                             Text(
-                              '4.3',
-                              style: TextStyle(color: Color(0xff555555)),
+                              (widget.datum?.avgRating != null &&
+                                      widget.datum?.avgRating
+                                              .toString()
+                                              .toLowerCase() !=
+                                          "null")
+                                  ? double.parse(
+                                          widget.datum!.avgRating.toString())
+                                      .toStringAsFixed(1)
+                                  : "4.3",
                             ),
                           ],
                         ),
@@ -165,7 +194,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          "Kerala’s Heritage Haven – Traditional Kerala Décor",
+                          widget.datum?.cruise?.name.toString() ?? "N/A",
                           style: TextStyles.ubuntu16black15w500,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -179,8 +208,25 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
-                  BookingSelectionWidget(
-                    onBookingTypeSelected: _onBookingTypeSelected,
+                  Container(
+                    height: 48,
+                    width: MediaQuery.of(context).size.width / 2 - 5,
+                    decoration: BoxDecoration(
+                      color: Color(0XFFFAFFFF),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.black12,
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      widget.datum?.name ?? "N/A",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                   SizedBox(height: 16),
                   Row(
@@ -194,8 +240,6 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       Spacer(),
-                      SvgPicture.asset(
-                          'assets/image/boat_details_img/msg_icon.svg'),
                       SizedBox(width: 9),
                       SvgPicture.asset(
                           'assets/image/boat_details_img/call_icon.svg'),
@@ -208,15 +252,15 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Set off on a luxurious voyage with Sea Breeze, a modern yacht designed for comfort and style. Equipped with spacious seating, shaded areas, and panoramic views, it’s perfect for relaxing or celebrating. Enjoy a smooth and stable ride, thanks to its advanced navigation and safety features. Onboard amenities include a kitchenette, sound system, and fresh water supply. Whether for a sunset cruise or a day-long adventure, Sea Breeze promises an unforgettable experience on the water.',
+                    widget.datum?.cruise?.description.toString() ?? "N/A",
                     style: TextStyle(fontSize: 14),
                   ),
                   SizedBox(height: 15),
-                  _buildInfoRow(
-                      Icons.people, "Passenger Capacity", "08-10 Adults"),
+                  _buildInfoRow(Icons.people, "Passenger Capacity",
+                      "${widget.datum?.cruise?.maxCapacity.toString() ?? "N/A"} Adults"),
                   SizedBox(height: 10),
-                  _buildInfoRow(
-                      Icons.access_time, "Boat Timing", "09:00 PM - 06:00 AM"),
+                  // _buildInfoRow(
+                  //     Icons.access_time, "Boat Timing", "09:00 PM - 06:00 AM"),
                   const SizedBox(height: 16.0),
                   Text(
                     "Location",
@@ -227,7 +271,8 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   Row(
                     children: [
                       Expanded(
-                          child: Text('Kavanattinkara,\nKumarakom, Kerala ')),
+                        child: Text(address.isNotEmpty ? address : 'Unknown'),
+                      ),
                       Expanded(
                         child: Container(
                           height: 141,
@@ -242,16 +287,68 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                           ),
                         ),
                       ),
+                      //         FutureBuilder<LatLng?>(
+                      //   future: _getCoordinatesFromAddress(address),
+                      //   builder: (context, snapshot) {
+                      //     if (snapshot.connectionState ==
+                      //         ConnectionState.waiting) {
+                      //       return const Center(
+                      //           child: CircularProgressIndicator());
+                      //     } else if (snapshot.hasData &&
+                      //         snapshot.data != null) {
+                      //       return SizedBox(
+                      //           height: 200,
+                      //           child: FlutterMap(
+                      //             options: MapOptions(
+                      //               cameraConstraint:
+                      //                   const CameraConstraint.unconstrained(),
+                      //               interactionOptions:
+                      //                   const InteractionOptions(),
+                      //               backgroundColor: Colors.white,
+                      //               // onTap: (LatLng latLng) {
+                      //               //   print('Tapped at: $latLng');
+                      //               // },
+                      //               // onLongPress: (LatLng latLng) {
+                      //               //   print('Long press at: $latLng');
+                      //               // },
+                      //             ),
+                      //             children: [
+                      //               TileLayer(
+                      //                 urlTemplate:
+                      //                     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      //                 subdomains: ['a', 'b', 'c'],
+                      //               ),
+                      //               MarkerLayer(
+                      //                 markers: [
+                      //                   Marker(
+                      //                     point: LatLng(50.5,
+                      //                         30.51), // A placeholder marker
+                      //                     width: 40,
+                      //                     height: 40,
+                      //                     child: const Icon(Icons.location_pin,
+                      //                         color: Colors.red, size: 40),
+                      //                   ),
+                      //                 ],
+                      //               ),
+                      //             ],
+                      //           ));
+                      //     } else {
+                      //       return const Text('Could not locate map');
+                      //     }
+                      //   },
+                      // )),
                     ],
                   ),
                   const SizedBox(height: 16.0),
-                  Text(
-                    "Amenities",
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                  ),
+                  if ((widget.datum?.amenities?.isNotEmpty ?? false))
+                    Text(
+                      "Amenities",
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.bold),
+                    ),
+
                   const SizedBox(height: 8.0),
-                  GridView(
+                  GridView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -260,16 +357,13 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 15,
                     ),
-                    children: [
-                      _buildAmenityButton(Icons.hot_tub, "Water Heater"),
-                      _buildAmenityButton(Icons.wifi, "Wi-Fi"),
-                      _buildAmenityButton(Icons.videocam, "Projector"),
-                      _buildAmenityButton(Icons.mic, "Mic"),
-                      _buildAmenityButton(Icons.music_note, "Music System"),
-                      _buildAmenityButton(Icons.tv, "TV"),
-                      _buildAmenityButton(Icons.iron, "Iron Box"),
-                    ],
+                    itemCount: widget.datum?.amenities?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final amenity = widget.datum!.amenities![index];
+                      return _buildAmenityItem(amenity.name);
+                    },
                   ),
+
                   const SizedBox(height: 16.0),
                   Text(
                     "Reviews",
@@ -320,6 +414,28 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAmenityItem(dynamic amenity) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              amenity.toString(),
+              style: TextStyle(fontSize: 14),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

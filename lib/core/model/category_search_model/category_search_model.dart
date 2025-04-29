@@ -2,6 +2,8 @@
 
 import 'dart:convert';
 
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
+
 CategorySearchModel CategorySearchModelFromJson(String str) => CategorySearchModel.fromJson(json.decode(str));
 
 String CategorySearchModelToJson(CategorySearchModel data) => json.encode(data.toJson());
@@ -30,69 +32,71 @@ class CategorySearchModel {
     };
 }
 
-class Datum {
-    int? id;
-    String? name;
-    String? description;
-    bool? isActive;
-    int? cruiseId;
-    String? avgRating;
-    List<DatumImage>? images;
-    Cruise? cruise;
-    List<Amenity>? amenities;
-    List<dynamic>? food;
-    List<dynamic>? itineraries;
-    List<BookingType>? bookingTypes;
-    List<UnavailableDate>? unavailableDate;
+// class Datum {
+//     int? id;
+//     String? name;
+//     String? description;
+//     bool? isActive;
+//     int? cruiseId;
+//     String? avgRating;
+//     List<DatumImage>? images;
+//     Cruise? cruise;
+//     List<Amenity>? amenities;
+//     List<dynamic>? food;
+//     List<dynamic>? itineraries;
+//     List<BookingType>? bookingTypes;
+//     List<UnavailableDate>? unavailableDate;
 
-    Datum({
-        this.id,
-        this.name,
-        this.description,
-        this.isActive,
-        this.cruiseId,
-        this.avgRating,
-        this.images,
-        this.cruise,
-        this.amenities,
-        this.food,
-        this.itineraries,
-        this.bookingTypes,
-        this.unavailableDate,
-    });
+//     Datum({
+//         this.id,
+//         this.name,
+//         this.description,
+//         this.isActive,
+//         this.cruiseId,
+//         this.avgRating,
+//         this.images,
+//         this.cruise,
+//         this.amenities,
+//         this.food,
+//         this.itineraries,
+//         this.bookingTypes,
+//         this.unavailableDate,
+//     });
 
-    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        id: json["id"],
-        name: json["name"],
-        description: json["description"],
-        isActive: json["isActive"],
-        cruiseId: json["cruiseId"],
-        avgRating: json["avgRating"],
-        images: json["images"] == null ? [] : List<DatumImage>.from(json["images"]!.map((x) => DatumImage.fromJson(x))),
-        cruise: json["cruise"] == null ? null : Cruise.fromJson(json["cruise"]),
-        amenities: json["amenities"] == null ? [] : List<Amenity>.from(json["amenities"]!.map((x) => Amenity.fromJson(x))),
-        food: json["food"] == null ? [] : List<dynamic>.from(json["food"]!.map((x) => x)),
-        itineraries: json["itineraries"] == null ? [] : List<dynamic>.from(json["itineraries"]!.map((x) => x)),
-        bookingTypes: json["bookingTypes"] == null ? [] : List<BookingType>.from(json["bookingTypes"]!.map((x) => BookingType.fromJson(x))),
-        unavailableDate: json["unavailableDate"] == null ? [] : List<UnavailableDate>.from(json["unavailableDate"]!.map((x) => UnavailableDate.fromJson(x))),
-    );
+//     factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+//         id: json["id"],
+//         name: json["name"],
+//         description: json["description"],
+//         isActive: json["isActive"],
+//         cruiseId: json["cruiseId"],
+//         avgRating: json["avgRating"],
+//         images: json["images"] == null ? [] : List<DatumImage>.from(json["images"]!.map((x) => DatumImage.fromJson(x))),
+//         cruise: json["cruise"] == null ? null : Cruise.fromJson(json["cruise"]),
+//         amenities: json["amenities"] == null ? [] : List<Amenity>.from(json["amenities"]!.map((x) => Amenity.fromJson(x))),
+//         food: json["food"] == null ? [] : List<dynamic>.from(json["food"]!.map((x) => x)),
+//         itineraries: json["itineraries"] == null ? [] : List<dynamic>.from(json["itineraries"]!.map((x) => x)),
+//         bookingTypes: json["bookingTypes"] == null ? [] : List<BookingType>.from(json["bookingTypes"]!.map((x) => BookingType.fromJson(x))),
+//         unavailableDate: json["unavailableDate"] == null ? [] : List<UnavailableDate>.from(json["unavailableDate"]!.map((x) => UnavailableDate.fromJson(x))),
+//     );
 
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "description": description,
-        "isActive": isActive,
-        "cruiseId": cruiseId,
-        "avgRating": avgRating,
-        "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x.toJson())),
-        "cruise": cruise?.toJson(),
-        "amenities": amenities == null ? [] : List<dynamic>.from(amenities!.map((x) => x.toJson())),
-        "food": food == null ? [] : List<dynamic>.from(food!.map((x) => x)),
-        "itineraries": itineraries == null ? [] : List<dynamic>.from(itineraries!.map((x) => x)),
-        "bookingTypes": bookingTypes == null ? [] : List<dynamic>.from(bookingTypes!.map((x) => x.toJson())),
-        "unavailableDate": unavailableDate == null ? [] : List<dynamic>.from(unavailableDate!.map((x) => x.toJson())),
-    };
-}
+//     Map<String, dynamic> toJson() => {
+//         "id": id,
+//         "name": name,
+//         "description": description,
+//         "isActive": isActive,
+//         "cruiseId": cruiseId,
+//         "avgRating": avgRating,
+//         "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x.toJson())),
+//         "cruise": cruise?.toJson(),
+//         "amenities": amenities == null ? [] : List<dynamic>.from(amenities!.map((x) => x.toJson())),
+//         "food": food == null ? [] : List<dynamic>.from(food!.map((x) => x)),
+//         "itineraries": itineraries == null ? [] : List<dynamic>.from(itineraries!.map((x) => x)),
+//         "bookingTypes": bookingTypes == null ? [] : List<dynamic>.from(bookingTypes!.map((x) => x.toJson())),
+//         "unavailableDate": unavailableDate == null ? [] : List<dynamic>.from(unavailableDate!.map((x) => x.toJson())),
+//     };
+// }
+
+
 
 class Amenity {
     int? id;

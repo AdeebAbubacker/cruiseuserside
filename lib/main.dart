@@ -15,6 +15,7 @@ import 'package:cruise_buddy/core/view_model/login/login_bloc.dart';
 import 'package:cruise_buddy/core/view_model/postGoogleId/post_google_bloc.dart';
 import 'package:cruise_buddy/core/view_model/regsiter/register_bloc.dart';
 import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
+import 'package:cruise_buddy/core/view_model/seeAllMyBookings/see_allmy_bookings_bloc.dart';
 import 'package:cruise_buddy/core/view_model/updateUserProfile/update_user_profile_bloc.dart';
 import 'package:cruise_buddy/firebase_options.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -84,6 +85,8 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => UpdateUserProfileBloc(),
+        ),  BlocProvider(
+          create: (context) => SeeAllmyBookingsBloc(),
         ),
       ],
       child: MaterialApp(

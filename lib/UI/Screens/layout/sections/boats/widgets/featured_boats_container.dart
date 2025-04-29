@@ -386,7 +386,8 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                           _scales[index] = 1.0;
                                         });
                                         AppRoutes.navigateToBoatdetailScreen(
-                                            context);
+                                            context,
+                                            datum: value.featuredBoats.data?[index]);
                                       });
                                     },
                                     onTapCancel: () {

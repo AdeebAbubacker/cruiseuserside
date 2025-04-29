@@ -1,61 +1,232 @@
-import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
 
-class BoatsScreen extends StatelessWidget {
+import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/view_model/seeAllMyBookings/see_allmy_bookings_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+
+class BoatsScreen extends StatefulWidget {
   const BoatsScreen({super.key});
 
   @override
+  State<BoatsScreen> createState() => _BoatsScreenState();
+}
+
+class _BoatsScreenState extends State<BoatsScreen> {
+  GlobalKey qrKey = GlobalKey();
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      BlocProvider.of<SeeAllmyBookingsBloc>(context)
+          .add(SeeAllmyBookingsEvent.seeMyBooking());
+    });
+
+    super.initState();
+  }
+
+  Future<void> _shareQr(GlobalKey key, String orderId) async {
+    try {
+      // Check if the key's context is available
+      if (key.currentContext != null) {
+        RenderRepaintBoundary boundary =
+            key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+        var image = await boundary.toImage(pixelRatio: 3.0);
+        ByteData? byteData =
+            await image.toByteData(format: ImageByteFormat.png);
+        Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+        // Save the image to a temporary directory
+        final directory = await getTemporaryDirectory();
+        final imagePath = await File('${directory.path}/qr_code.png').create();
+        await imagePath.writeAsBytes(pngBytes);
+
+        // Share the image file
+        await Share.shareXFiles([XFile(imagePath.path)],
+            text: 'Here is your ticket: $orderId');
+      } else {
+        print('QR code widget context is not available.');
+      }
+    } catch (e) {
+      print('Error sharing QR: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          bottom: -40,
-          child: SvgPicture.asset(
-            'assets/icons/cruise_background.svg',
-            color: const Color.fromARGB(255, 196, 238, 237),
-          ),
-        ),
-        Positioned(
-          bottom: 140,
-          child: SvgPicture.asset(
-            'assets/icons/cruise_background.svg',
-            color: const Color.fromARGB(255, 181, 235, 233),
-          ),
-        ),
-        Positioned(
-          bottom: 150,
-          child: SvgPicture.asset(
-            'assets/icons/cruise_background.svg',
-            color: const Color.fromARGB(255, 181, 235, 233),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+    return BlocBuilder<SeeAllmyBookingsBloc, SeeAllmyBookingsState>(
+      builder: (context, state) {
+        return state.map(
+          initial: (value) {
+            return Center(child: CircularProgressIndicator());
+          },
+          loading: (value) {
+            return Center(child: CircularProgressIndicator());
+          },
+          getuseruccess: (value) {
+            return ListView.builder(
+              padding: EdgeInsets.all(16),
+              itemCount: value.mybookingmodel.data?.length,
+              itemBuilder: (context, index) {
+                final booking = value?.mybookingmodel.data?[index];
+                final imageUrl = (booking?.package?.cruise?.images != null &&
+                        booking!.package!.cruise!.images!.isNotEmpty)
+                    ? booking!.package!.cruise!.images![0].cruiseImg ??
+                        'https://via.placeholder.com/100'
+                    : 'https://via.placeholder.com/100';
+                GlobalKey qrKey = GlobalKey();
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                imageUrl,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Icon(Icons.image_not_supported),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    booking?.package?.cruise?.name ?? "N/A",
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text("Paid Price: ₹${booking?.amountPaid}"),
+                                  Text(
+                                      "Amount to Pay: ₹${booking?.balanceAmount}"),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // QR Code
+                            Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: RepaintBoundary(
+                                key: qrKey, // Attach the GlobalKey here
+                                child: QrImageView(
+                                  data: booking?.orderId.toString() ?? "N/A",
+                                  version: QrVersions.auto,
+                                  size: 100,
+                                  backgroundColor: Colors.white,
+                                ),
+                              ),
+                            ),
+
+                            // WhatsApp Share Button
+                            ElevatedButton.icon(
+                              onPressed: () async {
+                                if (qrKey.currentContext != null) {
+                                  _shareQr(qrKey,
+                                      booking?.orderId.toString() ?? "N/A");
+                                } else {
+                                  print(
+                                      'QR code widget context is not available.');
+                                }
+                              },
+                              icon: Icon(Icons.share),
+                              label: Text("Share"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+          getuserFailure: (value) {
+            return Stack(
               children: [
-                SvgPicture.asset('assets/icons/not_available_404.svg'),
-                Text(
-                  "No Booking Yet",
-                  style: TextStyles.ubuntu18bluew700,
+                Positioned(
+                  bottom: -40,
+                  child: SvgPicture.asset(
+                    'assets/icons/cruise_background.svg',
+                    color: const Color.fromARGB(255, 196, 238, 237),
+                  ),
                 ),
-                Center(
-                  child: Text(
-                    "It looks like no bookings yet.",
-                    textAlign:
-                        TextAlign.center, 
-                    style: TextStyles
-                        .ubuntu14black55w400, 
+                Positioned(
+                  bottom: 140,
+                  child: SvgPicture.asset(
+                    'assets/icons/cruise_background.svg',
+                    color: const Color.fromARGB(255, 181, 235, 233),
+                  ),
+                ),
+                Positioned(
+                  bottom: 150,
+                  child: SvgPicture.asset(
+                    'assets/icons/cruise_background.svg',
+                    color: const Color.fromARGB(255, 181, 235, 233),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset('assets/icons/not_available_404.svg'),
+                        Text(
+                          "No Booking Yet",
+                          style: TextStyles.ubuntu18bluew700,
+                        ),
+                        Center(
+                          child: Text(
+                            "It looks like no bookings yet.",
+                            textAlign: TextAlign.center,
+                            style: TextStyles.ubuntu14black55w400,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
-            ),
-          ),
-        ),
-      ],
+            );
+          },
+          noInternet: (value) {
+            return Text("No Internet");
+          },
+        );
+      },
     );
   }
 }

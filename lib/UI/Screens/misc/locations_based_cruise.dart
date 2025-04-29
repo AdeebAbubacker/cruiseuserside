@@ -588,7 +588,7 @@ class _LocationsBasedCruiseScreenState
                                                   value
                                                           .cruisemodel
                                                           .data![index]
-                                                          .bookingTypes[0]
+                                                          .bookingTypes?[0]
                                                           .defaultPrice ??
                                                       "",
                                                   style: TextStyles

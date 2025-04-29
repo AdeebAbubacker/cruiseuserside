@@ -6,6 +6,7 @@ import 'package:cruise_buddy/UI/Screens/On%20Boarding/onboardingscreen_three.dar
 import 'package:cruise_buddy/UI/Screens/On%20Boarding/onboardingscreen_two.dart';
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
 import 'package:cruise_buddy/UI/Screens/layout/main_layout/main_layout.dart';
+import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:flutter/material.dart';
 
 class AppRoutes {
@@ -61,12 +62,13 @@ class AppRoutes {
     );
   }
 
-  static navigateToBoatdetailScreen(BuildContext context) {
+  static navigateToBoatdetailScreen(BuildContext context, {Datum? datum}) {
     return Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => const BoatDetailScreen(
+          builder: (context) =>  BoatDetailScreen(
                 packageId: '51',
+                datum: datum,
               )),
     );
   }

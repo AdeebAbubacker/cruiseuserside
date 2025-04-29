@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cruise_buddy/core/constants/functions/connection/connectivity_checker.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/booking_response_model/booking_response_model.dart';
+import 'package:cruise_buddy/core/model/my_bookings_model/my_bookings_model.dart';
 
 import 'package:cruise_buddy/core/model/posted_favouritem_item_model/posted_favouritem_item_model.dart';
 import 'package:dartz/dartz.dart';
@@ -93,4 +94,53 @@ class BookingService {
       return Left('Error: $e');
     }
   }
+
+    Future<Either<String, MyBookingsModel>> getMyBookings(
+      {String? locationName}) async {
+    try {
+      final hasInternet = await _connectivityChecker.hasInternetAccess();
+      if (!hasInternet) {
+        print("No internet connection");
+        return const Left('No internet connection');
+      }
+
+      final token = await GetSharedPreferences.getAccessToken();
+
+      if (token == null) {
+        print('No access token found.');
+        return const Left('No access token found.');
+      }
+
+      // Add headers
+      _headers['Authorization'] = 'Bearer $token';
+      _headers['CRUISE_AUTH_KEY'] =
+          '16|OJfQtxaw6r4MBeEQ4JLzIT1m4UClhdUhvK3zNVJ7e01d3d19';
+
+      // Build URL with query parameter
+      final uri = Uri.parse(
+          '$url/booking?include=package.cruise.owner,package.cruise.cruisesImages');
+
+      final response = await http.get(uri, headers: _headers).timeout(
+        Duration(seconds: 10),
+        onTimeout: () {
+          throw TimeoutException('The request timed out.');
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = json.decode(response.body);
+        final locationDetails = MyBookingsModel.fromJson(data);
+        print(locationDetails.data?.length);
+        return Right(locationDetails);
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        return Left('Failed to fetch location details: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      return Left('Error: $e');
+    }
+  }
+
 }

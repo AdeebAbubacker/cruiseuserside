@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
+
 CruiseModel cruiseModelFromJson(String str) => CruiseModel.fromJson(json.decode(str));
 
 String cruiseModelToJson(CruiseModel data) => json.encode(data.toJson());
@@ -32,65 +34,6 @@ class CruiseModel {
     };
 }
 
-class Datum {
-    int id;
-    String name;
-    String description;
-    bool isActive;
-    int cruiseId;
-    List<DatumImage> images;
-    Cruise cruise;
-    List<Amenity> amenities;
-    List<dynamic> food;
-    List<dynamic> itineraries;
-    List<BookingType> bookingTypes;
-    List<dynamic> unavailableDate;
-
-    Datum({
-        required this.id,
-        required this.name,
-        required this.description,
-        required this.isActive,
-        required this.cruiseId,
-        required this.images,
-        required this.cruise,
-        required this.amenities,
-        required this.food,
-        required this.itineraries,
-        required this.bookingTypes,
-        required this.unavailableDate,
-    });
-
-    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        id: json["id"],
-        name: json["name"],
-        description: json["description"],
-        isActive: json["isActive"],
-        cruiseId: json["cruiseId"],
-        images: List<DatumImage>.from(json["images"].map((x) => DatumImage.fromJson(x))),
-        cruise: Cruise.fromJson(json["cruise"]),
-        amenities: List<Amenity>.from(json["amenities"].map((x) => Amenity.fromJson(x))),
-        food: List<dynamic>.from(json["food"].map((x) => x)),
-        itineraries: List<dynamic>.from(json["itineraries"].map((x) => x)),
-        bookingTypes: List<BookingType>.from(json["bookingTypes"].map((x) => BookingType.fromJson(x))),
-        unavailableDate: List<dynamic>.from(json["unavailableDate"].map((x) => x)),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "description": description,
-        "isActive": isActive,
-        "cruiseId": cruiseId,
-        "images": List<dynamic>.from(images.map((x) => x.toJson())),
-        "cruise": cruise.toJson(),
-        "amenities": List<dynamic>.from(amenities.map((x) => x.toJson())),
-        "food": List<dynamic>.from(food.map((x) => x)),
-        "itineraries": List<dynamic>.from(itineraries.map((x) => x)),
-        "bookingTypes": List<dynamic>.from(bookingTypes.map((x) => x.toJson())),
-        "unavailableDate": List<dynamic>.from(unavailableDate.map((x) => x)),
-    };
-}
 
 class Amenity {
     int id;

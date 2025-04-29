@@ -787,6 +787,7 @@ class _CategoriesListResultscreenState
                                                                         builder: (context) =>
                                                                             BoatDetailScreen(
                                                                               packageId: '51',
+                                                                             datum: value.packagesearchresults.data?[index] 
                                                                             )));
                                                               },
                                                               style:
