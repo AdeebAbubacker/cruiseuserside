@@ -509,6 +509,31 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                             ),
                                                           ),
                                                         ),
+                                                        Positioned(
+                                                            top: 10,
+                                                            left: 10,
+                                                            child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .circular(
+                                                                        6,
+                                                                      )),
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                        8.0),
+                                                                child: Text(
+                                                                  "${value.featuredBoats.data?[index].name}",
+                                                                  style: TextStyles
+                                                                      .ubuntu12blue23w700,
+                                                                ),
+                                                              ),
+                                                            )),
                                                       ],
                                                     ),
                                                   ),

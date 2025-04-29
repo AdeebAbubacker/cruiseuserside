@@ -208,7 +208,7 @@ class _CategoriesSectionState extends State<CategoriesSection> {
                                 ),
                                 SizedBox(height: 10),
                                 Text(
-                                  "sss",
+                                  "",
                                   style: TextStyles.ubuntu16blue86w500,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
@@ -261,8 +261,8 @@ class _CategoriesSectionState extends State<CategoriesSection> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => CategoriesListResultscreen(
-                                category:
-                                    '${openCruiseTypes?[index].type}',location: '',
+                                category: '${openCruiseTypes?[index].type}',
+                                location: '',
                               ),
                             ),
                           );

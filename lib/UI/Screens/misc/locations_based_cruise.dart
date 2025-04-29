@@ -357,7 +357,7 @@ class _LocationsBasedCruiseScreenState
                         shrinkWrap: true,
                         physics: const BouncingScrollPhysics(),
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        itemCount: value.cruisemodel.data?.length,
+                        itemCount: value.cruisemodel.data.length,
                         itemBuilder: (context, index) {
                           final packageId =
                               '${value.cruisemodel.data?[index].id}';
@@ -376,6 +376,13 @@ class _LocationsBasedCruiseScreenState
                           //           .toString() ??
                           //       "",
                           // );
+                          final imageUrl = value.cruisemodel.data?[index]
+                                      ?.cruise?.images?.isNotEmpty ==
+                                  true
+                              ? value.cruisemodel.data![index].cruise!
+                                  .images![0].cruiseImg
+                                  ?.toString()
+                              : null;
                           return GestureDetector(
                             child: Card(
                               color: Color(0xffFFFFFF),
@@ -390,22 +397,33 @@ class _LocationsBasedCruiseScreenState
                                   Stack(
                                     children: [
                                       ClipRRect(
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(13),
-                                            topRight: Radius.circular(13),
-                                          ),
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(13),
+                                          topRight: Radius.circular(13),
+                                        ),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height:
+                                              160, // Single height control here
+                                          color: Colors.grey[
+                                              200], // Optional background for error/loading states
                                           child: Image.network(
-                                            value
-                                                    .cruisemodel
-                                                    .data![index]
-                                                    .cruise
-                                                    ?.images?[0]
-                                                    .cruiseImg
-                                                    .toString() ??
-                                                "",
-                                            width: double.infinity,
-                                            height: 160,
+                                            imageUrl ??
+                                                'https://via.placeholder.com/150',
                                             fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                width: double.infinity,
+                                                height: 160,
+                                                color: Colors.grey[300],
+                                                child: const Center(
+                                                  child: Icon(
+                                                      Icons.image_not_supported,
+                                                      size: 50),
+                                                ),
+                                              );
+                                            },
                                             loadingBuilder: (context, child,
                                                 loadingProgress) {
                                               if (loadingProgress == null) {
@@ -414,28 +432,16 @@ class _LocationsBasedCruiseScreenState
                                               return Container(
                                                 width: double.infinity,
                                                 height: 160,
-                                                color: Colors.grey[
-                                                    300], // Placeholder background
+                                                color: Colors.grey[300],
                                                 child: const Center(
-                                                    child:
-                                                        CircularProgressIndicator()),
-                                              );
-                                            },
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return Container(
-                                                width: double.infinity,
-                                                height: 160,
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: AssetImage(
-                                                        'assets/image/boat_details_img/boat_detail_img.png'),
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                                  child:
+                                                      CircularProgressIndicator(),
                                                 ),
                                               );
                                             },
-                                          )),
+                                          ),
+                                        ),
+                                      ),
                                       Positioned(
                                         top: 10,
                                         right: 10,
@@ -579,7 +585,12 @@ class _LocationsBasedCruiseScreenState
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "₹5000",
+                                                  value
+                                                          .cruisemodel
+                                                          .data![index]
+                                                          .bookingTypes[0]
+                                                          .defaultPrice ??
+                                                      "",
                                                   style: TextStyles
                                                       .ubuntu18bluew700,
                                                 ),

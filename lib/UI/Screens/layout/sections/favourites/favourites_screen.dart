@@ -337,6 +337,23 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                               ),
                             ),
                           ),
+                          Positioned(
+                              top: 10,
+                              left: 10,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(
+                                      6,
+                                    )),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "${favourite?.package?.name ?? ""}",
+                                    style: TextStyles.ubuntu12blue23w700,
+                                  ),
+                                ),
+                              )),
                         ],
                       ),
                       Padding(
@@ -359,7 +376,8 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              "${snapshot.data?.data?[0].package?.name}",
+                              "${snapshot.data?.data?[0].package?.name}" ??
+                                  "N/A",
                               style: TextStyles.ubuntu16black15w500,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
