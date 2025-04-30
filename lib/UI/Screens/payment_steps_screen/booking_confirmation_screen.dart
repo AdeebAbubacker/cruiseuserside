@@ -2,7 +2,9 @@ import 'package:cruise_buddy/UI/Screens/payment_steps_screen/select_payment_meth
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/rectangle_bluebutton_loading.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/model/category_search_model/category_search_model.dart';
 import 'package:cruise_buddy/core/view_model/bookMyCruise/book_my_cruise_bloc.dart';
+import 'package:cruise_buddy/core/view_model/viewMyPackage/view_my_package_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -31,6 +33,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      BlocProvider.of<ViewMyPackageBloc>(context)
+          .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
+    });
   }
 
   @override
@@ -99,11 +105,11 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
   int _currentPage = 0;
   String _selectedCruiseType = 'Day Cruise';
-  int _numRooms = 2;
+  int _numRooms = 1;
   int _day = 1;
-  int _numAdults = 2;
-  int _numKids = 2;
-  DateTime _selectedDate = DateTime(2029, 12, 2);
+  int _numAdults = 1;
+  int _numKids = 0;
+  DateTime _selectedDate = DateTime.now();
   String _location = "Kottayam";
   int _nonVegCount = 2;
   int _vegCount = 2;
@@ -118,48 +124,76 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   bool _isEditingBoatDetails = false;
   bool _isEditingPassengers = false;
   bool _isEditingDate = false;
-  bool _isEditingLocation = false;
 
   final List<String> _images = [
     'assets/image/boat_details_img/boat_detail_img.png',
     'assets/image/boat_details_img/boat_detail_img.png',
     'assets/image/boat_details_img/boat_detail_img.png'
   ];
+  int maxAdults = 1; // default fallback
+  int maxRooms = 1;
+  List<UnavailableDate> unavailableDate = [];
   @override
   Widget build(BuildContext context) {
-    return BlocListener<BookMyCruiseBloc, BookMyCruiseState>(
-      listener: (context, state) {
-        state.mapOrNull(
-          loading: (value) {
-            setState(() => _isLoading = true);
-          },
-          getBookedBoats: (value) {
-            setState(() => _isLoading = false);
-            print(value.bookingresponse.booking?.orderId);
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<BookMyCruiseBloc, BookMyCruiseState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              loading: (value) {
+                setState(() => _isLoading = true);
+              },
+              getBookedBoats: (value) {
+                setState(() => _isLoading = false);
+                print(value.bookingresponse.booking?.orderId);
 
-            print("deey");
-            openCheckout(
-                orderid: value.bookingresponse.booking?.orderId
-                    .toString()); // Call Razorpay on success
-          },
-          getBookedFailure: (value) {
-            setState(() => _isLoading = false);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text(
-                      "Booking failed, your cruise is not available in this date")),
+                print("deey");
+                openCheckout(
+                    orderid: value.bookingresponse.booking?.orderId
+                        .toString()); // Call Razorpay on success
+              },
+              getBookedFailure: (value) {
+                setState(() => _isLoading = false);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text(
+                          "Booking failed, your cruise is not available in this date")),
+                );
+              },
+              noInternet: (value) {
+                setState(() => _isLoading = false);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("No internet connection")),
+                );
+              },
             );
           },
-          noInternet: (value) {
-            setState(() => _isLoading = false);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("No internet connection")),
+        ),
+        BlocListener<ViewMyPackageBloc, ViewMyPackageState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              viewMyPacakge: (value) {
+                setState(() {
+                  maxRooms = value.mybookingmodel.data?.cruise?.rooms ?? 1;
+                  maxAdults =
+                      value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
+                  final List<dynamic>? rawList =
+                      value.mybookingmodel.data?.unavailableDate;
+
+                  unavailableDate = rawList
+                          ?.map((e) => UnavailableDate.fromJson(
+                              e as Map<String, dynamic>))
+                          .toList() ??
+                      [];
+                });
+              },
             );
           },
-        );
-      },
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
+          forceMaterialTransparency: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () => Navigator.of(context).pop(),
@@ -247,8 +281,14 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                           }
                         },
                       ),
-                      _buildNumericInput('No of Rooms', _numRooms,
-                          (value) => setState(() => _numRooms = value)),
+                      _buildNumericInput(
+                        'No of Rooms',
+                        _numRooms,
+                        (value) => setState(
+                          () => _numRooms = value,
+                        ),
+                        max: maxRooms,
+                      ),
                       _buildNumericInput(
                           'Day', _day, (value) => setState(() => _day = value)),
                     ],
@@ -266,10 +306,19 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                     onTap: () => setState(
                         () => _isEditingPassengers = !_isEditingPassengers),
                     editingWidgets: [
-                      _buildNumericInput('Adults', _numAdults,
-                          (value) => setState(() => _numAdults = value)),
-                      _buildNumericInput('Kids', _numKids,
-                          (value) => setState(() => _numKids = value)),
+                      _buildNumericInput(
+                        'Adults',
+                        _numAdults,
+                        (value) => setState(() => _numAdults = value),
+                        max: maxAdults,
+                      ),
+                      _buildNumericInput(
+                        'Kids',
+                        _numKids,
+                        (value) => setState(
+                          () => _numKids = value,
+                        ),
+                      ),
                     ],
                     displayWidgets: [
                       _buildDetailRowWithIcon('Adults', _numAdults.toString(),
@@ -317,24 +366,6 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                     displayWidgets: [
                       _buildDetailRow('Date',
                           DateFormat('dd/MM/yyyy').format(_selectedDate)),
-                    ],
-                  ),
-
-                  // Location Section
-                  _buildEditableSection(
-                    title: 'Location',
-                    isEditing: _isEditingLocation,
-                    onTap: () => setState(
-                        () => _isEditingLocation = !_isEditingLocation),
-                    editingWidgets: [
-                      TextField(
-                        onChanged: (value) => _location = value,
-                        decoration:
-                            const InputDecoration(hintText: 'Enter Location'),
-                      ),
-                    ],
-                    displayWidgets: [
-                      _buildDetailRow('Location', _location),
                     ],
                   ),
 
@@ -389,7 +420,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                 String formattedDate = DateFormat('yyyy-MM-dd')
                                     .format(_selectedDate);
 
-                                print('ddddddddddddd $formattedDate');
+                                print('ddddddddddddd ');
                                 context
                                     .read<BookMyCruiseBloc>()
                                     .add(BookMyCruiseEvent.createNewbookings(
@@ -403,6 +434,13 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                 ],
               ),
             ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: unavailableDate.length,
+              itemBuilder: (context, index) {
+                return Text("d ${unavailableDate[index].startDate}");
+              },
+            )
           ],
         ),
       ),
@@ -410,7 +448,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   }
 
   Widget _buildNumericInput(
-      String label, int value, ValueChanged<int> onChanged) {
+      String label, int value, ValueChanged<int> onChanged,
+      {int? max}) {
     return Row(
       children: [
         Padding(
@@ -428,7 +467,18 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
         Text('$value'),
         IconButton(
           icon: Icon(Icons.add),
-          onPressed: () => onChanged(value + 1),
+          onPressed: () {
+            if (max != null && value >= max) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Maximum $label reached'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            } else {
+              onChanged(value + 1);
+            }
+          },
         ),
       ],
     );
@@ -449,6 +499,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       ],
     );
   }
+
 //-------------------
   Widget _buildEditableSection({
     required String title,
