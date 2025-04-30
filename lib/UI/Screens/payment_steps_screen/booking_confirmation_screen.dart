@@ -2,7 +2,7 @@ import 'package:cruise_buddy/UI/Screens/payment_steps_screen/select_payment_meth
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/rectangle_bluebutton_loading.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
-import 'package:cruise_buddy/core/model/category_search_model/category_search_model.dart';
+import 'package:cruise_buddy/core/model/viewmy_package_model/unavailable_date.dart';
 import 'package:cruise_buddy/core/view_model/bookMyCruise/book_my_cruise_bloc.dart';
 import 'package:cruise_buddy/core/view_model/viewMyPackage/view_my_package_bloc.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +103,11 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     );
   }
 
+  int parsePrice(String? priceString) {
+    if (priceString == null) return 0;
+    return int.tryParse(priceString.split('.').first) ?? 0;
+  }
+
   int _currentPage = 0;
   String _selectedCruiseType = 'Day Cruise';
   int _numRooms = 1;
@@ -133,6 +138,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   int maxAdults = 1; // default fallback
   int maxRooms = 1;
   List<UnavailableDate> unavailableDate = [];
+  int defaultPrice = 0;
+  int totalPrice = 0;
+  int pricePerDay = 0;
+  int pricePerPerson = 0;
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -177,14 +186,25 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                   maxRooms = value.mybookingmodel.data?.cruise?.rooms ?? 1;
                   maxAdults =
                       value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
-                  final List<dynamic>? rawList =
-                      value.mybookingmodel.data?.unavailableDate;
 
-                  unavailableDate = rawList
-                          ?.map((e) => UnavailableDate.fromJson(
-                              e as Map<String, dynamic>))
-                          .toList() ??
-                      [];
+                  unavailableDate =
+                      value.mybookingmodel.data?.unavailableDate ?? [];
+                  defaultPrice = parsePrice(
+                    value.mybookingmodel?.data?.bookingTypes?[0].defaultPrice
+                        .toString(),
+                  );
+
+                  pricePerDay = parsePrice(value
+                          .mybookingmodel?.data?.bookingTypes?[0].pricePerDay
+                          ?.toString() ??
+                      '');
+                  pricePerPerson = parsePrice(value
+                          .mybookingmodel?.data?.bookingTypes?[0].pricePerPerson
+                          ?.toString() ??
+                      '');
+                  print(
+                      "defaultprice is ${value.mybookingmodel?.data?.bookingTypes?[0].defaultPrice?.toString()}");
+                  totalPrice = defaultPrice + pricePerPerson * 1;
                 });
               },
             );
@@ -309,7 +329,13 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       _buildNumericInput(
                         'Adults',
                         _numAdults,
-                        (value) => setState(() => _numAdults = value),
+                        (value) {
+                          setState(() {
+                            _numAdults = value;
+                            totalPrice = (defaultPrice ?? 0) +
+                                (_numAdults * (pricePerPerson ?? 1));
+                          });
+                        },
                         max: maxAdults,
                       ),
                       _buildNumericInput(
@@ -330,6 +356,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
                   // Date
                   _buildEditableSection(
+                    unavailable_date: unavailableDate,
                     title: 'Date',
                     isEditing: _isEditingDate,
                     onTap: () =>
@@ -399,15 +426,12 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                   const Text('Grand Total',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-                  _buildDetailRow('Charges for the day',
-                      '₹${_chargesForTheDay.toStringAsFixed(2)}'),
-                  _buildDetailRow('Tax', '₹${_tax.toStringAsFixed(2)}'),
+                  _buildDetailRow('Charges for the trip', '₹${defaultPrice}'),
+                  _buildDetailRow('Price Per Person', '₹${pricePerPerson}'),
                   _buildDetailRow(
                       'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
                   _buildDetailRow('Others', '₹${_others.toStringAsFixed(2)}'),
-                  _buildDetailRow('Total',
-                      '₹${(_chargesForTheDay + _tax - _discounts + _others).toStringAsFixed(2)}',
-                      isTotal: true),
+                  _buildDetailRow('Total', '₹${totalPrice}', isTotal: true),
 
                   const SizedBox(height: 20),
                   BlocBuilder<BookMyCruiseBloc, BookMyCruiseState>(
@@ -434,13 +458,6 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                 ],
               ),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: unavailableDate.length,
-              itemBuilder: (context, index) {
-                return Text("d ${unavailableDate[index].startDate}");
-              },
-            )
           ],
         ),
       ),
@@ -502,6 +519,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
 //-------------------
   Widget _buildEditableSection({
+    List<UnavailableDate>? unavailable_date,
     required String title,
     required bool isEditing,
     required VoidCallback onTap,
