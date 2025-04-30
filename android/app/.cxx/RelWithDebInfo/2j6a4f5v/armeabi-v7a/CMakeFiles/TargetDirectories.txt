@@ -1,0 +1,2 @@
+/Users/slbs/Desktop/userapp/cruiseuserside/android/app/.cxx/RelWithDebInfo/2j6a4f5v/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/slbs/Desktop/userapp/cruiseuserside/android/app/.cxx/RelWithDebInfo/2j6a4f5v/armeabi-v7a/CMakeFiles/rebuild_cache.dir

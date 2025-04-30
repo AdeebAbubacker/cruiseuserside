@@ -53,28 +53,47 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     String? orderid,
     required int totalamount,
   }) {
+    // var options = {
+    //   'key': 'rzp_live_9YK0kUaQLzZd55',
+    //   'amount': '100', // Amount should be in paise (e.g., 100 = 1 INR)
+    //   'currency': 'INR',
+    //   'name': 'Cruise Buddy',
+    //   'order_id': orderid ?? "order_PvwS5g5uKP5e4m",
+    //   'description': 'Premium House Boat',
+    //   'retry': {'enabled': true, 'max_count': 1},
+    //   'send_sms_hash': true,
+    //   'prefill': {
+    //     'contact': '8848055651',
+    //     'email': 'test@razorpay.com',
+    //   },
+    //   'external': {
+    //     'wallets': ['paytm'],
+    //   }
+    // };
     var options = {
-      'key': 'rzp_test_FHMbJJb5sxQ1Cu',
-      'amount':
-          totalPrice * 100, // Amount should be in paise (e.g., 100 = 1 INR)
-      'name': 'Cruise Buddy',
-      'order_id': orderid ?? "order_PvwS5g5uKP5e4m",
-      'description': 'Premium House Boat',
-      'retry': {'enabled': true, 'max_count': 1},
-      'send_sms_hash': true,
+      'key': 'rzp_live_ZAFN8qKXodIxis',
+      'amount': '100',
+      'currency': 'INR',
+      'name': 'Test',
+      'description': 'Course' ' ' + 'Fee',
+      'order_id': orderid,
       'prefill': {
         'contact': '8848055651',
-        'email': 'test@razorpay.com',
+        'email': 'test@gmail.com',
       },
-      'external': {
-        'wallets': ['paytm'],
-      }
+      'method': {
+        'upi': true,
+        'netbanking': false,
+        'wallet': false,
+      },
+      'theme': {'color': '#FFD700'},
+      'redirect': true,
     };
 
     try {
       _razorpay.open(options);
     } catch (e) {
-      debugPrint("Error: $e");
+      debugPrint("-----------Error: $e");
     }
   }
 
@@ -167,7 +186,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
               },
               getBookedBoats: (value) {
                 setState(() => _isLoading = false);
-                print(value.bookingresponse.booking?.orderId);
+                print('order id ${value.bookingresponse.booking?.orderId}');
 
                 print("deey");
                 openCheckout(
