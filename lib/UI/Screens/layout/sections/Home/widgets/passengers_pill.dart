@@ -3,7 +3,8 @@ import 'package:flutter_svg/svg.dart';
 
 class PassengersPill extends StatefulWidget {
   final String image;
-  final ValueChanged<int> onChanged; // Callback to notify parent of value changes
+  final ValueChanged<int>
+      onChanged; // Callback to notify parent of value changes
 
   const PassengersPill({
     super.key,

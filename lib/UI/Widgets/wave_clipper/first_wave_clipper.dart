@@ -1,5 +1,3 @@
-
-
 import 'dart:math';
 import 'dart:ui';
 
@@ -19,7 +17,8 @@ class FirstWaveClipper extends CustomClipper<Path> {
     final waveLength = size.width;
 
     // Calculate the dynamic vertical position
-    double verticalPosition = lerpDouble(size.height * 0.98, -55, waveProgress)!;
+    double verticalPosition =
+        lerpDouble(size.height * 0.98, -55, waveProgress)!;
 
     // Starting point
     path.moveTo(0, verticalPosition);

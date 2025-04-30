@@ -35,7 +35,6 @@ class AmenitiesPill extends StatelessWidget {
             width: 14,
             height: 14,
           ),
-
           SizedBox(width: 4),
           Text(
             text,

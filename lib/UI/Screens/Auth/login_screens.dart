@@ -21,14 +21,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-   @override
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       checkForUpdate();
     });
   }
-   Future<void> checkForUpdate() async {
+
+  Future<void> checkForUpdate() async {
     try {
       final updateInfo = await InAppUpdate.checkForUpdate();
 
@@ -37,6 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {}
   }
+
   String? userEmail;
 
   // Google Sign-In Function
@@ -558,7 +560,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
 
 //  SHA1: 0D:0E:CD:12:74:95:1C:4E:2B:CA:14:55:4F:DE:0C:E7:C3:38:7A:77
 // SHA256: E5:C5:06:8E:9B:AC:A6:01:3D:FA:E3:DB:99:54:A0:A9:A1:10:58:E7:ED:BC:D9:82:0B:FA:3F:E7:4F:01:C3:6B

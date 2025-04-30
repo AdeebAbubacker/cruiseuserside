@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class MultiplebookingDateselection extends StatefulWidget {
-  final Function(DateTime, DateTime) onDateRangeSelected; // Callback for the selected date range
+  final Function(DateTime, DateTime)
+      onDateRangeSelected; // Callback for the selected date range
 
-  const MultiplebookingDateselection({super.key, required this.onDateRangeSelected});
+  const MultiplebookingDateselection(
+      {super.key, required this.onDateRangeSelected});
 
   @override
   State<MultiplebookingDateselection> createState() =>
@@ -76,7 +78,8 @@ class _MultiplebookingDateselectionState
                       startDate = DateTime.now();
                       endDate = DateTime.now();
                     });
-                    widget.onDateRangeSelected(startDate, endDate); // Clear the range
+                    widget.onDateRangeSelected(
+                        startDate, endDate); // Clear the range
                   },
                 ),
               IconButton(

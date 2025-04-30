@@ -1,4 +1,3 @@
-
 import 'package:cruise_buddy/core/constants/colors/app_colors.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/routes/app_routes.dart';

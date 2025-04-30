@@ -1,7 +1,6 @@
 import 'package:cruise_buddy/core/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
-
 class OnboardingScreenOne extends StatefulWidget {
   const OnboardingScreenOne({super.key});
 
@@ -110,7 +109,7 @@ class _OnboardingScreenOneState extends State<OnboardingScreenOne>
                               icon: const Icon(Icons.arrow_forward,
                                   color: Colors.white),
                               onPressed: () {
-                               AppRoutes.navigateToOnboardingTwo(context);
+                                AppRoutes.navigateToOnboardingTwo(context);
                               },
                             ),
                           ),
@@ -144,6 +143,3 @@ class _OnboardingScreenOneState extends State<OnboardingScreenOne>
     );
   }
 }
-
-
-

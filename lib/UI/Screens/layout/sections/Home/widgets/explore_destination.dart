@@ -199,7 +199,8 @@ class _ExploreDestinationWidgetState extends State<ExploreDestinationWidget> {
                           location:
                               value.locationmodel.data![index].name.toString(),
                           pacakgeId:
-                              value.locationmodel.data?[index].id.toString() ?? "51",
+                              value.locationmodel.data?[index].id.toString() ??
+                                  "51",
                         );
                       },
                     ));

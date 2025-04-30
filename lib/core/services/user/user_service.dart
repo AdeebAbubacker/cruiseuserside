@@ -90,10 +90,11 @@ class UserService {
       if (phone != null) {
         request.fields['phone'] = phone;
       }
-     if (image != null && image.isNotEmpty) {
-      final file = File(image); // convert string path to File
-      request.files.add(await http.MultipartFile.fromPath('image', file.path));
-    }
+      if (image != null && image.isNotEmpty) {
+        final file = File(image); // convert string path to File
+        request.files
+            .add(await http.MultipartFile.fromPath('image', file.path));
+      }
 
       request.headers.addAll({
         'Accept': 'application/json',

@@ -784,11 +784,11 @@ class _CategoriesListResultscreenState
                                                                 Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
-                                                                        builder: (context) =>
-                                                                            BoatDetailScreen(
-                                                                              packageId: '51',
-                                                                             datum: value.packagesearchresults.data?[index] 
-                                                                            )));
+                                                                        builder: (context) => BoatDetailScreen(
+                                                                            packageId:
+                                                                                '51',
+                                                                            datum:
+                                                                                value.packagesearchresults.data?[index])));
                                                               },
                                                               style:
                                                                   ElevatedButton

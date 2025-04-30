@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:in_app_update/in_app_update.dart';
+
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
 

@@ -20,10 +20,10 @@ class GetSeachedCruiseresultsBloc
           location: event.location,
           maxAmount: event.maxAmount,
           minAmount: event.minAmount,
-         // bookingType: "closed",
+          // bookingType: "closed",
           // premiumOrDeluxe: event.premiumOrDeluxe,
           //cruiseModelName: event.typeOfCruise,
-           startDate: event.startDate,
+          startDate: event.startDate,
           endDate: event.endDate,
         );
 

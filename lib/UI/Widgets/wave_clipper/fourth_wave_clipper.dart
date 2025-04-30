@@ -3,8 +3,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-
-
 class FourthWaveClipper extends CustomClipper<Path> {
   final double waveProgress;
   final double waveHeight;
@@ -19,7 +17,8 @@ class FourthWaveClipper extends CustomClipper<Path> {
     final waveLength = size.width;
 
     // Calculate the dynamic vertical position
-    double verticalPosition = lerpDouble(size.height * 0.76, -55, waveProgress)!;
+    double verticalPosition =
+        lerpDouble(size.height * 0.76, -55, waveProgress)!;
 
     // Starting point
     path.moveTo(0, verticalPosition);

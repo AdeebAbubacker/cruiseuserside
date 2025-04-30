@@ -7,7 +7,7 @@ class FullWidthRectangleBlueButton extends StatelessWidget {
   const FullWidthRectangleBlueButton({
     super.key,
     required this.text,
-     this.onPressed,
+    this.onPressed,
   });
 
   @override

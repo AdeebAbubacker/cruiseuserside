@@ -18,13 +18,13 @@ class GetSeachedCruiseresultsEvent with _$GetSeachedCruiseresultsEvent {
   }) = _GetSeachedCruiseresultsEvent;
 }
 
-  // final String? filterCriteria;
-  // final String? location;
-  // final String? startDate;
-  // final String? endDate;
-  // final String? maxAmount;
-  // final String? minAMount;
-  // final String? typeOfCruise;
-  // final String? noOfPassengers;
-  // final String? noOfRooms;
-  // final String? premiumOrDeluxe;
+// final String? filterCriteria;
+// final String? location;
+// final String? startDate;
+// final String? endDate;
+// final String? maxAmount;
+// final String? minAMount;
+// final String? typeOfCruise;
+// final String? noOfPassengers;
+// final String? noOfRooms;
+// final String? premiumOrDeluxe;

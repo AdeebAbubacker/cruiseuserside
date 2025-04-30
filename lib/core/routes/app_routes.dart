@@ -66,7 +66,7 @@ class AppRoutes {
     return Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>  BoatDetailScreen(
+          builder: (context) => BoatDetailScreen(
                 packageId: '51',
                 datum: datum,
               )),

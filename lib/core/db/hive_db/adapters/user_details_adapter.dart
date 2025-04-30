@@ -1,4 +1,3 @@
-
 import 'package:hive_flutter/hive_flutter.dart';
 part 'user_details_adapter.g.dart';
 

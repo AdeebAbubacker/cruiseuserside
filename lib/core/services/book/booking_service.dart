@@ -95,7 +95,7 @@ class BookingService {
     }
   }
 
-    Future<Either<String, MyBookingsModel>> getMyBookings(
+  Future<Either<String, MyBookingsModel>> getMyBookings(
       {String? locationName}) async {
     try {
       final hasInternet = await _connectivityChecker.hasInternetAccess();
@@ -142,5 +142,4 @@ class BookingService {
       return Left('Error: $e');
     }
   }
-
 }
