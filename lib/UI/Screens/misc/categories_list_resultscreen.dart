@@ -22,6 +22,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../core/model/featured_boats_model/featured_boats_model.dart';
+
 class CategoriesListResultscreen extends StatefulWidget {
   final String category;
   final String location;
@@ -784,11 +786,11 @@ class _CategoriesListResultscreenState
                                                                 Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
-                                                                        builder: (context) => BoatDetailScreen(
-                                                                            packageId:
-                                                                                '51',
-                                                                            datum:
-                                                                                value.packagesearchresults.data?[index])));
+                                                                        builder: (context) =>
+                                                                            BoatDetailScreen(
+                                                                              packageId: value.packagesearchresults.data?[index].id.toString() ?? "53",
+                                                                              datum: value.packagesearchresults.data?[index] ?? Datum(),
+                                                                            )));
                                                               },
                                                               style:
                                                                   ElevatedButton

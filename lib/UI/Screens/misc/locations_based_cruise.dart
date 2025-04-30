@@ -617,6 +617,9 @@ class _LocationsBasedCruiseScreenState
                                                             BoatDetailScreen(
                                                               packageId: widget
                                                                   .pacakgeId,
+                                                              datum: value
+                                                                  .cruisemodel
+                                                                  .data[index],
                                                             )));
                                               },
                                               style: ElevatedButton.styleFrom(

@@ -1,5 +1,6 @@
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -167,6 +168,7 @@ class SearchResultsContainer extends StatelessWidget {
                               MaterialPageRoute(
                                   builder: (context) => BoatDetailScreen(
                                         packageId: '51',
+                                        datum: Datum(),
                                       )));
                         },
                         style: ElevatedButton.styleFrom(

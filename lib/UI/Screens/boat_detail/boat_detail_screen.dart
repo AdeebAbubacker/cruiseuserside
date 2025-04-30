@@ -14,8 +14,9 @@ import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
 class BoatDetailScreen extends StatefulWidget {
   final String packageId;
-  final Datum? datum;
-  const BoatDetailScreen({super.key, required this.packageId, this.datum});
+  final Datum datum;
+  const BoatDetailScreen(
+      {super.key, required this.packageId, required this.datum});
 
   @override
   State<BoatDetailScreen> createState() => _BoatDetailScreenState();
@@ -278,8 +279,11 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   SizedBox(height: 16),
                   Row(
                     children: [
-                      SvgPicture.asset(
-                          'assets/image/boat_details_img/cruise_ship_logo.svg'),
+                      CircleAvatar(
+                        radius: 17.5, // half of 35
+                        backgroundImage: AssetImage('assets/Applogo.png'),
+                        backgroundColor: Colors.transparent,
+                      ),
                       SizedBox(width: 12),
                       Text(
                         'Cruise Ship',
@@ -454,6 +458,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                           MaterialPageRoute(
                               builder: (context) => BookingconfirmationScreen(
                                     packageId: widget.packageId,
+                                    datum: widget.datum,
                                   )));
                     },
                     text: 'Book Now',

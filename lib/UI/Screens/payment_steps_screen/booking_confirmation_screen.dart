@@ -10,12 +10,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:table_calendar/table_calendar.dart';
+import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
 class BookingconfirmationScreen extends StatefulWidget {
   final String packageId;
+  final Datum datum;
   const BookingconfirmationScreen({
     super.key,
     required this.packageId,
+    required this.datum,
   });
 
   @override
@@ -45,10 +49,14 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     super.dispose();
   }
 
-  void openCheckout({String? orderid}) {
+  void openCheckout({
+    String? orderid,
+    required int totalamount,
+  }) {
     var options = {
       'key': 'rzp_test_FHMbJJb5sxQ1Cu',
-      'amount': 100, // Amount should be in paise (e.g., 100 = 1 INR)
+      'amount':
+          totalPrice * 100, // Amount should be in paise (e.g., 100 = 1 INR)
       'name': 'Cruise Buddy',
       'order_id': orderid ?? "order_PvwS5g5uKP5e4m",
       'description': 'Premium House Boat',
@@ -139,13 +147,16 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   ];
   int maxAdults = 1; // default fallback
   int maxRooms = 1;
-  List<UnavailableDate> unavailableDate = [];
+  List<UnavailableDate>? unavailableDates;
   int defaultPrice = 0;
   int totalPrice = 0;
   int pricePerDay = 0;
   int pricePerPerson = 0;
+  final List unavaibledates = [];
   @override
   Widget build(BuildContext context) {
+    unavailableDates = widget.datum.unavailableDate ?? [];
+
     return MultiBlocListener(
       listeners: [
         BlocListener<BookMyCruiseBloc, BookMyCruiseState>(
@@ -160,8 +171,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
                 print("deey");
                 openCheckout(
-                    orderid: value.bookingresponse.booking?.orderId
-                        .toString()); // Call Razorpay on success
+                    orderid: value.bookingresponse.booking?.orderId.toString(),
+                    totalamount: totalPrice); // Call Razorpay on success
               },
               getBookedFailure: (value) {
                 setState(() => _isLoading = false);
@@ -189,7 +200,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                   maxAdults =
                       value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
 
-                  unavailableDate =
+                  unavailableDates =
                       value.mybookingmodel.data?.unavailableDate ?? [];
                   defaultPrice = parsePrice(
                     value.mybookingmodel?.data?.bookingTypes?[0].defaultPrice
@@ -362,8 +373,9 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                     ),
 
                     // Date
+                    // Date section
                     _buildEditableSection(
-                      unavailable_date: unavailableDate,
+                      unavailable_date: unavailableDates,
                       title: 'Date',
                       isEditing: _isEditingDate,
                       onTap: () =>
@@ -371,39 +383,129 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       editingWidgets: [
                         GestureDetector(
                           onTap: () async {
-                            final DateTime? picked = await showDatePicker(
+                            await showDialog(
                               context: context,
-                              initialDate: _selectedDate,
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2101),
+                              builder: (context) {
+                                return AlertDialog(
+                                  contentPadding: EdgeInsets.all(12),
+                                  content: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
+                                    height: 460,
+                                    child: TableCalendar(
+                                      firstDay: DateTime(2000),
+                                      lastDay: DateTime(2101),
+                                      focusedDay: _selectedDate,
+                                      selectedDayPredicate: (day) =>
+                                          isSameDay(_selectedDate, day),
+                                      onDaySelected: (selectedDay, focusedDay) {
+                                        bool isUnavailable = unavailableDates
+                                                ?.any((range) {
+                                              if (range.startDate == null ||
+                                                  range.endDate == null)
+                                                return false;
+
+                                              return selectedDay.isAfter(
+                                                      range.startDate!.subtract(
+                                                          Duration(days: 1))) &&
+                                                  selectedDay.isBefore(range
+                                                      .endDate!
+                                                      .add(Duration(days: 1)));
+                                            }) ??
+                                            false; // If unavailableDates is null, return false
+
+                                        if (isUnavailable) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    "This date is not available.")),
+                                          );
+                                          return;
+                                        }
+
+                                        setState(() {
+                                          _selectedDate = selectedDay;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      calendarBuilders: CalendarBuilders(
+                                        defaultBuilder:
+                                            (context, day, focusedDay) {
+                                          bool isUnavailable = unavailableDates
+                                                  ?.any((range) {
+                                                if (range.startDate == null ||
+                                                    range.endDate == null)
+                                                  return false;
+                                                return day.isAfter(range
+                                                        .startDate!
+                                                        .subtract(Duration(
+                                                            days: 1))) &&
+                                                    day.isBefore(range.endDate!
+                                                        .add(
+                                                            Duration(days: 1)));
+                                              }) ??
+                                              false; // If unavailableDates is null, return false
+
+                                          if (isUnavailable) {
+                                            return Container(
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Text(
+                                                '${day.day}',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            );
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      headerStyle: HeaderStyle(
+                                        formatButtonVisible: true,
+                                        leftChevronVisible: true,
+                                        rightChevronVisible: true,
+                                        titleTextStyle: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        formatButtonShowsNext: false,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             );
-                            if (picked != null) {
-                              // Check for null here
-                              setState(() => _selectedDate = picked);
-                            }
                           },
                           child: Container(
                             height: 40,
                             width: MediaQuery.of(context).size.width * 0.8,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(36),
-                                border: Border.all(width: 1)),
+                              borderRadius: BorderRadius.circular(36),
+                              border: Border.all(width: 1),
+                            ),
                             child: Center(
                               child: Text(
                                 DateFormat('dd/MM/yyyy').format(_selectedDate),
-                                style: TextStyles.ubuntu16black15w500,
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),
                         ),
                       ],
                       displayWidgets: [
-                        _buildDetailRow('Date',
-                            DateFormat('dd/MM/yyyy').format(_selectedDate)),
+                        _buildDetailRow(
+                          'Date',
+                          DateFormat('dd/MM/yyyy').format(_selectedDate),
+                        ),
                       ],
                     ),
-
                     const SizedBox(height: 16),
+                    SizedBox(height: 16),
 
                     Text('Choose your food count',
                         style: const TextStyle(
