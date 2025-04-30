@@ -16,13 +16,14 @@ class BookMyCruiseBloc extends Bloc<BookMyCruiseEvent, BookMyCruiseState> {
       try {
         final result = await bookingService.addItemToBookeditem(
             packageId: event.packageId,
-            bookingTypeId: 'bookingTypeId',
-            vegCount: 'vegCount',
-            nonVegCount: 'nonVegCount',
-            jainVegCount: 'jainVegCount',
-            customerNote: 'customerNote',
-            startDate: event.date,
-            totalAmount: '50');
+            bookingTypeId: event.bookingtype,
+            vegCount: event.vegCount,
+            nonVegCount: event.nonVegCount,
+            jainVegCount: event.jainVegCount,
+            customerNote: event.customerNotet,
+            startDate: event.startdate,
+            endDate: event.endDate,
+            totalAmount: event.totalAmount);
 
         await result.fold((failure) async {
           if (failure == "No internet") {

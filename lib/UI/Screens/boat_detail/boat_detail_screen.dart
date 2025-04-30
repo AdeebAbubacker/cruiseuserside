@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/booking_selection_widget.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
 class BoatDetailScreen extends StatefulWidget {
@@ -59,6 +62,26 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             e.packageImg ?? 'assets/image/boat_details_img/boat_detail_img.png',
       ),
     ];
+  }
+
+  void makeCall(String number, BuildContext context) async {
+    final numberWithCountryCode =
+        number.startsWith('+') ? number : '+91$number';
+    final Uri telUri = Uri(scheme: 'tel', path: numberWithCountryCode);
+    try {
+      if (Platform.isAndroid || Platform.isIOS) {
+        await launchUrl(telUri);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Phone calls are not supported on this platform')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An unexpected error occurred: $e')),
+      );
+    }
   }
 
   @override
@@ -265,8 +288,13 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       ),
                       Spacer(),
                       SizedBox(width: 9),
-                      SvgPicture.asset(
-                          'assets/image/boat_details_img/call_icon.svg'),
+                      GestureDetector(
+                        onTap: () {
+                          makeCall('9072855886', context);
+                        },
+                        child: SvgPicture.asset(
+                            'assets/image/boat_details_img/call_icon.svg'),
+                      ),
                     ],
                   ),
                   SizedBox(height: 16),

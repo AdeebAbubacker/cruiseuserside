@@ -108,6 +108,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     return int.tryParse(priceString.split('.').first) ?? 0;
   }
 
+  FocusNode addonFocusnode = FocusNode();
+  TextEditingController addoncontroller = TextEditingController();
   int _currentPage = 0;
   String _selectedCruiseType = 'Day Cruise';
   int _numRooms = 1;
@@ -116,9 +118,9 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   int _numKids = 0;
   DateTime _selectedDate = DateTime.now();
   String _location = "Kottayam";
-  int _nonVegCount = 2;
-  int _vegCount = 2;
-  int _jainVegCount = 2;
+  int _nonVegCount = 0;
+  int _vegCount = 0;
+  int _jainVegCount = 0;
   String _addOns = '';
 
   final double _chargesForTheDay = 7000;
@@ -211,254 +213,276 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
           },
         ),
       ],
-      child: Scaffold(
-        appBar: AppBar(
-          forceMaterialTransparency: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.of(context).pop(),
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            forceMaterialTransparency: true,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ),
-        ),
-        body: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Stack(
-              children: [
-                SizedBox(
-                  height: 210,
-                  child: PageView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _images.length,
-                    onPageChanged: (int pageIndex) {
-                      setState(() {
-                        _currentPage = pageIndex;
-                      });
-                    },
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                        child: Image.asset(_images[index], fit: BoxFit.fill),
-                      );
-                    },
-                  ),
-                ),
-                Positioned(
-                  bottom: 15,
-                  left: 10,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Color(0xffE2E2E2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${_currentPage + 1}/${_images.length}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          body: ListView(
+            padding: const EdgeInsets.all(16.0),
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Stack(
                 children: [
-                  _buildEditableSection(
-                    title: 'Boat Details',
-                    isEditing: _isEditingBoatDetails,
-                    onTap: () => setState(
-                        () => _isEditingBoatDetails = !_isEditingBoatDetails),
-                    editingWidgets: [
-                      DropdownButtonFormField<String>(
-                        value: _selectedCruiseType,
-                        decoration:
-                            const InputDecoration(labelText: 'Cruise Type'),
-                        items: <String>[
-                          'Day Cruise',
-                          'Full Day Cruise',
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            setState(() {
-                              _selectedCruiseType = newValue;
-                            });
-                          }
-                        },
-                      ),
-                      _buildNumericInput(
-                        'No of Rooms',
-                        _numRooms,
-                        (value) => setState(
-                          () => _numRooms = value,
-                        ),
-                        max: maxRooms,
-                      ),
-                      _buildNumericInput(
-                          'Day', _day, (value) => setState(() => _day = value)),
-                    ],
-                    displayWidgets: [
-                      _buildDetailRow('Type of Cruise', _selectedCruiseType),
-                      _buildDetailRow('No of Rooms', _numRooms.toString()),
-                      _buildDetailRow('Day', _day.toString()),
-                    ],
-                  ),
-
-                  // Passengers Section
-                  _buildEditableSection(
-                    title: 'Number of passengers',
-                    isEditing: _isEditingPassengers,
-                    onTap: () => setState(
-                        () => _isEditingPassengers = !_isEditingPassengers),
-                    editingWidgets: [
-                      _buildNumericInput(
-                        'Adults',
-                        _numAdults,
-                        (value) {
-                          setState(() {
-                            _numAdults = value;
-                            totalPrice = (defaultPrice ?? 0) +
-                                (_numAdults * (pricePerPerson ?? 1));
-                          });
-                        },
-                        max: maxAdults,
-                      ),
-                      _buildNumericInput(
-                        'Kids',
-                        _numKids,
-                        (value) => setState(
-                          () => _numKids = value,
-                        ),
-                      ),
-                    ],
-                    displayWidgets: [
-                      _buildDetailRowWithIcon('Adults', _numAdults.toString(),
-                          'assets/icons/adult.svg'),
-                      _buildDetailRowWithIcon(
-                          'Kids', _numKids.toString(), 'assets/icons/kid.svg'),
-                    ],
-                  ),
-
-                  // Date
-                  _buildEditableSection(
-                    unavailable_date: unavailableDate,
-                    title: 'Date',
-                    isEditing: _isEditingDate,
-                    onTap: () =>
-                        setState(() => _isEditingDate = !_isEditingDate),
-                    editingWidgets: [
-                      GestureDetector(
-                        onTap: () async {
-                          final DateTime? picked = await showDatePicker(
-                            context: context,
-                            initialDate: _selectedDate,
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2101),
-                          );
-                          if (picked != null) {
-                            // Check for null here
-                            setState(() => _selectedDate = picked);
-                          }
-                        },
-                        child: Container(
-                          height: 40,
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(36),
-                              border: Border.all(width: 1)),
-                          child: Center(
-                            child: Text(
-                              DateFormat('dd/MM/yyyy').format(_selectedDate),
-                              style: TextStyles.ubuntu16black15w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    displayWidgets: [
-                      _buildDetailRow('Date',
-                          DateFormat('dd/MM/yyyy').format(_selectedDate)),
-                    ],
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  Text('Choose your food type',
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w600)),
-                  _buildFoodCounter('Non-Veg', _nonVegCount,
-                      (value) => setState(() => _nonVegCount = value)),
-                  _buildFoodCounter('Veg', _vegCount,
-                      (value) => setState(() => _vegCount = value)),
-                  _buildFoodCounter('Jain Veg', _jainVegCount,
-                      (value) => setState(() => _jainVegCount = value)),
-
-                  // Add ons
-                  const SizedBox(height: 16),
-                  const Text('Add-ons (optional)',
-                      style: TextStyle(fontSize: 16)),
-                  TextField(
-                    onChanged: (value) => _addOns = value,
-                    decoration: InputDecoration(
-                      hintText: 'Beef Biriyani',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(45)),
+                  SizedBox(
+                    height: 210,
+                    child: PageView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _images.length,
+                      onPageChanged: (int pageIndex) {
+                        setState(() {
+                          _currentPage = pageIndex;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                          child: Image.asset(_images[index], fit: BoxFit.fill),
+                        );
+                      },
                     ),
                   ),
-
-                  const SizedBox(height: 16),
-                  // Grand Total Section
-                  const Text('Grand Total',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-                  _buildDetailRow('Charges for the trip', '₹${defaultPrice}'),
-                  _buildDetailRow('Price Per Person', '₹${pricePerPerson}'),
-                  _buildDetailRow(
-                      'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
-                  _buildDetailRow('Others', '₹${_others.toStringAsFixed(2)}'),
-                  _buildDetailRow('Total', '₹${totalPrice}', isTotal: true),
-
-                  const SizedBox(height: 20),
-                  BlocBuilder<BookMyCruiseBloc, BookMyCruiseState>(
-                    builder: (context, state) {
-                      return _isLoading
-                          ? RectangleBluebuttonLoading()
-                          : FullWidthRectangleBlueButton(
-                              text: "Continue",
-                              onPressed: () {
-                                String formattedDate = DateFormat('yyyy-MM-dd')
-                                    .format(_selectedDate);
-
-                                print('ddddddddddddd ');
-                                context
-                                    .read<BookMyCruiseBloc>()
-                                    .add(BookMyCruiseEvent.createNewbookings(
-                                      packageId: widget.packageId,
-                                      date: formattedDate,
-                                    ));
-                              },
-                            );
-                    },
+                  Positioned(
+                    bottom: 15,
+                    left: 10,
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Color(0xffE2E2E2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '${_currentPage + 1}/${_images.length}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildEditableSection(
+                      title: 'Boat Details',
+                      isEditing: _isEditingBoatDetails,
+                      onTap: () => setState(
+                          () => _isEditingBoatDetails = !_isEditingBoatDetails),
+                      editingWidgets: [
+                        DropdownButtonFormField<String>(
+                          value: _selectedCruiseType,
+                          decoration:
+                              const InputDecoration(labelText: 'Cruise Type'),
+                          items: <String>[
+                            'Day Cruise',
+                            'Full Day Cruise',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            if (newValue != null) {
+                              setState(() {
+                                _selectedCruiseType = newValue;
+                              });
+                            }
+                          },
+                        ),
+                        _buildNumericInput(
+                          'No of Rooms',
+                          _numRooms,
+                          (value) => setState(
+                            () => _numRooms = value,
+                          ),
+                          max: maxRooms,
+                        ),
+                        _buildNumericInput('Day', _day,
+                            (value) => setState(() => _day = value)),
+                      ],
+                      displayWidgets: [
+                        _buildDetailRow('Type of Cruise', _selectedCruiseType),
+                        _buildDetailRow('No of Rooms', _numRooms.toString()),
+                        _buildDetailRow('Day', _day.toString()),
+                      ],
+                    ),
+
+                    // Passengers Section
+                    _buildEditableSection(
+                      title: 'Number of passengers',
+                      isEditing: _isEditingPassengers,
+                      onTap: () => setState(
+                          () => _isEditingPassengers = !_isEditingPassengers),
+                      editingWidgets: [
+                        _buildNumericInput(
+                          'Adults',
+                          _numAdults,
+                          (value) {
+                            setState(() {
+                              _numAdults = value;
+                              totalPrice = (defaultPrice ?? 0) +
+                                  (_numAdults * (pricePerPerson ?? 1));
+                            });
+                          },
+                          max: maxAdults,
+                        ),
+                        _buildNumericInput(
+                          'Kids',
+                          _numKids,
+                          (value) => setState(
+                            () => _numKids = value,
+                          ),
+                        ),
+                      ],
+                      displayWidgets: [
+                        _buildDetailRowWithIcon('Adults', _numAdults.toString(),
+                            'assets/icons/adult.svg'),
+                        _buildDetailRowWithIcon('Kids', _numKids.toString(),
+                            'assets/icons/kid.svg'),
+                      ],
+                    ),
+
+                    // Date
+                    _buildEditableSection(
+                      unavailable_date: unavailableDate,
+                      title: 'Date',
+                      isEditing: _isEditingDate,
+                      onTap: () =>
+                          setState(() => _isEditingDate = !_isEditingDate),
+                      editingWidgets: [
+                        GestureDetector(
+                          onTap: () async {
+                            final DateTime? picked = await showDatePicker(
+                              context: context,
+                              initialDate: _selectedDate,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2101),
+                            );
+                            if (picked != null) {
+                              // Check for null here
+                              setState(() => _selectedDate = picked);
+                            }
+                          },
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(36),
+                                border: Border.all(width: 1)),
+                            child: Center(
+                              child: Text(
+                                DateFormat('dd/MM/yyyy').format(_selectedDate),
+                                style: TextStyles.ubuntu16black15w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      displayWidgets: [
+                        _buildDetailRow('Date',
+                            DateFormat('dd/MM/yyyy').format(_selectedDate)),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    Text('Choose your food count',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600)),
+                    _buildFoodCounter('Non-Veg', _nonVegCount,
+                        (value) => setState(() => _nonVegCount = value)),
+                    _buildFoodCounter('Veg', _vegCount,
+                        (value) => setState(() => _vegCount = value)),
+                    _buildFoodCounter('Jain Veg', _jainVegCount,
+                        (value) => setState(() => _jainVegCount = value)),
+
+                    // Add ons
+                    const SizedBox(height: 16),
+                    const Text('Add-ons (optional)',
+                        style: TextStyle(fontSize: 16)),
+                    TextField(
+                      controller: addoncontroller,
+                      focusNode: addonFocusnode,
+                      onChanged: (value) => _addOns = value,
+                      decoration: InputDecoration(
+                        hintText: 'Beef Biriyani',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(45)),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+                    // Grand Total Section
+                    const Text('Grand Total',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w700)),
+                    _buildDetailRow('Charges for the trip', '₹${defaultPrice}'),
+                    _buildDetailRow('Price Per Person', '₹${pricePerPerson}'),
+                    _buildDetailRow(
+                        'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
+                    _buildDetailRow('Others', '₹${_others.toStringAsFixed(2)}'),
+                    _buildDetailRow('Total', '₹${totalPrice}', isTotal: true),
+
+                    const SizedBox(height: 20),
+
+                    BlocBuilder<BookMyCruiseBloc, BookMyCruiseState>(
+                      builder: (context, state) {
+                        return _isLoading
+                            ? RectangleBluebuttonLoading()
+                            : FullWidthRectangleBlueButton(
+                                text: "Continue",
+                                onPressed: () {
+                                  String formattedDate =
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(_selectedDate);
+
+                                  print('ddddddddddddd ');
+                                  context
+                                      .read<BookMyCruiseBloc>()
+                                      .add(BookMyCruiseEvent.createNewbookings(
+                                        packageId: widget.packageId,
+                                        startdate: formattedDate,
+                                        bookingtype: '1',
+                                        nonVegCount: _nonVegCount > 0
+                                            ? _nonVegCount.toString()
+                                            : null,
+                                        vegCount: _vegCount > 0
+                                            ? _vegCount.toString()
+                                            : null,
+                                        jainVegCount: _jainVegCount > 0
+                                            ? _jainVegCount.toString()
+                                            : null,
+                                        customerNotet: addoncontroller.text,
+                                        totalAmount: totalPrice.toString(),
+                                      ));
+                                },
+                              );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
