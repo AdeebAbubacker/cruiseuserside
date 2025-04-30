@@ -386,8 +386,14 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                           _scales[index] = 1.0;
                                         });
                                         AppRoutes.navigateToBoatdetailScreen(
-                                            context,
-                                            datum: value.featuredBoats.data?[index]);
+                                          context,
+                                          datum:
+                                              value.featuredBoats.data?[index],
+                                          packageid: value
+                                                  .featuredBoats.data?[index].id
+                                                  .toString() ??
+                                              "53",
+                                        );
                                       });
                                     },
                                     onTapCancel: () {

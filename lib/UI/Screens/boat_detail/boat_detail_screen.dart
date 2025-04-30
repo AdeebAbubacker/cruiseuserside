@@ -28,12 +28,8 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     });
   }
 
-  final List<String> imageUrls = [
-    'assets/image/boat_details_img/boat_detail_img.png',
-    'assets/image/boat_details_img/boat_detail_img.png',
-    'assets/image/boat_details_img/boat_detail_img.png',
-    'assets/image/boat_details_img/boat_detail_img.png',
-  ];
+  List<String> imageUrls = [];
+
   int _currentIndex = 0;
 
   final List<Map<String, dynamic>> reviews = [
@@ -49,6 +45,21 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
   ];
 
   bool showMore = false;
+  @override
+  void initState() {
+    super.initState();
+
+    imageUrls = [
+      (widget.datum?.cruise?.images?.isNotEmpty == true
+              ? widget.datum!.cruise!.images![0].cruiseImg
+              : null) ??
+          'assets/image/boat_details_img/boat_detail_img.png',
+      ...?widget.datum?.images?.map(
+        (e) =>
+            e.packageImg ?? 'assets/image/boat_details_img/boat_detail_img.png',
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,14 +127,27 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       });
                     },
                     itemBuilder: (context, index) {
+                      final imageUrl = imageUrls[index];
+
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
-                          child: Image.asset(
-                            imageUrls[index],
-                            fit: BoxFit.cover,
-                          ),
+                          child: imageUrl.startsWith('http')
+                              ? Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Image.asset(
+                                      'assets/image/boat_details_img/boat_detail_img.png',
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                )
+                              : Image.asset(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       );
                     },

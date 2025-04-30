@@ -384,6 +384,9 @@ class _LocationsBasedCruiseScreenState
                                   .images![0].cruiseImg
                                   ?.toString()
                               : null;
+                          final String rating = value
+                              .cruisemodel.data[index].avgRating
+                              .toString();
                           return GestureDetector(
                             child: Card(
                               color: Color(0xffFFFFFF),
@@ -517,13 +520,15 @@ class _LocationsBasedCruiseScreenState
                                           ),
                                           child: Row(
                                             mainAxisSize: MainAxisSize.min,
-                                            children: const [
+                                            children: [
                                               Icon(
                                                 Icons.star,
                                                 color: Colors.amber,
                                                 size: 16,
                                               ),
-                                              Text("4.3"),
+                                              Text(
+                                                "${(value.cruisemodel.data?[index].avgRating != null && value.cruisemodel.data?[index].avgRating.toString() != "null") ? double.parse(value.cruisemodel.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3"}",
+                                              ),
                                             ],
                                           ),
                                         ),

@@ -701,7 +701,9 @@ class _CategoriesListResultscreenState
                                                                     .amber,
                                                                 size: 24,
                                                               ),
-                                                              Text("4.3"),
+                                                              Text(
+                                                                "${(value.packagesearchresults.data?[index].avgRating != null && value.packagesearchresults.data?[index].avgRating.toString() != "null") ? double.parse(value.packagesearchresults.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3"}",
+                                                              ),
                                                               SizedBox(
                                                                   width: 10),
                                                             ],
