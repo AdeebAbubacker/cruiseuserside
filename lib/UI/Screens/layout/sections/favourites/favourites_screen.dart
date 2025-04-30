@@ -380,19 +380,6 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Row(
-                            //   children: [
-                            //     PillWidget(
-                            //       image: 'assets/icons/wifi.svg',
-                            //       text: 'Wifi',
-                            //     ),
-                            //     const SizedBox(width: 5),
-                            //     PillWidget(
-                            //       image: 'assets/icons/heater.svg',
-                            //       text: 'Heater',
-                            //     ),
-                            //   ],
-                            // ),
                             AmenityRow(
                               amenities: favourite?.package?.amenities!
                                       .map((e) => {
@@ -403,7 +390,6 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                       .toList() ??
                                   [],
                             ),
-
                             const SizedBox(height: 8),
                             Text(
                               favourite?.package?.cruise?.name ?? "",

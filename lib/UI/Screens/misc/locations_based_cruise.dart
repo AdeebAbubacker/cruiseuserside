@@ -1,4 +1,5 @@
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
+import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/featured_boats_container.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/favourites/favourites_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
@@ -555,18 +556,16 @@ class _LocationsBasedCruiseScreenState
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          children: [
-                                            PillWidget(
-                                              image: 'assets/icons/wifi.svg',
-                                              text: 'Wifi',
-                                            ),
-                                            const SizedBox(width: 5),
-                                            PillWidget(
-                                              image: 'assets/icons/heater.svg',
-                                              text: 'Heater',
-                                            ),
-                                          ],
+                                        AmenityRow(
+                                          amenities: value?.cruisemodel
+                                                  .data[index]?.amenities!
+                                                  .map((e) => {
+                                                        "name": e.name,
+                                                        "icon":
+                                                            'assets/icons/heater.svg', // Replace with dynamic logic if needed
+                                                      })
+                                                  .toList() ??
+                                              [],
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
