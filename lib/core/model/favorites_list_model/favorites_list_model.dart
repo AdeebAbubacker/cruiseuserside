@@ -1,3 +1,6 @@
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart'
+    as Featured;
+
 import 'datum.dart';
 import 'links.dart';
 import 'meta.dart';

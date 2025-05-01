@@ -19,19 +19,49 @@ mixin _$BookMyCruiseEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String date, String packageId) createNewbookings,
+    required TResult Function(
+            String packageId,
+            String bookingtype,
+            String startdate,
+            String? endDate,
+            String? vegCount,
+            String? nonVegCount,
+            String? jainVegCount,
+            String? totalAmount,
+            String? customerNotet)
+        createNewbookings,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String date, String packageId)? createNewbookings,
+    TResult? Function(
+            String packageId,
+            String bookingtype,
+            String startdate,
+            String? endDate,
+            String? vegCount,
+            String? nonVegCount,
+            String? jainVegCount,
+            String? totalAmount,
+            String? customerNotet)?
+        createNewbookings,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String date, String packageId)? createNewbookings,
+    TResult Function(
+            String packageId,
+            String bookingtype,
+            String startdate,
+            String? endDate,
+            String? vegCount,
+            String? nonVegCount,
+            String? jainVegCount,
+            String? totalAmount,
+            String? customerNotet)?
+        createNewbookings,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -119,7 +149,17 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String date, String packageId) createNewbookings,
+    required TResult Function(
+            String packageId,
+            String bookingtype,
+            String startdate,
+            String? endDate,
+            String? vegCount,
+            String? nonVegCount,
+            String? jainVegCount,
+            String? totalAmount,
+            String? customerNotet)
+        createNewbookings,
   }) {
     return started();
   }
@@ -128,7 +168,17 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String date, String packageId)? createNewbookings,
+    TResult? Function(
+            String packageId,
+            String bookingtype,
+            String startdate,
+            String? endDate,
+            String? vegCount,
+            String? nonVegCount,
+            String? jainVegCount,
+            String? totalAmount,
+            String? customerNotet)?
+        createNewbookings,
   }) {
     return started?.call();
   }
@@ -137,7 +187,17 @@ class _$StartedImpl implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String date, String packageId)? createNewbookings,
+    TResult Function(
+            String packageId,
+            String bookingtype,
+            String startdate,
+            String? endDate,
+            String? vegCount,
+            String? nonVegCount,
+            String? jainVegCount,
+            String? totalAmount,
+            String? customerNotet)?
+        createNewbookings,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -189,7 +249,16 @@ abstract class _$$BookMyCruiseEventboatsImplCopyWith<$Res> {
           $Res Function(_$BookMyCruiseEventboatsImpl) then) =
       __$$BookMyCruiseEventboatsImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String date, String packageId});
+  $Res call(
+      {String packageId,
+      String bookingtype,
+      String startdate,
+      String? endDate,
+      String? vegCount,
+      String? nonVegCount,
+      String? jainVegCount,
+      String? totalAmount,
+      String? customerNotet});
 }
 
 /// @nodoc
@@ -206,18 +275,53 @@ class __$$BookMyCruiseEventboatsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? date = null,
     Object? packageId = null,
+    Object? bookingtype = null,
+    Object? startdate = null,
+    Object? endDate = freezed,
+    Object? vegCount = freezed,
+    Object? nonVegCount = freezed,
+    Object? jainVegCount = freezed,
+    Object? totalAmount = freezed,
+    Object? customerNotet = freezed,
   }) {
     return _then(_$BookMyCruiseEventboatsImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as String,
       packageId: null == packageId
           ? _value.packageId
           : packageId // ignore: cast_nullable_to_non_nullable
               as String,
+      bookingtype: null == bookingtype
+          ? _value.bookingtype
+          : bookingtype // ignore: cast_nullable_to_non_nullable
+              as String,
+      startdate: null == startdate
+          ? _value.startdate
+          : startdate // ignore: cast_nullable_to_non_nullable
+              as String,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      vegCount: freezed == vegCount
+          ? _value.vegCount
+          : vegCount // ignore: cast_nullable_to_non_nullable
+              as String?,
+      nonVegCount: freezed == nonVegCount
+          ? _value.nonVegCount
+          : nonVegCount // ignore: cast_nullable_to_non_nullable
+              as String?,
+      jainVegCount: freezed == jainVegCount
+          ? _value.jainVegCount
+          : jainVegCount // ignore: cast_nullable_to_non_nullable
+              as String?,
+      totalAmount: freezed == totalAmount
+          ? _value.totalAmount
+          : totalAmount // ignore: cast_nullable_to_non_nullable
+              as String?,
+      customerNotet: freezed == customerNotet
+          ? _value.customerNotet
+          : customerNotet // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -226,16 +330,38 @@ class __$$BookMyCruiseEventboatsImplCopyWithImpl<$Res>
 
 class _$BookMyCruiseEventboatsImpl implements _BookMyCruiseEventboats {
   const _$BookMyCruiseEventboatsImpl(
-      {required this.date, required this.packageId});
+      {required this.packageId,
+      required this.bookingtype,
+      required this.startdate,
+      this.endDate,
+      this.vegCount,
+      this.nonVegCount,
+      this.jainVegCount,
+      this.totalAmount,
+      this.customerNotet});
 
   @override
-  final String date;
-  @override
   final String packageId;
+  @override
+  final String bookingtype;
+  @override
+  final String startdate;
+  @override
+  final String? endDate;
+  @override
+  final String? vegCount;
+  @override
+  final String? nonVegCount;
+  @override
+  final String? jainVegCount;
+  @override
+  final String? totalAmount;
+  @override
+  final String? customerNotet;
 
   @override
   String toString() {
-    return 'BookMyCruiseEvent.createNewbookings(date: $date, packageId: $packageId)';
+    return 'BookMyCruiseEvent.createNewbookings(packageId: $packageId, bookingtype: $bookingtype, startdate: $startdate, endDate: $endDate, vegCount: $vegCount, nonVegCount: $nonVegCount, jainVegCount: $jainVegCount, totalAmount: $totalAmount, customerNotet: $customerNotet)';
   }
 
   @override
@@ -243,13 +369,37 @@ class _$BookMyCruiseEventboatsImpl implements _BookMyCruiseEventboats {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$BookMyCruiseEventboatsImpl &&
-            (identical(other.date, date) || other.date == date) &&
             (identical(other.packageId, packageId) ||
-                other.packageId == packageId));
+                other.packageId == packageId) &&
+            (identical(other.bookingtype, bookingtype) ||
+                other.bookingtype == bookingtype) &&
+            (identical(other.startdate, startdate) ||
+                other.startdate == startdate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.vegCount, vegCount) ||
+                other.vegCount == vegCount) &&
+            (identical(other.nonVegCount, nonVegCount) ||
+                other.nonVegCount == nonVegCount) &&
+            (identical(other.jainVegCount, jainVegCount) ||
+                other.jainVegCount == jainVegCount) &&
+            (identical(other.totalAmount, totalAmount) ||
+                other.totalAmount == totalAmount) &&
+            (identical(other.customerNotet, customerNotet) ||
+                other.customerNotet == customerNotet));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, date, packageId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      packageId,
+      bookingtype,
+      startdate,
+      endDate,
+      vegCount,
+      nonVegCount,
+      jainVegCount,
+      totalAmount,
+      customerNotet);
 
   /// Create a copy of BookMyCruiseEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -264,29 +414,62 @@ class _$BookMyCruiseEventboatsImpl implements _BookMyCruiseEventboats {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String date, String packageId) createNewbookings,
+    required TResult Function(
+            String packageId,
+            String bookingtype,
+            String startdate,
+            String? endDate,
+            String? vegCount,
+            String? nonVegCount,
+            String? jainVegCount,
+            String? totalAmount,
+            String? customerNotet)
+        createNewbookings,
   }) {
-    return createNewbookings(date, packageId);
+    return createNewbookings(packageId, bookingtype, startdate, endDate,
+        vegCount, nonVegCount, jainVegCount, totalAmount, customerNotet);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String date, String packageId)? createNewbookings,
+    TResult? Function(
+            String packageId,
+            String bookingtype,
+            String startdate,
+            String? endDate,
+            String? vegCount,
+            String? nonVegCount,
+            String? jainVegCount,
+            String? totalAmount,
+            String? customerNotet)?
+        createNewbookings,
   }) {
-    return createNewbookings?.call(date, packageId);
+    return createNewbookings?.call(packageId, bookingtype, startdate, endDate,
+        vegCount, nonVegCount, jainVegCount, totalAmount, customerNotet);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String date, String packageId)? createNewbookings,
+    TResult Function(
+            String packageId,
+            String bookingtype,
+            String startdate,
+            String? endDate,
+            String? vegCount,
+            String? nonVegCount,
+            String? jainVegCount,
+            String? totalAmount,
+            String? customerNotet)?
+        createNewbookings,
     required TResult orElse(),
   }) {
     if (createNewbookings != null) {
-      return createNewbookings(date, packageId);
+      return createNewbookings(packageId, bookingtype, startdate, endDate,
+          vegCount, nonVegCount, jainVegCount, totalAmount, customerNotet);
     }
     return orElse();
   }
@@ -325,11 +508,25 @@ class _$BookMyCruiseEventboatsImpl implements _BookMyCruiseEventboats {
 
 abstract class _BookMyCruiseEventboats implements BookMyCruiseEvent {
   const factory _BookMyCruiseEventboats(
-      {required final String date,
-      required final String packageId}) = _$BookMyCruiseEventboatsImpl;
+      {required final String packageId,
+      required final String bookingtype,
+      required final String startdate,
+      final String? endDate,
+      final String? vegCount,
+      final String? nonVegCount,
+      final String? jainVegCount,
+      final String? totalAmount,
+      final String? customerNotet}) = _$BookMyCruiseEventboatsImpl;
 
-  String get date;
   String get packageId;
+  String get bookingtype;
+  String get startdate;
+  String? get endDate;
+  String? get vegCount;
+  String? get nonVegCount;
+  String? get jainVegCount;
+  String? get totalAmount;
+  String? get customerNotet;
 
   /// Create a copy of BookMyCruiseEvent
   /// with the given fields replaced by the non-null parameter values.

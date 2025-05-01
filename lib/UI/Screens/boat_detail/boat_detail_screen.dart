@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/booking_selection_widget.dart';
+import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/cruise_selection_widget.dart';
+import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/type_ofday_selection.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
@@ -7,12 +11,14 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
 class BoatDetailScreen extends StatefulWidget {
   final String packageId;
-  final Datum? datum;
-  const BoatDetailScreen({super.key, required this.packageId, this.datum});
+  final Datum datum;
+  const BoatDetailScreen(
+      {super.key, required this.packageId, required this.datum});
 
   @override
   State<BoatDetailScreen> createState() => _BoatDetailScreenState();
@@ -28,12 +34,8 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     });
   }
 
-  final List<String> imageUrls = [
-    'assets/image/boat_details_img/boat_detail_img.png',
-    'assets/image/boat_details_img/boat_detail_img.png',
-    'assets/image/boat_details_img/boat_detail_img.png',
-    'assets/image/boat_details_img/boat_detail_img.png',
-  ];
+  List<String> imageUrls = [];
+
   int _currentIndex = 0;
 
   final List<Map<String, dynamic>> reviews = [
@@ -49,6 +51,41 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
   ];
 
   bool showMore = false;
+  @override
+  void initState() {
+    super.initState();
+
+    imageUrls = [
+      (widget.datum?.cruise?.images?.isNotEmpty == true
+              ? widget.datum!.cruise!.images![0].cruiseImg
+              : null) ??
+          'assets/image/boat_details_img/boat_detail_img.png',
+      ...?widget.datum?.images?.map(
+        (e) =>
+            e.packageImg ?? 'assets/image/boat_details_img/boat_detail_img.png',
+      ),
+    ];
+  }
+
+  void makeCall(String number, BuildContext context) async {
+    final numberWithCountryCode =
+        number.startsWith('+') ? number : '+91$number';
+    final Uri telUri = Uri(scheme: 'tel', path: numberWithCountryCode);
+    try {
+      if (Platform.isAndroid || Platform.isIOS) {
+        await launchUrl(telUri);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Phone calls are not supported on this platform')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An unexpected error occurred: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +109,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       return null;
     }
 
+  
     return Scaffold(
       backgroundColor: Color(0XFFFFFFFF),
       appBar: AppBar(
@@ -116,14 +154,27 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       });
                     },
                     itemBuilder: (context, index) {
+                      final imageUrl = imageUrls[index];
+
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
-                          child: Image.asset(
-                            imageUrls[index],
-                            fit: BoxFit.cover,
-                          ),
+                          child: imageUrl.startsWith('http')
+                              ? Image.network(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Image.asset(
+                                      'assets/image/boat_details_img/boat_detail_img.png',
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                )
+                              : Image.asset(
+                                  imageUrl,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       );
                     },
@@ -229,10 +280,15 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     ),
                   ),
                   SizedBox(height: 16),
+                 
+
                   Row(
                     children: [
-                      SvgPicture.asset(
-                          'assets/image/boat_details_img/cruise_ship_logo.svg'),
+                      CircleAvatar(
+                        radius: 17.5, // half of 35
+                        backgroundImage: AssetImage('assets/Applogo.png'),
+                        backgroundColor: Colors.transparent,
+                      ),
                       SizedBox(width: 12),
                       Text(
                         'Cruise Ship',
@@ -241,8 +297,13 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       ),
                       Spacer(),
                       SizedBox(width: 9),
-                      SvgPicture.asset(
-                          'assets/image/boat_details_img/call_icon.svg'),
+                      GestureDetector(
+                        onTap: () {
+                          makeCall('9072855886', context);
+                        },
+                        child: SvgPicture.asset(
+                            'assets/image/boat_details_img/call_icon.svg'),
+                      ),
                     ],
                   ),
                   SizedBox(height: 16),
@@ -402,6 +463,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                           MaterialPageRoute(
                               builder: (context) => BookingconfirmationScreen(
                                     packageId: widget.packageId,
+                                    datum: widget.datum,
                                   )));
                     },
                     text: 'Book Now',

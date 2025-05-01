@@ -1,8 +1,8 @@
+import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/type_ofday_selection.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/select_payment_method.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/rectangle_bluebutton_loading.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
-import 'package:cruise_buddy/core/model/viewmy_package_model/unavailable_date.dart';
 import 'package:cruise_buddy/core/view_model/bookMyCruise/book_my_cruise_bloc.dart';
 import 'package:cruise_buddy/core/view_model/viewMyPackage/view_my_package_bloc.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +10,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:table_calendar/table_calendar.dart';
+import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
 class BookingconfirmationScreen extends StatefulWidget {
   final String packageId;
+  final Datum datum;
   const BookingconfirmationScreen({
     super.key,
     required this.packageId,
+    required this.datum,
   });
 
   @override
@@ -26,6 +30,7 @@ class BookingconfirmationScreen extends StatefulWidget {
 class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   late Razorpay _razorpay;
   bool _isLoading = false;
+  String bookingTypeId = '1';
   @override
   void initState() {
     super.initState();
@@ -34,8 +39,18 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (widget.datum.bookingTypes!.length == 1) {
+        bookingTypeId = widget.datum.bookingTypes!.first.id
+            .toString(); // Set the booking type ID directly
+      }
       BlocProvider.of<ViewMyPackageBloc>(context)
           .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
+    });
+  }
+
+  void _onBookingTypeSelected(String bookingTypeId) {
+    setState(() {
+      bookingTypeId = bookingTypeId; // Store the selected booking type ID
     });
   }
 
@@ -45,28 +60,51 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     super.dispose();
   }
 
-  void openCheckout({String? orderid}) {
+  void openCheckout({
+    String? orderid,
+    required int totalamount,
+  }) {
+    // var options = {
+    //   'key': 'rzp_live_9YK0kUaQLzZd55',
+    //   'amount': '100', // Amount should be in paise (e.g., 100 = 1 INR)
+    //   'currency': 'INR',
+    //   'name': 'Cruise Buddy',
+    //   'order_id': orderid ?? "order_PvwS5g5uKP5e4m",
+    //   'description': 'Premium House Boat',
+    //   'retry': {'enabled': true, 'max_count': 1},
+    //   'send_sms_hash': true,
+    //   'prefill': {
+    //     'contact': '8848055651',
+    //     'email': 'test@razorpay.com',
+    //   },
+    //   'external': {
+    //     'wallets': ['paytm'],
+    //   }
+    // };
     var options = {
-      'key': 'rzp_test_FHMbJJb5sxQ1Cu',
-      'amount': 100, // Amount should be in paise (e.g., 100 = 1 INR)
-      'name': 'Cruise Buddy',
-      'order_id': orderid ?? "order_PvwS5g5uKP5e4m",
-      'description': 'Premium House Boat',
-      'retry': {'enabled': true, 'max_count': 1},
-      'send_sms_hash': true,
+      'key': 'rzp_live_ZAFN8qKXodIxis',
+      'amount': '100',
+      'currency': 'INR',
+      'name': 'Test',
+      'description': 'Course' ' ' + 'Fee',
+      'order_id': orderid,
       'prefill': {
         'contact': '8848055651',
-        'email': 'test@razorpay.com',
+        'email': 'test@gmail.com',
       },
-      'external': {
-        'wallets': ['paytm'],
-      }
+      'method': {
+        'upi': true,
+        'netbanking': false,
+        'wallet': false,
+      },
+      'theme': {'color': '#FFD700'},
+      'redirect': true,
     };
 
     try {
       _razorpay.open(options);
     } catch (e) {
-      debugPrint("Error: $e");
+      debugPrint("-----------Error: $e");
     }
   }
 
@@ -103,11 +141,24 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     );
   }
 
+  String _getCruiseName(int id) {
+    switch (id) {
+      case 1:
+        return "Day Cruise";
+      case 2:
+        return "Full Day Cruise";
+      default:
+        return "Unknown";
+    }
+  }
+
   int parsePrice(String? priceString) {
     if (priceString == null) return 0;
     return int.tryParse(priceString.split('.').first) ?? 0;
   }
 
+  FocusNode addonFocusnode = FocusNode();
+  TextEditingController addoncontroller = TextEditingController();
   int _currentPage = 0;
   String _selectedCruiseType = 'Day Cruise';
   int _numRooms = 1;
@@ -116,9 +167,9 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   int _numKids = 0;
   DateTime _selectedDate = DateTime.now();
   String _location = "Kottayam";
-  int _nonVegCount = 2;
-  int _vegCount = 2;
-  int _jainVegCount = 2;
+  int _nonVegCount = 0;
+  int _vegCount = 0;
+  int _jainVegCount = 0;
   String _addOns = '';
 
   final double _chargesForTheDay = 7000;
@@ -137,13 +188,16 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   ];
   int maxAdults = 1; // default fallback
   int maxRooms = 1;
-  List<UnavailableDate> unavailableDate = [];
+  List<UnavailableDate>? unavailableDates;
   int defaultPrice = 0;
   int totalPrice = 0;
   int pricePerDay = 0;
   int pricePerPerson = 0;
+  final List unavaibledates = [];
   @override
   Widget build(BuildContext context) {
+    unavailableDates = widget.datum.unavailableDate ?? [];
+
     return MultiBlocListener(
       listeners: [
         BlocListener<BookMyCruiseBloc, BookMyCruiseState>(
@@ -154,12 +208,12 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
               },
               getBookedBoats: (value) {
                 setState(() => _isLoading = false);
-                print(value.bookingresponse.booking?.orderId);
+                print('order id ${value.bookingresponse.booking?.orderId}');
 
                 print("deey");
                 openCheckout(
-                    orderid: value.bookingresponse.booking?.orderId
-                        .toString()); // Call Razorpay on success
+                    orderid: value.bookingresponse.booking?.orderId.toString(),
+                    totalamount: totalPrice); // Call Razorpay on success
               },
               getBookedFailure: (value) {
                 setState(() => _isLoading = false);
@@ -187,7 +241,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                   maxAdults =
                       value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
 
-                  unavailableDate =
+                  unavailableDates =
                       value.mybookingmodel.data?.unavailableDate ?? [];
                   defaultPrice = parsePrice(
                     value.mybookingmodel?.data?.bookingTypes?[0].defaultPrice
@@ -211,254 +265,393 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
           },
         ),
       ],
-      child: Scaffold(
-        appBar: AppBar(
-          forceMaterialTransparency: true,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.of(context).pop(),
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            forceMaterialTransparency: true,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
           ),
-        ),
-        body: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Stack(
-              children: [
-                SizedBox(
-                  height: 210,
-                  child: PageView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _images.length,
-                    onPageChanged: (int pageIndex) {
-                      setState(() {
-                        _currentPage = pageIndex;
-                      });
-                    },
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                        child: Image.asset(_images[index], fit: BoxFit.fill),
-                      );
-                    },
-                  ),
-                ),
-                Positioned(
-                  bottom: 15,
-                  left: 10,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Color(0xffE2E2E2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${_currentPage + 1}/${_images.length}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          body: ListView(
+            padding: const EdgeInsets.all(16.0),
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Stack(
                 children: [
-                  _buildEditableSection(
-                    title: 'Boat Details',
-                    isEditing: _isEditingBoatDetails,
-                    onTap: () => setState(
-                        () => _isEditingBoatDetails = !_isEditingBoatDetails),
-                    editingWidgets: [
-                      DropdownButtonFormField<String>(
-                        value: _selectedCruiseType,
-                        decoration:
-                            const InputDecoration(labelText: 'Cruise Type'),
-                        items: <String>[
-                          'Day Cruise',
-                          'Full Day Cruise',
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          if (newValue != null) {
-                            setState(() {
-                              _selectedCruiseType = newValue;
-                            });
-                          }
-                        },
-                      ),
-                      _buildNumericInput(
-                        'No of Rooms',
-                        _numRooms,
-                        (value) => setState(
-                          () => _numRooms = value,
-                        ),
-                        max: maxRooms,
-                      ),
-                      _buildNumericInput(
-                          'Day', _day, (value) => setState(() => _day = value)),
-                    ],
-                    displayWidgets: [
-                      _buildDetailRow('Type of Cruise', _selectedCruiseType),
-                      _buildDetailRow('No of Rooms', _numRooms.toString()),
-                      _buildDetailRow('Day', _day.toString()),
-                    ],
-                  ),
-
-                  // Passengers Section
-                  _buildEditableSection(
-                    title: 'Number of passengers',
-                    isEditing: _isEditingPassengers,
-                    onTap: () => setState(
-                        () => _isEditingPassengers = !_isEditingPassengers),
-                    editingWidgets: [
-                      _buildNumericInput(
-                        'Adults',
-                        _numAdults,
-                        (value) {
-                          setState(() {
-                            _numAdults = value;
-                            totalPrice = (defaultPrice ?? 0) +
-                                (_numAdults * (pricePerPerson ?? 1));
-                          });
-                        },
-                        max: maxAdults,
-                      ),
-                      _buildNumericInput(
-                        'Kids',
-                        _numKids,
-                        (value) => setState(
-                          () => _numKids = value,
-                        ),
-                      ),
-                    ],
-                    displayWidgets: [
-                      _buildDetailRowWithIcon('Adults', _numAdults.toString(),
-                          'assets/icons/adult.svg'),
-                      _buildDetailRowWithIcon(
-                          'Kids', _numKids.toString(), 'assets/icons/kid.svg'),
-                    ],
-                  ),
-
-                  // Date
-                  _buildEditableSection(
-                    unavailable_date: unavailableDate,
-                    title: 'Date',
-                    isEditing: _isEditingDate,
-                    onTap: () =>
-                        setState(() => _isEditingDate = !_isEditingDate),
-                    editingWidgets: [
-                      GestureDetector(
-                        onTap: () async {
-                          final DateTime? picked = await showDatePicker(
-                            context: context,
-                            initialDate: _selectedDate,
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2101),
-                          );
-                          if (picked != null) {
-                            // Check for null here
-                            setState(() => _selectedDate = picked);
-                          }
-                        },
-                        child: Container(
-                          height: 40,
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(36),
-                              border: Border.all(width: 1)),
-                          child: Center(
-                            child: Text(
-                              DateFormat('dd/MM/yyyy').format(_selectedDate),
-                              style: TextStyles.ubuntu16black15w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    displayWidgets: [
-                      _buildDetailRow('Date',
-                          DateFormat('dd/MM/yyyy').format(_selectedDate)),
-                    ],
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  Text('Choose your food type',
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w600)),
-                  _buildFoodCounter('Non-Veg', _nonVegCount,
-                      (value) => setState(() => _nonVegCount = value)),
-                  _buildFoodCounter('Veg', _vegCount,
-                      (value) => setState(() => _vegCount = value)),
-                  _buildFoodCounter('Jain Veg', _jainVegCount,
-                      (value) => setState(() => _jainVegCount = value)),
-
-                  // Add ons
-                  const SizedBox(height: 16),
-                  const Text('Add-ons (optional)',
-                      style: TextStyle(fontSize: 16)),
-                  TextField(
-                    onChanged: (value) => _addOns = value,
-                    decoration: InputDecoration(
-                      hintText: 'Beef Biriyani',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(45)),
+                  SizedBox(
+                    height: 210,
+                    child: PageView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _images.length,
+                      onPageChanged: (int pageIndex) {
+                        setState(() {
+                          _currentPage = pageIndex;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 3.0),
+                          child: Image.asset(_images[index], fit: BoxFit.fill),
+                        );
+                      },
                     ),
                   ),
-
-                  const SizedBox(height: 16),
-                  // Grand Total Section
-                  const Text('Grand Total',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-                  _buildDetailRow('Charges for the trip', '₹${defaultPrice}'),
-                  _buildDetailRow('Price Per Person', '₹${pricePerPerson}'),
-                  _buildDetailRow(
-                      'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
-                  _buildDetailRow('Others', '₹${_others.toStringAsFixed(2)}'),
-                  _buildDetailRow('Total', '₹${totalPrice}', isTotal: true),
-
-                  const SizedBox(height: 20),
-                  BlocBuilder<BookMyCruiseBloc, BookMyCruiseState>(
-                    builder: (context, state) {
-                      return _isLoading
-                          ? RectangleBluebuttonLoading()
-                          : FullWidthRectangleBlueButton(
-                              text: "Continue",
-                              onPressed: () {
-                                String formattedDate = DateFormat('yyyy-MM-dd')
-                                    .format(_selectedDate);
-
-                                print('ddddddddddddd ');
-                                context
-                                    .read<BookMyCruiseBloc>()
-                                    .add(BookMyCruiseEvent.createNewbookings(
-                                      packageId: widget.packageId,
-                                      date: formattedDate,
-                                    ));
-                              },
-                            );
-                    },
+                  Positioned(
+                    bottom: 15,
+                    left: 10,
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Color(0xffE2E2E2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '${_currentPage + 1}/${_images.length}',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildEditableSection(
+                      title: 'Boat Details',
+                      isEditing: _isEditingBoatDetails,
+                      onTap: () => setState(
+                          () => _isEditingBoatDetails = !_isEditingBoatDetails),
+                      editingWidgets: [
+                        DropdownButtonFormField<String>(
+                          value: _selectedCruiseType,
+                          decoration:
+                              const InputDecoration(labelText: 'Cruise Type'),
+                          items: <String>[
+                            'Day Cruise',
+                            'Full Day Cruise',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            if (newValue != null) {
+                              setState(() {
+                                _selectedCruiseType = newValue;
+                              });
+                            }
+                          },
+                        ),
+                        _buildNumericInput(
+                          'No of Rooms',
+                          _numRooms,
+                          (value) => setState(
+                            () => _numRooms = value,
+                          ),
+                          max: maxRooms,
+                        ),
+                        _buildNumericInput('Day', _day,
+                            (value) => setState(() => _day = value)),
+                      ],
+                      displayWidgets: [
+                        _buildDetailRow('Type of Cruise', _selectedCruiseType),
+                        _buildDetailRow('No of Rooms', _numRooms.toString()),
+                        _buildDetailRow('Day', _day.toString()),
+                      ],
+                    ),
+                    Text(
+                      'Booking Type',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    if (widget.datum.bookingTypes!.length == 1)
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          _getCruiseName(
+                              widget.datum.bookingTypes!.first.id ?? 0),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    else if (widget.datum.bookingTypes!.length > 1)
+                      BookingTypeSelectorWidget(
+                        onTypeSelected: (selectedType) {
+                          print("Selected booking type: $selectedType");
+                          _onBookingTypeSelected(
+                              selectedType.toString()); // Set the selected type
+                        },
+                        initialType: int.tryParse(bookingTypeId) ??
+                            1, // Pass the initial value (if any)
+                      ),
+                    SizedBox(height: 10),
+                    // Passengers Section
+                    _buildEditableSection(
+                      title: 'Number of passengers',
+                      isEditing: _isEditingPassengers,
+                      onTap: () => setState(
+                          () => _isEditingPassengers = !_isEditingPassengers),
+                      editingWidgets: [
+                        _buildNumericInput(
+                          'Adults',
+                          _numAdults,
+                          (value) {
+                            setState(() {
+                              _numAdults = value;
+                              totalPrice = (defaultPrice ?? 0) +
+                                  (_numAdults * (pricePerPerson ?? 1));
+                            });
+                          },
+                          max: maxAdults,
+                        ),
+                        _buildNumericInput(
+                          'Kids',
+                          _numKids,
+                          (value) => setState(
+                            () => _numKids = value,
+                          ),
+                        ),
+                      ],
+                      displayWidgets: [
+                        _buildDetailRowWithIcon('Adults', _numAdults.toString(),
+                            'assets/icons/adult.svg'),
+                        _buildDetailRowWithIcon('Kids', _numKids.toString(),
+                            'assets/icons/kid.svg'),
+                      ],
+                    ),
+
+                    // Date
+                    // Date section
+                    _buildEditableSection(
+                      unavailable_date: unavailableDates,
+                      title: 'Date',
+                      isEditing: _isEditingDate,
+                      onTap: () =>
+                          setState(() => _isEditingDate = !_isEditingDate),
+                      editingWidgets: [
+                        GestureDetector(
+                          onTap: () async {
+                            await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  contentPadding: EdgeInsets.all(12),
+                                  content: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
+                                    height: 460,
+                                    child: TableCalendar(
+                                      firstDay: DateTime(2000),
+                                      lastDay: DateTime(2101),
+                                      focusedDay: _selectedDate,
+                                      selectedDayPredicate: (day) =>
+                                          isSameDay(_selectedDate, day),
+                                      onDaySelected: (selectedDay, focusedDay) {
+                                        bool isUnavailable = unavailableDates
+                                                ?.any((range) {
+                                              if (range.startDate == null ||
+                                                  range.endDate == null)
+                                                return false;
+
+                                              return selectedDay.isAfter(
+                                                      range.startDate!.subtract(
+                                                          Duration(days: 1))) &&
+                                                  selectedDay.isBefore(range
+                                                      .endDate!
+                                                      .add(Duration(days: 1)));
+                                            }) ??
+                                            false; // If unavailableDates is null, return false
+
+                                        if (isUnavailable) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                                content: Text(
+                                                    "This date is not available.")),
+                                          );
+                                          return;
+                                        }
+
+                                        setState(() {
+                                          _selectedDate = selectedDay;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      calendarBuilders: CalendarBuilders(
+                                        defaultBuilder:
+                                            (context, day, focusedDay) {
+                                          bool isUnavailable = unavailableDates
+                                                  ?.any((range) {
+                                                if (range.startDate == null ||
+                                                    range.endDate == null)
+                                                  return false;
+                                                return day.isAfter(range
+                                                        .startDate!
+                                                        .subtract(Duration(
+                                                            days: 1))) &&
+                                                    day.isBefore(range.endDate!
+                                                        .add(
+                                                            Duration(days: 1)));
+                                              }) ??
+                                              false; // If unavailableDates is null, return false
+
+                                          if (isUnavailable) {
+                                            return Container(
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Text(
+                                                '${day.day}',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            );
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      headerStyle: HeaderStyle(
+                                        formatButtonVisible: true,
+                                        leftChevronVisible: true,
+                                        rightChevronVisible: true,
+                                        titleTextStyle: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        formatButtonShowsNext: false,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(36),
+                              border: Border.all(width: 1),
+                            ),
+                            child: Center(
+                              child: Text(
+                                DateFormat('dd/MM/yyyy').format(_selectedDate),
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      displayWidgets: [
+                        _buildDetailRow(
+                          'Date',
+                          DateFormat('dd/MM/yyyy').format(_selectedDate),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
+
+                    Text('Choose your food count',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600)),
+                    _buildFoodCounter('Non-Veg', _nonVegCount,
+                        (value) => setState(() => _nonVegCount = value)),
+                    _buildFoodCounter('Veg', _vegCount,
+                        (value) => setState(() => _vegCount = value)),
+                    _buildFoodCounter('Jain Veg', _jainVegCount,
+                        (value) => setState(() => _jainVegCount = value)),
+
+                    // Add ons
+                    const SizedBox(height: 16),
+                    const Text('Add-ons (optional)',
+                        style: TextStyle(fontSize: 16)),
+                    TextField(
+                      controller: addoncontroller,
+                      focusNode: addonFocusnode,
+                      onChanged: (value) => _addOns = value,
+                      decoration: InputDecoration(
+                        hintText: 'Beef Biriyani',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(45)),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+                    // Grand Total Section
+                    const Text('Grand Total',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w700)),
+                    _buildDetailRow('Charges for the trip', '₹${defaultPrice}'),
+                    _buildDetailRow('Price Per Person', '₹${pricePerPerson}'),
+                    _buildDetailRow(
+                        'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
+                    _buildDetailRow('Others', '₹${_others.toStringAsFixed(2)}'),
+                    _buildDetailRow('Total', '₹${totalPrice}', isTotal: true),
+
+                    const SizedBox(height: 20),
+
+                    BlocBuilder<BookMyCruiseBloc, BookMyCruiseState>(
+                      builder: (context, state) {
+                        return _isLoading
+                            ? RectangleBluebuttonLoading()
+                            : FullWidthRectangleBlueButton(
+                                text: "Continue",
+                                onPressed: () {
+                                  String formattedDate =
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(_selectedDate);
+
+                                  print('ddddddddddddd ');
+                                  context
+                                      .read<BookMyCruiseBloc>()
+                                      .add(BookMyCruiseEvent.createNewbookings(
+                                        packageId: widget.packageId,
+                                        startdate: formattedDate,
+                                        bookingtype: bookingTypeId,
+                                        nonVegCount: _nonVegCount > 0
+                                            ? _nonVegCount.toString()
+                                            : null,
+                                        vegCount: _vegCount > 0
+                                            ? _vegCount.toString()
+                                            : null,
+                                        jainVegCount: _jainVegCount > 0
+                                            ? _jainVegCount.toString()
+                                            : null,
+                                        customerNotet: addoncontroller.text,
+                                        totalAmount: totalPrice.toString(),
+                                      ));
+                                },
+                              );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

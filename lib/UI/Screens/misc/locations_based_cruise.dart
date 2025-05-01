@@ -1,4 +1,5 @@
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
+import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/featured_boats_container.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/favourites/favourites_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
@@ -383,6 +384,9 @@ class _LocationsBasedCruiseScreenState
                                   .images![0].cruiseImg
                                   ?.toString()
                               : null;
+                          final String rating = value
+                              .cruisemodel.data[index].avgRating
+                              .toString();
                           return GestureDetector(
                             child: Card(
                               color: Color(0xffFFFFFF),
@@ -516,13 +520,15 @@ class _LocationsBasedCruiseScreenState
                                           ),
                                           child: Row(
                                             mainAxisSize: MainAxisSize.min,
-                                            children: const [
+                                            children: [
                                               Icon(
                                                 Icons.star,
                                                 color: Colors.amber,
                                                 size: 16,
                                               ),
-                                              Text("4.3"),
+                                              Text(
+                                                "${(value.cruisemodel.data?[index].avgRating != null && value.cruisemodel.data?[index].avgRating.toString() != "null") ? double.parse(value.cruisemodel.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3"}",
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -555,18 +561,16 @@ class _LocationsBasedCruiseScreenState
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          children: [
-                                            PillWidget(
-                                              image: 'assets/icons/wifi.svg',
-                                              text: 'Wifi',
-                                            ),
-                                            const SizedBox(width: 5),
-                                            PillWidget(
-                                              image: 'assets/icons/heater.svg',
-                                              text: 'Heater',
-                                            ),
-                                          ],
+                                        AmenityRow(
+                                          amenities: value?.cruisemodel
+                                                  .data[index]?.amenities!
+                                                  .map((e) => {
+                                                        "name": e.name,
+                                                        "icon":
+                                                            'assets/icons/heater.svg', // Replace with dynamic logic if needed
+                                                      })
+                                                  .toList() ??
+                                              [],
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
@@ -613,6 +617,9 @@ class _LocationsBasedCruiseScreenState
                                                             BoatDetailScreen(
                                                               packageId: widget
                                                                   .pacakgeId,
+                                                              datum: value
+                                                                  .cruisemodel
+                                                                  .data[index],
                                                             )));
                                               },
                                               style: ElevatedButton.styleFrom(

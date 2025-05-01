@@ -1,3 +1,6 @@
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart'
+    as featuredBoats;
+
 import 'amenity.dart';
 import 'booking_type.dart';
 import 'cruise.dart';
@@ -16,7 +19,7 @@ class Data {
   List<dynamic>? food;
   List<dynamic>? itineraries;
   List<BookingType>? bookingTypes;
-  List<UnavailableDate>? unavailableDate;
+  List<featuredBoats.UnavailableDate>? unavailableDate;
 
   Data({
     this.id,
@@ -54,7 +57,8 @@ class Data {
             ?.map((e) => BookingType.fromJson(e as Map<String, dynamic>))
             .toList(),
         unavailableDate: (json['unavailableDate'] as List<dynamic>?)
-            ?.map((e) => UnavailableDate.fromJson(e as Map<String, dynamic>))
+            ?.map((e) => featuredBoats.UnavailableDate.fromJson(
+                e as Map<String, dynamic>))
             .toList(),
       );
 

@@ -22,12 +22,13 @@ class BookingService {
   Future<Either<String, BookingResponseModel>> addItemToBookeditem({
     required String packageId,
     required String bookingTypeId,
-    required String vegCount,
-    required String nonVegCount,
-    required String jainVegCount,
-    required String customerNote,
+    String? vegCount,
+    String? nonVegCount,
+    String? jainVegCount,
+    String? customerNote,
     required String startDate,
-    required String totalAmount,
+    String? endDate,
+    String? totalAmount,
   }) async {
     try {
       final hasInternet = await _connectivityChecker.hasInternetAccess();
@@ -56,13 +57,14 @@ class BookingService {
       // Create request body
       final body = {
         'packageId': packageId,
-        'bookingTypeId': "1",
-        'vegCount': "1",
-        'nonVegCount': "15",
-        'jainVegCount': "10",
-        'customerNote': "This is a test booking",
+        'bookingTypeId': bookingTypeId,
         'startDate': startDate,
-        'totalAmount': totalAmount,
+        if (vegCount != null) 'vegCount': vegCount,
+        if (nonVegCount != null) 'nonVegCount': nonVegCount,
+        if (jainVegCount != null) 'jainVegCount': jainVegCount,
+        if (customerNote != null) 'customerNote': customerNote,
+        if (endDate != null) 'endDate': endDate,
+        if (totalAmount != null) 'totalAmount': totalAmount,
       };
 
       // Make POST request

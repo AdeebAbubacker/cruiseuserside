@@ -5,6 +5,7 @@ import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmatio
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/featured_shimmer_card.dart';
@@ -386,9 +387,15 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                           _scales[index] = 1.0;
                                         });
                                         AppRoutes.navigateToBoatdetailScreen(
-                                            context,
-                                            datum: value
-                                                .featuredBoats.data?[index]);
+                                          context,
+                                          datum: value
+                                                  .featuredBoats.data?[index] ??
+                                              Datum(),
+                                          packageid: value
+                                                  .featuredBoats.data?[index].id
+                                                  .toString() ??
+                                              "53",
+                                        );
                                       });
                                     },
                                     onTapCancel: () {
@@ -681,11 +688,13 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  BookingconfirmationScreen(
-                                                                    packageId:
-                                                                        "${value.featuredBoats.data?[index].id}",
-                                                                  )));
+                                                              builder: (context) => BookingconfirmationScreen(
+                                                                  packageId:
+                                                                      "${value.featuredBoats.data?[index].id}",
+                                                                  datum: value
+                                                                          .featuredBoats
+                                                                          .data?[index] ??
+                                                                      Datum())));
                                                     },
                                                     style: ElevatedButton
                                                         .styleFrom(

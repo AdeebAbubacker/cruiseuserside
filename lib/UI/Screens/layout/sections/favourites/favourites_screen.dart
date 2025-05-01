@@ -4,6 +4,7 @@ import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
@@ -380,19 +381,6 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Row(
-                            //   children: [
-                            //     PillWidget(
-                            //       image: 'assets/icons/wifi.svg',
-                            //       text: 'Wifi',
-                            //     ),
-                            //     const SizedBox(width: 5),
-                            //     PillWidget(
-                            //       image: 'assets/icons/heater.svg',
-                            //       text: 'Heater',
-                            //     ),
-                            //   ],
-                            // ),
                             AmenityRow(
                               amenities: favourite?.package?.amenities!
                                       .map((e) => {
@@ -403,7 +391,6 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                       .toList() ??
                                   [],
                             ),
-
                             const SizedBox(height: 8),
                             Text(
                               favourite?.package?.cruise?.name ?? "",
@@ -432,15 +419,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                 ),
                                 const Spacer(),
                                 ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                BoatDetailScreen(
-                                                  packageId: '51',
-                                                )));
-                                  },
+                                  onPressed: () {},
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0XFF1F8386),
                                     shape: RoundedRectangleBorder(

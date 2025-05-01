@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/featured_shimmer_card.dart';
+import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
@@ -20,6 +21,8 @@ import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+
+import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
 class CategoriesListResultscreen extends StatefulWidget {
   final String category;
@@ -700,7 +703,9 @@ class _CategoriesListResultscreenState
                                                                     .amber,
                                                                 size: 24,
                                                               ),
-                                                              Text("4.3"),
+                                                              Text(
+                                                                "${(value.packagesearchresults.data?[index].avgRating != null && value.packagesearchresults.data?[index].avgRating.toString() != "null") ? double.parse(value.packagesearchresults.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3"}",
+                                                              ),
                                                               SizedBox(
                                                                   width: 10),
                                                             ],
@@ -744,22 +749,19 @@ class _CategoriesListResultscreenState
                                                             .start,
                                                     children: [
                                                       SizedBox(height: 10),
-                                                      Row(
-                                                        children: [
-                                                          PillWidget(
-                                                            image:
-                                                                'assets/icons/wifi.svg',
-                                                            text: 'Wifi',
-                                                          ),
-                                                          SizedBox(
-                                                            width: 5,
-                                                          ),
-                                                          PillWidget(
-                                                            image:
-                                                                'assets/icons/heater.svg',
-                                                            text: 'Heater',
-                                                          ),
-                                                        ],
+                                                      AmenityRow(
+                                                        amenities: value
+                                                                .packagesearchresults
+                                                                ?.data?[index]
+                                                                ?.amenities!
+                                                                .map((e) => {
+                                                                      "name": e
+                                                                          .name,
+                                                                      "icon":
+                                                                          'assets/icons/heater.svg', // Replace with dynamic logic if needed
+                                                                    })
+                                                                .toList() ??
+                                                            [],
                                                       ),
                                                       Text(
                                                         truncateString(
@@ -784,11 +786,11 @@ class _CategoriesListResultscreenState
                                                                 Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
-                                                                        builder: (context) => BoatDetailScreen(
-                                                                            packageId:
-                                                                                '51',
-                                                                            datum:
-                                                                                value.packagesearchresults.data?[index])));
+                                                                        builder: (context) =>
+                                                                            BoatDetailScreen(
+                                                                              packageId: value.packagesearchresults.data?[index].id.toString() ?? "53",
+                                                                              datum: value.packagesearchresults.data?[index] ?? Datum(),
+                                                                            )));
                                                               },
                                                               style:
                                                                   ElevatedButton
@@ -1082,3 +1084,4 @@ class _CategoriesListResultscreenState
     );
   }
 }
+//---------

@@ -342,6 +342,8 @@ mixin _$LoginState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(LoginModel loginModel) loginSuccess,
+    required TResult Function(LoginValidation loginValidation)
+        loginvaldationFailure,
     required TResult Function(String error) loginFailure,
     required TResult Function() noInternet,
   }) =>
@@ -351,6 +353,7 @@ mixin _$LoginState {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(LoginModel loginModel)? loginSuccess,
+    TResult? Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult? Function(String error)? loginFailure,
     TResult? Function()? noInternet,
   }) =>
@@ -360,6 +363,7 @@ mixin _$LoginState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(LoginModel loginModel)? loginSuccess,
+    TResult Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult Function(String error)? loginFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -370,6 +374,7 @@ mixin _$LoginState {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_LoginSuccess value) loginSuccess,
+    required TResult Function(_LoginValidation value) loginvaldationFailure,
     required TResult Function(LoginFailure value) loginFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) =>
@@ -379,6 +384,7 @@ mixin _$LoginState {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_LoginSuccess value)? loginSuccess,
+    TResult? Function(_LoginValidation value)? loginvaldationFailure,
     TResult? Function(LoginFailure value)? loginFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) =>
@@ -388,6 +394,7 @@ mixin _$LoginState {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_LoginSuccess value)? loginSuccess,
+    TResult Function(_LoginValidation value)? loginvaldationFailure,
     TResult Function(LoginFailure value)? loginFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
@@ -460,6 +467,8 @@ class _$InitialImpl implements _Initial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(LoginModel loginModel) loginSuccess,
+    required TResult Function(LoginValidation loginValidation)
+        loginvaldationFailure,
     required TResult Function(String error) loginFailure,
     required TResult Function() noInternet,
   }) {
@@ -472,6 +481,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(LoginModel loginModel)? loginSuccess,
+    TResult? Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult? Function(String error)? loginFailure,
     TResult? Function()? noInternet,
   }) {
@@ -484,6 +494,7 @@ class _$InitialImpl implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(LoginModel loginModel)? loginSuccess,
+    TResult Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult Function(String error)? loginFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -500,6 +511,7 @@ class _$InitialImpl implements _Initial {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_LoginSuccess value) loginSuccess,
+    required TResult Function(_LoginValidation value) loginvaldationFailure,
     required TResult Function(LoginFailure value) loginFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
@@ -512,6 +524,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_LoginSuccess value)? loginSuccess,
+    TResult? Function(_LoginValidation value)? loginvaldationFailure,
     TResult? Function(LoginFailure value)? loginFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
@@ -524,6 +537,7 @@ class _$InitialImpl implements _Initial {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_LoginSuccess value)? loginSuccess,
+    TResult Function(_LoginValidation value)? loginvaldationFailure,
     TResult Function(LoginFailure value)? loginFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
@@ -583,6 +597,8 @@ class _$LoadingImpl implements _Loading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(LoginModel loginModel) loginSuccess,
+    required TResult Function(LoginValidation loginValidation)
+        loginvaldationFailure,
     required TResult Function(String error) loginFailure,
     required TResult Function() noInternet,
   }) {
@@ -595,6 +611,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(LoginModel loginModel)? loginSuccess,
+    TResult? Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult? Function(String error)? loginFailure,
     TResult? Function()? noInternet,
   }) {
@@ -607,6 +624,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(LoginModel loginModel)? loginSuccess,
+    TResult Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult Function(String error)? loginFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -623,6 +641,7 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_LoginSuccess value) loginSuccess,
+    required TResult Function(_LoginValidation value) loginvaldationFailure,
     required TResult Function(LoginFailure value) loginFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
@@ -635,6 +654,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_LoginSuccess value)? loginSuccess,
+    TResult? Function(_LoginValidation value)? loginvaldationFailure,
     TResult? Function(LoginFailure value)? loginFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
@@ -647,6 +667,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_LoginSuccess value)? loginSuccess,
+    TResult Function(_LoginValidation value)? loginvaldationFailure,
     TResult Function(LoginFailure value)? loginFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
@@ -734,6 +755,8 @@ class _$LoginSuccessImpl implements _LoginSuccess {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(LoginModel loginModel) loginSuccess,
+    required TResult Function(LoginValidation loginValidation)
+        loginvaldationFailure,
     required TResult Function(String error) loginFailure,
     required TResult Function() noInternet,
   }) {
@@ -746,6 +769,7 @@ class _$LoginSuccessImpl implements _LoginSuccess {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(LoginModel loginModel)? loginSuccess,
+    TResult? Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult? Function(String error)? loginFailure,
     TResult? Function()? noInternet,
   }) {
@@ -758,6 +782,7 @@ class _$LoginSuccessImpl implements _LoginSuccess {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(LoginModel loginModel)? loginSuccess,
+    TResult Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult Function(String error)? loginFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -774,6 +799,7 @@ class _$LoginSuccessImpl implements _LoginSuccess {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_LoginSuccess value) loginSuccess,
+    required TResult Function(_LoginValidation value) loginvaldationFailure,
     required TResult Function(LoginFailure value) loginFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
@@ -786,6 +812,7 @@ class _$LoginSuccessImpl implements _LoginSuccess {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_LoginSuccess value)? loginSuccess,
+    TResult? Function(_LoginValidation value)? loginvaldationFailure,
     TResult? Function(LoginFailure value)? loginFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
@@ -798,6 +825,7 @@ class _$LoginSuccessImpl implements _LoginSuccess {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_LoginSuccess value)? loginSuccess,
+    TResult Function(_LoginValidation value)? loginvaldationFailure,
     TResult Function(LoginFailure value)? loginFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
@@ -819,6 +847,174 @@ abstract class _LoginSuccess implements LoginState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoginSuccessImplCopyWith<_$LoginSuccessImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LoginValidationImplCopyWith<$Res> {
+  factory _$$LoginValidationImplCopyWith(_$LoginValidationImpl value,
+          $Res Function(_$LoginValidationImpl) then) =
+      __$$LoginValidationImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({LoginValidation loginValidation});
+}
+
+/// @nodoc
+class __$$LoginValidationImplCopyWithImpl<$Res>
+    extends _$LoginStateCopyWithImpl<$Res, _$LoginValidationImpl>
+    implements _$$LoginValidationImplCopyWith<$Res> {
+  __$$LoginValidationImplCopyWithImpl(
+      _$LoginValidationImpl _value, $Res Function(_$LoginValidationImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? loginValidation = null,
+  }) {
+    return _then(_$LoginValidationImpl(
+      loginValidation: null == loginValidation
+          ? _value.loginValidation
+          : loginValidation // ignore: cast_nullable_to_non_nullable
+              as LoginValidation,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LoginValidationImpl implements _LoginValidation {
+  const _$LoginValidationImpl({required this.loginValidation});
+
+  @override
+  final LoginValidation loginValidation;
+
+  @override
+  String toString() {
+    return 'LoginState.loginvaldationFailure(loginValidation: $loginValidation)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LoginValidationImpl &&
+            (identical(other.loginValidation, loginValidation) ||
+                other.loginValidation == loginValidation));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, loginValidation);
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoginValidationImplCopyWith<_$LoginValidationImpl> get copyWith =>
+      __$$LoginValidationImplCopyWithImpl<_$LoginValidationImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(LoginModel loginModel) loginSuccess,
+    required TResult Function(LoginValidation loginValidation)
+        loginvaldationFailure,
+    required TResult Function(String error) loginFailure,
+    required TResult Function() noInternet,
+  }) {
+    return loginvaldationFailure(loginValidation);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(LoginModel loginModel)? loginSuccess,
+    TResult? Function(LoginValidation loginValidation)? loginvaldationFailure,
+    TResult? Function(String error)? loginFailure,
+    TResult? Function()? noInternet,
+  }) {
+    return loginvaldationFailure?.call(loginValidation);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(LoginModel loginModel)? loginSuccess,
+    TResult Function(LoginValidation loginValidation)? loginvaldationFailure,
+    TResult Function(String error)? loginFailure,
+    TResult Function()? noInternet,
+    required TResult orElse(),
+  }) {
+    if (loginvaldationFailure != null) {
+      return loginvaldationFailure(loginValidation);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_LoginSuccess value) loginSuccess,
+    required TResult Function(_LoginValidation value) loginvaldationFailure,
+    required TResult Function(LoginFailure value) loginFailure,
+    required TResult Function(_NoInternet value) noInternet,
+  }) {
+    return loginvaldationFailure(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_LoginSuccess value)? loginSuccess,
+    TResult? Function(_LoginValidation value)? loginvaldationFailure,
+    TResult? Function(LoginFailure value)? loginFailure,
+    TResult? Function(_NoInternet value)? noInternet,
+  }) {
+    return loginvaldationFailure?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_LoginSuccess value)? loginSuccess,
+    TResult Function(_LoginValidation value)? loginvaldationFailure,
+    TResult Function(LoginFailure value)? loginFailure,
+    TResult Function(_NoInternet value)? noInternet,
+    required TResult orElse(),
+  }) {
+    if (loginvaldationFailure != null) {
+      return loginvaldationFailure(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _LoginValidation implements LoginState {
+  const factory _LoginValidation(
+      {required final LoginValidation loginValidation}) = _$LoginValidationImpl;
+
+  LoginValidation get loginValidation;
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoginValidationImplCopyWith<_$LoginValidationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -893,6 +1089,8 @@ class _$LoginFailureImpl implements LoginFailure {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(LoginModel loginModel) loginSuccess,
+    required TResult Function(LoginValidation loginValidation)
+        loginvaldationFailure,
     required TResult Function(String error) loginFailure,
     required TResult Function() noInternet,
   }) {
@@ -905,6 +1103,7 @@ class _$LoginFailureImpl implements LoginFailure {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(LoginModel loginModel)? loginSuccess,
+    TResult? Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult? Function(String error)? loginFailure,
     TResult? Function()? noInternet,
   }) {
@@ -917,6 +1116,7 @@ class _$LoginFailureImpl implements LoginFailure {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(LoginModel loginModel)? loginSuccess,
+    TResult Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult Function(String error)? loginFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -933,6 +1133,7 @@ class _$LoginFailureImpl implements LoginFailure {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_LoginSuccess value) loginSuccess,
+    required TResult Function(_LoginValidation value) loginvaldationFailure,
     required TResult Function(LoginFailure value) loginFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
@@ -945,6 +1146,7 @@ class _$LoginFailureImpl implements LoginFailure {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_LoginSuccess value)? loginSuccess,
+    TResult? Function(_LoginValidation value)? loginvaldationFailure,
     TResult? Function(LoginFailure value)? loginFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
@@ -957,6 +1159,7 @@ class _$LoginFailureImpl implements LoginFailure {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_LoginSuccess value)? loginSuccess,
+    TResult Function(_LoginValidation value)? loginvaldationFailure,
     TResult Function(LoginFailure value)? loginFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
@@ -1025,6 +1228,8 @@ class _$NoInternetImpl implements _NoInternet {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(LoginModel loginModel) loginSuccess,
+    required TResult Function(LoginValidation loginValidation)
+        loginvaldationFailure,
     required TResult Function(String error) loginFailure,
     required TResult Function() noInternet,
   }) {
@@ -1037,6 +1242,7 @@ class _$NoInternetImpl implements _NoInternet {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(LoginModel loginModel)? loginSuccess,
+    TResult? Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult? Function(String error)? loginFailure,
     TResult? Function()? noInternet,
   }) {
@@ -1049,6 +1255,7 @@ class _$NoInternetImpl implements _NoInternet {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(LoginModel loginModel)? loginSuccess,
+    TResult Function(LoginValidation loginValidation)? loginvaldationFailure,
     TResult Function(String error)? loginFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
@@ -1065,6 +1272,7 @@ class _$NoInternetImpl implements _NoInternet {
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
     required TResult Function(_LoginSuccess value) loginSuccess,
+    required TResult Function(_LoginValidation value) loginvaldationFailure,
     required TResult Function(LoginFailure value) loginFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
@@ -1077,6 +1285,7 @@ class _$NoInternetImpl implements _NoInternet {
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
     TResult? Function(_LoginSuccess value)? loginSuccess,
+    TResult? Function(_LoginValidation value)? loginvaldationFailure,
     TResult? Function(LoginFailure value)? loginFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
@@ -1089,6 +1298,7 @@ class _$NoInternetImpl implements _NoInternet {
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
     TResult Function(_LoginSuccess value)? loginSuccess,
+    TResult Function(_LoginValidation value)? loginvaldationFailure,
     TResult Function(LoginFailure value)? loginFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),

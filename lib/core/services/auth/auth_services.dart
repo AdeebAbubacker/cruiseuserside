@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cruise_buddy/core/constants/functions/connection/connectivity_checker.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/login_model/login_model.dart';
+import 'package:cruise_buddy/core/model/validation/login_validation/login_validation.dart';
 import 'package:cruise_buddy/core/model/verifiedgoogle_id_model/verifiedgoogle_id_model.dart';
 import 'package:cruise_buddy/core/model/registration_model/registration_model.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +19,7 @@ class AuthServices {
         'XSRF-TOKEN=eyJpdiI6IktBbkpHQ051U2pnd1drYy90MVA1anc9PSIsInZhbHVlIjoieEFMbHVzMzMzSTluSnZCSnJYa0RXUXQ1UURqK1huY1RHdFZvZjFWR3NHWWphd0FQZ05iSmNqa0NDUTB4K1R4Q0RjclVVS1VRbStYMjRYdEEvSUgwS3VQWHNCaVJ5ZzFwelVpM2I4NnRvYWs5WDFYblV5TkpwQ3Q1bEo4b3I0U0EiLCJtYWMiOiI4ZWQ2OWQ4ODQwNTVlZTgzZmM5MDIwYjQ4NzY1MTk1NDdhMDdkMjIyMTZjNjA2MTRlYjAwZDJmNWQ0ZGRlZjYyIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IkUzRE5yWUhmaWtxeTV4b1hFZXVjdVE9PSIsInZhbHVlIjoiL0h0NjY4SndVSlU2WHdCZHlKQUNaUGFVTGZ4Q3U2UXZ3YUdjUmh2RmdkcVVUVm92QzFsUUFjUWdrNkNXNENEb0Z3d3NlbDVzQTFWSEUzMW5QbzdudjA4NWpMU0dNT0wzYWVyZmVndENST1I5NG5tTmlhUVFoNmhjZGxhaW5KcG8iLCJtYWMiOiJjYWY0ZTRlNjY2ZTFjYzVjYThmMjVmNTIwZDhlMDQxM2QzYWVlYWY5N2UxNzdhYzk3ODU3ZWI3MzQyNmNhYmRjIiwidGFnIjoiIn0%3D',
   };
 
-  Future<Either<String, LoginModel>> login({
+  Future<Either<dynamic, LoginModel>> login({
     required String email,
     required String password,
   }) async {
@@ -43,11 +44,18 @@ class AuthServices {
         final loginModel = LoginModel.fromJson(data);
 
         return Right(loginModel);
+      } else if (response.statusCode == 422) {
+        final data = json.decode(response.body);
+
+        final loginModel = LoginValidation.fromJson(data);
+        print('data failed ${response.body.toLowerCase()}');
+        return left(loginModel);
       } else {
         print('data failed ${response.body.toLowerCase()}');
         return Left('Failed to login: ${response.body}');
       }
     } catch (e) {
+      print('Error: $e');
       return Left('Error: $e');
     }
   }

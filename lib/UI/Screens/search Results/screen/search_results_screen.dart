@@ -228,12 +228,6 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                               itemCount:
                                   value.packagesearchresults.data?.length,
                               itemBuilder: (context, index) {
-                                print(
-                                    '-name-----${value.packagesearchresults.data?[index].cruise?.name}');
-                                print(
-                                    '------${value.packagesearchresults.data?[index].avgRating}');
-                                print(
-                                    '------${value.packagesearchresults.data?[index].name}');
                                 return Padding(
                                   padding: const EdgeInsets.only(
                                     bottom: 15,

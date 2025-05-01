@@ -6,7 +6,7 @@ class LoginState with _$LoginState {
   const factory LoginState.loading() = _Loading;
   const factory LoginState.loginSuccess({required LoginModel loginModel}) =
       _LoginSuccess;
-
+  const factory LoginState.loginvaldationFailure({required LoginValidation loginValidation}) = _LoginValidation;
   const factory LoginState.loginFailure({required String error}) = LoginFailure;
   const factory LoginState.noInternet() = _NoInternet;
 }

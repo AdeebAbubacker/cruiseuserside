@@ -29,6 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  String? emailErrorText;
+  String? passwordErrorText;
   Future<void> checkForUpdate() async {
     try {
       final updateInfo = await InAppUpdate.checkForUpdate();
@@ -135,6 +137,40 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 loading: (_) {
                   print('loading');
+                },
+                loginvaldationFailure: (value) {
+                  print('validation failed ${value.loginValidation.message}');
+
+                  final genericError =
+                      "these credentials do not match our records.";
+
+                  final emailErrors = value.loginValidation.errors?.email;
+                  final passwordErrors = value.loginValidation.errors?.password;
+
+                  // Normalize and check
+                  final emailError = emailErrors != null &&
+                          !(emailErrors.first.toLowerCase().trim() ==
+                              genericError)
+                      ? emailErrors.first
+                      : null;
+
+                  final passwordError = passwordErrors != null &&
+                          !(passwordErrors.first.toLowerCase().trim() ==
+                              genericError)
+                      ? passwordErrors.first
+                      : null;
+
+                  setState(() {
+                    emailErrorText = emailError;
+                    passwordErrorText = passwordError;
+                  });
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          value.loginValidation.message ?? "Validation error"),
+                    ),
+                  );
                 },
                 loginSuccess: (success) async {
                   final loginModel = success
@@ -244,6 +280,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 12),
                   TextField(
                     decoration: InputDecoration(
+                      hintText: "Enter your email",
+                      errorText: emailErrorText,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(32),
                       ),
@@ -276,6 +314,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     obscureText: isTextVisible,
                     decoration: InputDecoration(
+                        hintText: "Enter your password",
+                        errorText: passwordErrorText,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: SvgPicture.asset(
