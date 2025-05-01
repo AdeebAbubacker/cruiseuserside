@@ -9,7 +9,7 @@ String CategorySearchModelToJson(CategorySearchModel data) =>
     json.encode(data.toJson());
 
 class CategorySearchModel {
-  List<Datum>? data;
+  List<DatumTest>? data;
   Links? links;
   Meta? meta;
 
@@ -23,7 +23,7 @@ class CategorySearchModel {
       CategorySearchModel(
         data: json["data"] == null
             ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            : List<DatumTest>.from(json["data"]!.map((x) => DatumTest.fromJson(x))),
         links: json["links"] == null ? null : Links.fromJson(json["links"]),
         meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
       );

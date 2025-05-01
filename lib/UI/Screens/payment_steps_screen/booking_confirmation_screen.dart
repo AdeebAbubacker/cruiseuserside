@@ -16,7 +16,7 @@ import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
 class BookingconfirmationScreen extends StatefulWidget {
   final String packageId;
-  final Datum datum;
+  final DatumTest datum;
   const BookingconfirmationScreen({
     super.key,
     required this.packageId,

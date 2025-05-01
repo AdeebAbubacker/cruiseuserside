@@ -5,7 +5,7 @@ import 'package:another_flushbar/flushbar.dart';
 class CustomToast {
   static void itemAddedToast({
     required BuildContext context,
-    required VoidCallback onChangeTab,
+   
   }) {
     toastification.showCustom(
       context: context,

@@ -1,4 +1,5 @@
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
+import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +10,25 @@ class SearchResultsContainer extends StatelessWidget {
   final String cruisename;
   final String imageUrl;
   final String price;
-  final Datum datum;
+  final DatumTest datum;
+  final bool isFavorite;
+  final String? favouriteId;
+  final Set<String> loadingFavorites;
+  final void Function(
+      {String? packageId,
+      bool? isFavorite,
+      String? favouriteId}) toggleFavorite;
+
   const SearchResultsContainer({
     required this.packageId,
     this.cruisename = "Kerala’s Heritage Haven – Traditional Kerala Décor",
     required this.imageUrl,
     required this.datum,
     required this.price,
+    required this.isFavorite,
+    this.favouriteId,
+    required this.loadingFavorites,
+    required this.toggleFavorite,
     super.key,
   });
 
@@ -85,26 +98,73 @@ class SearchResultsContainer extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Positioned(
+                //   top: 8,
+                //   right: 8,
+                //   child: InkWell(
+                //     onTap: () {},
+                //     child: Container(
+                //       decoration: BoxDecoration(
+                //           color: Colors.white,
+                //           borderRadius: BorderRadius.circular(25)),
+                //       child: Padding(
+                //         padding: const EdgeInsets.all(5.0),
+                //         child: Icon(
+                //           Icons.favorite,
+                //           color: Color(0XFF4FC2C5),
+                //           size: 20,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+
                 Positioned(
                   top: 8,
                   right: 8,
-                  child: InkWell(
-                    onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
+                  child: GestureDetector(
+                    onTap: () => toggleFavorite(
+                      packageId: packageId,
+                      isFavorite: isFavorite,
+                      favouriteId: favouriteId,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(25)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon(
-                          Icons.favorite,
-                          color: Color(0XFF4FC2C5),
-                          size: 20,
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            transitionBuilder: (child, animation) {
+                              return ScaleTransition(
+                                  scale: animation, child: child);
+                            },
+                            child: loadingFavorites.contains(packageId)
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Icon(
+                                    isFavorite
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: const Color(0XFF4FC2C5),
+                                    size: 20,
+                                  ),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
+
                 Positioned(
                   top: 110,
                   right: 8,
@@ -137,21 +197,17 @@ class SearchResultsContainer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 10),
-                Row(
-                  children: [
-                    PillWidget(
-                      image: 'assets/icons/wifi.svg',
-                      text: 'Wifi',
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    PillWidget(
-                      image: 'assets/icons/heater.svg',
-                      text: 'Heater',
-                    ),
-                  ],
+                AmenityRow(
+                  amenities: datum?.amenities!
+                          .map((e) => {
+                                "name": e.name,
+                                "icon":
+                                    'assets/icons/heater.svg', // Replace with dynamic logic if needed
+                              })
+                          .toList() ??
+                      [],
                 ),
+                SizedBox(height: 5),
                 Text(
                   truncateString(cruisename, 43),
                   style: TextStyles.ubuntu16black15w500,

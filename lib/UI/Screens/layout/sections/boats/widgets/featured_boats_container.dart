@@ -251,7 +251,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
               loading: (value) {},
               addedSuccess: (value) {
                 CustomToast.itemAddedToast(
-                    context: context, onChangeTab: widget.onChangeTab);
+                    context: context, );
                 setState(() {
                   loadingFavorites.remove(value
                       .postedfavouritemitemodel.favorite?.package?.id
@@ -390,7 +390,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                           context,
                                           datum: value
                                                   .featuredBoats.data?[index] ??
-                                              Datum(),
+                                              DatumTest(),
                                           packageid: value
                                                   .featuredBoats.data?[index].id
                                                   .toString() ??
@@ -694,7 +694,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                                   datum: value
                                                                           .featuredBoats
                                                                           .data?[index] ??
-                                                                      Datum())));
+                                                                      DatumTest())));
                                                     },
                                                     style: ElevatedButton
                                                         .styleFrom(

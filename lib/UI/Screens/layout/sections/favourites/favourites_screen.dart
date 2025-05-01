@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
+import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
@@ -419,7 +420,20 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                 ),
                                 const Spacer(),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                BookingconfirmationScreen(
+                                                    packageId:
+                                                        "${snapshot.data?.data?[index].package?.id.toString()}",
+                                                    datum: snapshot
+                                                            .data
+                                                            ?.data?[index]
+                                                            .package ??
+                                                        DatumTest())));
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0XFF1F8386),
                                     shape: RoundedRectangleBorder(

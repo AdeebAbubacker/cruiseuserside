@@ -66,7 +66,7 @@ class BookingService {
         if (endDate != null) 'endDate': endDate,
         if (totalAmount != null) 'totalAmount': totalAmount,
       };
-
+      print('my body ${body}');
       // Make POST request
       final response = await http
           .post(
@@ -80,8 +80,9 @@ class BookingService {
           throw TimeoutException('The request timed out.');
         },
       );
-
+      print('Response body: ${response.body}');
       if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Response body: ${response.body}');
         final data = json.decode(response.body);
         final bookingDetails = BookingResponseModel.fromJson(data);
         print('Response Data: $data');

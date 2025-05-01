@@ -75,7 +75,7 @@ class _SignupScreenState extends State<SignupScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 70),
+                  const SizedBox(height: 40),
                   Center(
                     child: Container(
                       decoration: BoxDecoration(
@@ -86,10 +86,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Image.asset(
-                          'assets/image/auth_img/Signup.png',
-                          width: 120,
-                          height: 120,
+                        child: SvgPicture.asset(
+                          'assets/icons/signup_logo.svg',
+                          width: 80,
+                          height: 80,
                         ),
                       ),
                     ),

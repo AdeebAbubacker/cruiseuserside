@@ -1,8 +1,17 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/featured_shimmer_card.dart';
+import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
+import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
+import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';
+import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
+import 'package:http/http.dart' as http;
 import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/amenities_pill.dart';
 import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/boat_category_pill.dart';
 import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/search_results_container.dart';
 import 'package:cruise_buddy/core/constants/colors/app_colors.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:cruise_buddy/core/view_model/getSearchCruiseResults/get_seached_cruiseresults_bloc.dart';
 import 'package:flutter/material.dart';
@@ -40,10 +49,67 @@ class SearchResultsScreen extends StatefulWidget {
 }
 
 class _SearchResultsScreenState extends State<SearchResultsScreen> {
+  List<double> _scales = [];
+  List<bool> isFavoriteList = [];
+
+  final StreamController<FavoritesListModel> _favoritesController =
+      StreamController<FavoritesListModel>();
+
+  Set<String> loadingFavorites = {};
+  Map<String, String> favoritePackageMap = {};
+  Future<void> fetchFavorites() async {
+    final token = await GetSharedPreferences.getAccessToken();
+    final response = await http.get(
+      Uri.parse(
+          'https://cruisebuddy.in/api/v1/favorite?include=package.cruise'),
+      headers: {
+        'Accept': 'application/json',
+        'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      final Map<String, dynamic> decodedJson = json.decode(response.body);
+      final FavoritesListModel jsonResponse =
+          FavoritesListModel.fromJson(decodedJson);
+      _favoritesController.add(jsonResponse);
+
+      favoritePackageMap = {
+        for (var item in jsonResponse.data ?? [])
+          if (item.package?.id != null && item.id != null)
+            item.package!.id!.toString(): item.id!.toString()
+      };
+    } else {
+      _favoritesController.addError("Failed to load favorites");
+    }
+  }
+
+  void toggleFavorite(
+      {String? packageId, bool? isFavorite, String? favouriteId}) {
+    setState(() {
+      loadingFavorites.add(packageId ?? "");
+    });
+
+    if (isFavorite ?? false) {
+      _removeFromFavorites(favouriteId: favouriteId.toString());
+    } else {
+      BlocProvider.of<AddItemToFavouritesBloc>(context)
+          .add(AddItemToFavouritesEvent.added(packageId: packageId ?? ""));
+    }
+  }
+
+  void _removeFromFavorites({required String favouriteId}) {
+    context
+        .read<RemoveItemFavouritesBloc>()
+        .add(RemoveItemFavouritesEvent.added(favouritesId: favouriteId));
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      fetchFavorites();
       BlocProvider.of<GetSeachedCruiseresultsBloc>(context).add(
         GetSeachedCruiseresultsEvent.SeachedCruise(
           location:
@@ -76,256 +142,423 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0XFFF7FFFE),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final totalHeight = constraints.maxHeight;
-
-            final headerHeight = 5 + kToolbarHeight + 20;
-
-            final availableHeight = totalHeight - headerHeight;
-
-            return Column(
-              children: [
-                const SizedBox(height: 5),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                      ),
-                      const SizedBox(width: 5),
-                      SvgPicture.asset('assets/icons/map.svg'),
-                      const SizedBox(width: 5),
-                      Text(
-                        widget.location.toString() ?? "Kumarakom",
-                        style: TextStyles.ubuntu14black55w400,
-                      ),
-                      const Spacer(),
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () => _showFilterPopup(context),
-                          borderRadius: BorderRadius.circular(8),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: SvgPicture.asset(
-                              "assets/icons/filter.svg",
-                              height: 20,
-                              width: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+    return StreamBuilder<FavoritesListModel>(
+        stream: _favoritesController.stream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Scaffold(
+              body: Padding(
+                padding: const EdgeInsets.only(
+                  top: 100,
+                ),
+                child: Center(
+                  child: SpinKitWave(
+                    color: Colors.blue,
+                    size: 50.0,
                   ),
                 ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: availableHeight,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: BlocBuilder<GetSeachedCruiseresultsBloc,
-                        GetSeachedCruiseresultsState>(
-                      builder: (context, state) {
-                        return state.map(
-                          initial: (value) {
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                top: 100,
-                              ),
-                              child: Center(
-                                child: SpinKitWave(
-                                  color: Colors.blue,
-                                  size: 50.0,
-                                ),
-                              ),
-                            );
-                          },
-                          loading: (value) {
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                top: 100,
-                              ),
-                              child: Center(
-                                child: SpinKitWave(
-                                  color: Colors.blue,
-                                  size: 50.0,
-                                ),
-                              ),
-                            );
-                          },
-                          getuseruccess: (value) {
-                            if (value.packagesearchresults.data == null ||
-                                value.packagesearchresults.data!.isEmpty) {
-                              return Stack(
-                                children: [
-                                  Positioned(
-                                    bottom: -40,
-                                    child: SvgPicture.asset(
-                                      'assets/icons/cruise_background.svg',
-                                      color: const Color.fromARGB(
-                                          255, 196, 238, 237),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 140,
-                                    child: SvgPicture.asset(
-                                      'assets/icons/cruise_background.svg',
-                                      color: const Color.fromARGB(
-                                          255, 181, 235, 233),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 150,
-                                    child: SvgPicture.asset(
-                                      'assets/icons/cruise_background.svg',
-                                      color: const Color.fromARGB(
-                                          255, 181, 235, 233),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Center(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset(
-                                              'assets/icons/not_available_404.svg'),
-                                          Text(
-                                            "No Cruise Found",
-                                            style: TextStyles.ubuntu18bluew700,
-                                          ),
-                                          Center(
-                                            child: Text(
-                                              "It looks like no cruise are available in this price range.",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyles
-                                                  .ubuntu14black55w400,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                            return ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              itemCount:
-                                  value.packagesearchresults.data?.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                    bottom: 15,
-                                  ),
-                                  child: SearchResultsContainer(
-                                    packageId: value.packagesearchresults
-                                            .data?[index].id
-                                            .toString() ??
-                                        '1',
-                                    datum: value.packagesearchresults
-                                            .data?[index] ??
-                                        Datum(),
-                                    cruisename: value.packagesearchresults
-                                            .data?[index].cruise?.name ??
-                                        "N/A",
-                                    imageUrl:
-                                        '${value.packagesearchresults.data?[index].cruise?.images?[0].cruiseImg}',
-                                    price:
-                                        '${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}',
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          getuserFailure: (value) {
-                            return Stack(
+              ),
+            );
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.wifi_off,
+                    color: Colors.grey,
+                    size: 80,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    "No Internet Connection",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Please check your network and try again.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                    ),
+                    child: const Text(
+                      "Retry",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+          if (snapshot.hasData) {
+            favoritePackageMap = {
+              for (var item in snapshot.data!.data ?? [])
+                if (item.package?.id != null && item.id != null)
+                  item.package!.id!.toString(): item.id!.toString()
+            };
+          }
+          return BlocListener<AddItemToFavouritesBloc,
+              AddItemToFavouritesState>(
+            listener: (context, state) {
+              state.map(
+                initial: (value) {},
+                loading: (value) {},
+                addedSuccess: (value) {
+                  setState(() {
+                    loadingFavorites.remove(value
+                        .postedfavouritemitemodel.favorite?.package?.id
+                        .toString());
+                  });
+                  fetchFavorites();
+                },
+                addedFailure: (value) {
+                  setState(() {
+                    loadingFavorites.clear();
+                  });
+                },
+                noInternet: (value) {
+                  setState(() {
+                    loadingFavorites.clear();
+                  });
+                  // CustomToast.intenetConnectionMissToast(context: context);
+                },
+              );
+            },
+            child: BlocListener<RemoveItemFavouritesBloc,
+                RemoveItemFavouritesState>(
+              listener: (context, state) {
+                state.map(
+                  initial: (value) {},
+                  loading: (value) {},
+                  addedSuccess: (value) {
+                    setState(() {
+                      loadingFavorites.clear();
+                    });
+                    fetchFavorites();
+                  },
+                  addedFailure: (value) {
+                    setState(() {
+                      loadingFavorites.clear();
+                    });
+                  },
+                  noInternet: (value) {
+                    setState(() {
+                      loadingFavorites.clear();
+                    });
+                  },
+                );
+              },
+              child: Scaffold(
+                backgroundColor: const Color(0XFFF7FFFE),
+                body: SafeArea(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final totalHeight = constraints.maxHeight;
+
+                      final headerHeight = 5 + kToolbarHeight + 20;
+
+                      final availableHeight = totalHeight - headerHeight;
+
+                      return Column(
+                        children: [
+                          const SizedBox(height: 5),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Row(
                               children: [
-                                Positioned(
-                                  bottom: -40,
-                                  child: SvgPicture.asset(
-                                    'assets/icons/cruise_background.svg',
-                                    color: const Color.fromARGB(
-                                        255, 196, 238, 237),
-                                  ),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: const Icon(
+                                      Icons.arrow_back_ios_new_rounded),
                                 ),
-                                Positioned(
-                                  bottom: 140,
-                                  child: SvgPicture.asset(
-                                    'assets/icons/cruise_background.svg',
-                                    color: const Color.fromARGB(
-                                        255, 181, 235, 233),
-                                  ),
+                                const SizedBox(width: 5),
+                                SvgPicture.asset('assets/icons/map.svg'),
+                                const SizedBox(width: 5),
+                                Text(
+                                  widget.location.toString() ?? "Kumarakom",
+                                  style: TextStyles.ubuntu14black55w400,
                                 ),
-                                Positioned(
-                                  bottom: 150,
-                                  child: SvgPicture.asset(
-                                    'assets/icons/cruise_background.svg',
-                                    color: const Color.fromARGB(
-                                        255, 181, 235, 233),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Center(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                            'assets/icons/not_available_404.svg'),
-                                        Text(
-                                          "No Cruise Available",
-                                          style: TextStyles.ubuntu18bluew700,
-                                        ),
-                                        Center(
-                                          child: Text(
-                                            "It looks like no cruises are available in the ${widget.location} location.",
-                                            textAlign: TextAlign
-                                                .center, // Ensures multi-line text is centered
-                                            style: TextStyles
-                                                .ubuntu14black55w400, // Optional: Adjust font size or style
-                                          ),
-                                        ),
-                                      ],
+                                const Spacer(),
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () => _showFilterPopup(context),
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: SvgPicture.asset(
+                                        "assets/icons/filter.svg",
+                                        height: 20,
+                                        width: 20,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ],
-                            );
-                          },
-                          noInternet: (value) {
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                top: 100,
-                              ),
-                              child: Center(child: Text("No Internet")),
-                            );
-                          },
-                        );
-                      },
-                    ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            height: availableHeight,
+                            child: BlocBuilder<GetSeachedCruiseresultsBloc,
+                                GetSeachedCruiseresultsState>(
+                              builder: (context, state) {
+                                return state.map(
+                                  initial: (value) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 100,
+                                      ),
+                                      child: Center(
+                                        child: SpinKitWave(
+                                          color: Colors.blue,
+                                          size: 50.0,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  loading: (value) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 100,
+                                      ),
+                                      child: Center(
+                                        child: SpinKitWave(
+                                          color: Colors.blue,
+                                          size: 50.0,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  getuseruccess: (value) {
+                                    if (value.packagesearchresults.data ==
+                                            null ||
+                                        value.packagesearchresults.data!
+                                            .isEmpty) {
+                                      return Stack(
+                                        children: [
+                                          Positioned(
+                                            bottom: -40,
+                                            child: SvgPicture.asset(
+                                              'assets/icons/cruise_background.svg',
+                                              color: const Color.fromARGB(
+                                                  255, 196, 238, 237),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            bottom: 140,
+                                            child: SvgPicture.asset(
+                                              'assets/icons/cruise_background.svg',
+                                              color: const Color.fromARGB(
+                                                  255, 181, 235, 233),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            bottom: 150,
+                                            child: SvgPicture.asset(
+                                              'assets/icons/cruise_background.svg',
+                                              color: const Color.fromARGB(
+                                                  255, 181, 235, 233),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Center(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                      'assets/icons/not_available_404.svg'),
+                                                  Text(
+                                                    "No Cruise Found",
+                                                    style: TextStyles
+                                                        .ubuntu18bluew700,
+                                                  ),
+                                                  Center(
+                                                    child: Text(
+                                                      "It looks like no cruise are available in this price range.",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyles
+                                                          .ubuntu14black55w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                      ),
+                                      child: ListView.builder(
+                                        physics: BouncingScrollPhysics(),
+                                        itemCount: value
+                                            .packagesearchresults.data?.length,
+                                        itemBuilder: (context, index) {
+                                          final package = value
+                                              .packagesearchresults
+                                              .data?[index];
+                                          final packageId =
+                                              package?.id?.toString() ?? '1';
+                                          final isFavorite = favoritePackageMap
+                                              .containsKey(packageId);
+                                          final favouriteId = isFavorite
+                                              ? favoritePackageMap[packageId]
+                                              : null;
+
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 15,
+                                            ),
+                                            child: SearchResultsContainer(
+                                              packageId: value
+                                                      .packagesearchresults
+                                                      .data?[index]
+                                                      .id
+                                                      .toString() ??
+                                                  '1',
+                                              datum: value.packagesearchresults
+                                                      .data?[index] ??
+                                                  DatumTest(),
+                                              cruisename: value
+                                                      .packagesearchresults
+                                                      .data?[index]
+                                                      .cruise
+                                                      ?.name ??
+                                                  "N/A",
+                                              imageUrl:
+                                                  '${value.packagesearchresults.data?[index].cruise?.images?[0].cruiseImg}',
+                                              price:
+                                                  '${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}',
+                                              isFavorite: isFavorite,
+                                              favouriteId: favouriteId,
+                                              loadingFavorites:
+                                                  loadingFavorites,
+                                              toggleFavorite: (
+                                                      {packageId,
+                                                      isFavorite,
+                                                      favouriteId}) =>
+                                                  toggleFavorite(
+                                                packageId: packageId,
+                                                isFavorite: isFavorite,
+                                                favouriteId: favouriteId,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  getuserFailure: (value) {
+                                    return Stack(
+                                      children: [
+                                        Positioned(
+                                          bottom: -40,
+                                          child: SvgPicture.asset(
+                                            'assets/icons/cruise_background.svg',
+                                            color: const Color.fromARGB(
+                                                255, 196, 238, 237),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: 140,
+                                          child: SvgPicture.asset(
+                                            'assets/icons/cruise_background.svg',
+                                            color: const Color.fromARGB(
+                                                255, 181, 235, 233),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: 150,
+                                          child: SvgPicture.asset(
+                                            'assets/icons/cruise_background.svg',
+                                            color: const Color.fromARGB(
+                                                255, 181, 235, 233),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Center(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                    'assets/icons/not_available_404.svg'),
+                                                Text(
+                                                  "No Cruise Available",
+                                                  style: TextStyles
+                                                      .ubuntu18bluew700,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    "It looks like no cruises are available in the ${widget.location} location.",
+                                                    textAlign: TextAlign
+                                                        .center, // Ensures multi-line text is centered
+                                                    style: TextStyles
+                                                        .ubuntu14black55w400, // Optional: Adjust font size or style
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                  noInternet: (value) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 100,
+                                      ),
+                                      child: Center(child: Text("No Internet")),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
+              ),
+            ),
+          );
+        });
   }
 
   void _showFilterPopup(BuildContext context) {

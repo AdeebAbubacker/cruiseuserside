@@ -17,7 +17,7 @@ import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
 class BoatDetailScreen extends StatefulWidget {
   final String packageId;
-  final Datum datum;
+  final DatumTest datum;
   const BoatDetailScreen(
       {super.key, required this.packageId, required this.datum});
 

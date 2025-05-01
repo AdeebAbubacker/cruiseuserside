@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cruise_buddy/UI/Screens/Auth/login_screens.dart';
 import 'package:cruise_buddy/UI/Screens/misc/privacy_policy.dart';
 import 'package:cruise_buddy/UI/Screens/misc/terms_and_c_screen.dart';
+import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
 import 'package:cruise_buddy/core/services/auth/auth_services.dart';
@@ -14,6 +15,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -69,6 +71,30 @@ class _AccountScreenState extends State<AccountScreen> {
       setState(() {
         _pickedImage = image;
       });
+    }
+  }
+
+  void makeCall(String number, BuildContext context) async {
+    final numberWithCountryCode =
+        number.startsWith('+') ? number : '+91$number';
+    final Uri telUri = Uri(scheme: 'tel', path: numberWithCountryCode);
+    try {
+      if (Platform.isAndroid || Platform.isIOS) {
+        await launchUrl(telUri);
+      } else {
+        CustomToast.showFlushBar(
+          context: context,
+          status: false,
+          title: "Oops",
+          content: 'Phone calls are not supported on this platform',
+        );
+      }
+    } catch (e) {
+      CustomToast.showFlushBar(
+          context: context,
+          status: true,
+          title: "Success",
+          content: 'An unexpected error occurred');
     }
   }
 
@@ -152,121 +178,126 @@ class _AccountScreenState extends State<AccountScreen> {
         onTap: () {
           FocusScope.of(context).unfocus();
         },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 10),
-            if (isEditing)
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300], // light grey background
-                      shape: BoxShape.circle, // make it circular
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.check, color: Colors.green),
-                      onPressed: () {
-                        setState(() {
-                          isEditing = false;
-                          // Save changes logic here
-                          BlocProvider.of<UpdateUserProfileBloc>(context).add(
-                            UpdateUserProfileEvent.updateprofile(
-                              name: nameController.text.trim(),
-                              email: emailController.text.trim(),
-                              phone: phoneController.text.trim(),
-                              image: _pickedImage?.path ??
-                                  '', // pass image path if selected
-                            ),
-                          );
-                        });
-                      },
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 10),
+              if (isEditing)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300], // light grey background
+                        shape: BoxShape.circle, // make it circular
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.check, color: Colors.green),
+                        onPressed: () {
+                          setState(() {
+                            isEditing = false;
+                            // Save changes logic here
+                            BlocProvider.of<UpdateUserProfileBloc>(context).add(
+                              UpdateUserProfileEvent.updateprofile(
+                                name: nameController.text.trim(),
+                                email: emailController.text.trim(),
+                                phone: phoneController.text.trim(),
+                                image: _pickedImage?.path ??
+                                    '', // pass image path if selected
+                              ),
+                            );
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                if (!isEditing) ...[
-                  CustomPaint(
-                    size: const Size(120, 120),
-                    painter: DottedBorderPainter(),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  if (!isEditing) ...[
+                    CustomPaint(
+                      size: const Size(120, 120),
+                      painter: DottedBorderPainter(),
+                    ),
+                  ],
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: _pickedImage != null
+                        ? FileImage(File(_pickedImage!.path)) // Local image
+                        : imageUrl != null
+                            ? NetworkImage(imageUrl!) // Network image
+                            : null, // Default if no image
+                    child: _pickedImage == null && imageUrl == null
+                        ? ClipOval(
+                            child: Icon(Icons.person),
+                          )
+                        : null,
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 5,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (isEditing) {
+                          _pickImage();
+                        } else {
+                          setState(() {
+                            isEditing = !isEditing;
+                          });
+                        }
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.black,
+                          shape: BoxShape.circle,
+                        ),
+                        padding: const EdgeInsets.all(4),
+                        child: isEditing
+                            ? SvgPicture.asset(
+                                'assets/image/profile/profile_pic_edit.svg')
+                            : SvgPicture.asset(
+                                'assets/image/profile/profile_pic_edit.svg'),
+                      ),
+                    ),
                   ),
                 ],
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: _pickedImage != null
-                      ? FileImage(File(_pickedImage!.path)) // Local image
-                      : imageUrl != null
-                          ? NetworkImage(imageUrl!) // Network image
-                          : null, // Default if no image
-                  child: _pickedImage == null && imageUrl == null
-                      ? ClipOval(
-                          child: Icon(Icons.person),
-                        )
-                      : null,
+              ),
+              const SizedBox(height: 20),
+              if (isEditing) ...[
+                BuildEditableField(
+                  textEditingController: nameController,
+                  focusNode: nameFocusnode,
                 ),
-                Positioned(
-                  bottom: 0,
-                  right: 5,
-                  child: GestureDetector(
-                    onTap: () {
-                      if (isEditing) {
-                        _pickImage();
-                      } else {
-                        setState(() {
-                          isEditing = !isEditing;
-                        });
-                      }
-                    },
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.black,
-                        shape: BoxShape.circle,
-                      ),
-                      padding: const EdgeInsets.all(4),
-                      child: isEditing
-                          ? SvgPicture.asset(
-                              'assets/image/profile/profile_pic_edit.svg')
-                          : SvgPicture.asset(
-                              'assets/image/profile/profile_pic_edit.svg'),
-                    ),
-                  ),
+                BuildEditableField(
+                  textEditingController: emailController,
+                  focusNode: emailFocusnode,
                 ),
+                BuildEditableField(
+                  textEditingController: phoneController,
+                  focusNode: phoneNoFocusnode,
+                ),
+              ] else ...[
+                Text(nameController.text,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 5),
+                Text(emailController.text,
+                    style:
+                        const TextStyle(fontSize: 14, color: Colors.black54)),
+                const SizedBox(height: 5),
+                Text(phoneController.text,
+                    style:
+                        const TextStyle(fontSize: 14, color: Colors.black54)),
               ],
-            ),
-            const SizedBox(height: 20),
-            if (isEditing) ...[
-              BuildEditableField(
-                textEditingController: nameController,
-                focusNode: nameFocusnode,
-              ),
-              BuildEditableField(
-                textEditingController: emailController,
-                focusNode: emailFocusnode,
-              ),
-              BuildEditableField(
-                textEditingController: phoneController,
-                focusNode: phoneNoFocusnode,
-              ),
-            ] else ...[
-              Text(nameController.text,
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 5),
-              Text(emailController.text,
-                  style: const TextStyle(fontSize: 14, color: Colors.black54)),
-              const SizedBox(height: 5),
-              Text(phoneController.text,
-                  style: const TextStyle(fontSize: 14, color: Colors.black54)),
-            ],
-            const SizedBox(height: 30),
-            Expanded(
-              child: ListView(
+              const SizedBox(height: 30),
+              ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
                   // ListTile(
@@ -281,33 +312,24 @@ class _AccountScreenState extends State<AccountScreen> {
                   // ),
                   // const Divider(),
                   ListTile(
-                    leading: const Icon(Icons
-                        .description), // or Icons.rule, Icons.article, Icons.gavel
-                    title: const Text('T & C'),
-                    trailing: SvgPicture.asset(
-                      'assets/image/profile/arrow_right.svg',
-                    ),
+                    leading: SvgPicture.asset(
+                      'assets/icons/support_settings.svg',
+                      color: Colors.blue,
+                    ), // or Icons.rule, Icons.article, Icons.gavel
+                    title: const Text('Get Support'),
+
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return TermsAndConditionsScreen();
-                          },
-                        ),
-                      );
+                      makeCall('9072855886', context);
                     },
                   ),
-
-                  const Divider(),
+                  SizedBox(height: 5),
+                  // const Divider(),
                   ListTile(
                     leading: SvgPicture.asset(
-                      'assets/image/profile/privacy_policy.svg',
+                      'assets/icons/privacy_settings.svg',
+                      color: Colors.blue,
                     ),
                     title: const Text('Privacy Policy'),
-                    trailing: SvgPicture.asset(
-                      'assets/image/profile/arrow_right.svg',
-                    ),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -319,14 +341,46 @@ class _AccountScreenState extends State<AccountScreen> {
                       );
                     },
                   ),
-                  const Divider(),
+                  SizedBox(height: 5),
+                  // const Divider(),
                   ListTile(
                     leading: SvgPicture.asset(
-                      'assets/image/profile/logout.svg',
+                      'assets/icons/terms&c.svg',
+                      color: Colors.blue,
+                    ),
+                    title: const Text('Terms and Conditions'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return TermsAndConditionsScreen();
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  // const Divider(),
+                  SizedBox(height: 5),
+                  ListTile(
+                    leading: SvgPicture.asset(
+                      'assets/icons/app_version_settings.svg',
+                      color: Colors.blue,
+                    ),
+                    title: const Text('App Version'),
+                    trailing: Text(
+                      "v1.0.17",
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  // const Divider(),
+                  ListTile(
+                    leading: SvgPicture.asset(
+                      'assets/icons/logout_settings.svg',
+                      color: Colors.blue,
                     ),
                     title: const Text(
                       'Logout',
-                      style: TextStyle(color: Color(0xff1F8386)),
                     ),
                     trailing: SvgPicture.asset(
                       'assets/image/profile/arrow_right.svg',
@@ -363,8 +417,8 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

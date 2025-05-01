@@ -785,7 +785,7 @@ class _CategoriesListResultscreenState
                                                                         builder: (context) =>
                                                                             BoatDetailScreen(
                                                                               packageId: value.packagesearchresults.data?[index].id.toString() ?? "53",
-                                                                              datum: value.packagesearchresults.data?[index] ?? Datum(),
+                                                                              datum: value.packagesearchresults.data?[index] ?? DatumTest(),
                                                                             )));
                                                               },
                                                               style:

@@ -63,7 +63,7 @@ class AppRoutes {
   }
 
   static navigateToBoatdetailScreen(BuildContext context,
-      {required Datum datum, required String packageid}) {
+      {required DatumTest datum, required String packageid}) {
     return Navigator.push(
       context,
       MaterialPageRoute(

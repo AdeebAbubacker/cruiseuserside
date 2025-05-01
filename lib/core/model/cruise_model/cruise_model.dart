@@ -12,7 +12,7 @@ CruiseModel cruiseModelFromJson(String str) =>
 String cruiseModelToJson(CruiseModel data) => json.encode(data.toJson());
 
 class CruiseModel {
-  List<Datum> data;
+  List<DatumTest> data;
   Links links;
   Meta meta;
 
@@ -23,7 +23,7 @@ class CruiseModel {
   });
 
   factory CruiseModel.fromJson(Map<String, dynamic> json) => CruiseModel(
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: List<DatumTest>.from(json["data"].map((x) => DatumTest.fromJson(x))),
         links: Links.fromJson(json["links"]),
         meta: Meta.fromJson(json["meta"]),
       );

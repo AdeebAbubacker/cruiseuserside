@@ -1,10 +1,12 @@
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
+
 import 'package.dart';
 import 'user.dart';
 
 class Datum {
   int? id;
   User? user;
-  Package? package;
+  DatumTest? package;
 
   Datum({this.id, this.user, this.package});
 
@@ -15,7 +17,7 @@ class Datum {
             : User.fromJson(json['user'] as Map<String, dynamic>),
         package: json['package'] == null
             ? null
-            : Package.fromJson(json['package'] as Map<String, dynamic>),
+            : DatumTest.fromJson(json['package'] as Map<String, dynamic>),
       );
 
   Map<String, dynamic> toJson() => {
