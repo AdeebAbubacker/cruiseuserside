@@ -35,8 +35,8 @@ class LocationsBasedCruiseScreen extends StatefulWidget {
 
 class _LocationsBasedCruiseScreenState
     extends State<LocationsBasedCruiseScreen> {
-  final StreamController<FeaturedBoatsModel> _favoritesController =
-      StreamController<FeaturedBoatsModel>();
+  final StreamController<FavoritesListModel> _favoritesController =
+      StreamController<FavoritesListModel>();
   Map<String, String> favoritePackageMap = {};
   Set<String> loadingFavorites = {};
   List<bool> isFavoriteList = [];
@@ -65,8 +65,8 @@ class _LocationsBasedCruiseScreenState
 
     if (response.statusCode == 201 || response.statusCode == 200) {
       final Map<String, dynamic> decodedJson = json.decode(response.body);
-      final FeaturedBoatsModel jsonResponse =
-          FeaturedBoatsModel.fromJson(decodedJson);
+      final FavoritesListModel jsonResponse =
+          FavoritesListModel.fromJson(decodedJson);
       _favoritesController.add(jsonResponse);
 
       favoritePackageMap = {
@@ -101,70 +101,98 @@ class _LocationsBasedCruiseScreenState
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<FeaturedBoatsModel>(
+    return StreamBuilder<FavoritesListModel>(
         stream: _favoritesController.stream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Padding(
-              padding: const EdgeInsets.only(
-                top: 100,
+            return Scaffold(
+              appBar: AppBar(
+                forceMaterialTransparency: true,
+                backgroundColor: Colors.white,
+                elevation: 0,
+                leading: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(Icons.arrow_back_ios)),
+                title: Text(widget.location,
+                    style: TextStyles.ubuntu32black15w700),
               ),
-              child: Center(
-                child: SpinKitWave(
-                  color: Colors.blue,
-                  size: 50.0,
+              body: Padding(
+                padding: const EdgeInsets.only(
+                  top: 100,
+                ),
+                child: Center(
+                  child: SpinKitWave(
+                    color: Colors.blue,
+                    size: 50.0,
+                  ),
                 ),
               ),
             );
           }
           if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.wifi_off,
-                    color: Colors.grey,
-                    size: 80,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "No Internet Connection",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[700],
+            return Scaffold(
+              appBar: AppBar(
+                forceMaterialTransparency: true,
+                backgroundColor: Colors.white,
+                elevation: 0,
+                leading: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(Icons.arrow_back_ios)),
+                title: Text(widget.location,
+                    style: TextStyles.ubuntu32black15w700),
+              ),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.wifi_off,
+                      color: Colors.grey,
+                      size: 80,
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Please check your network and try again.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                    ),
-                    child: const Text(
-                      "Retry",
+                    const SizedBox(height: 20),
+                    Text(
+                      "No Internet Connection",
                       style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[700],
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 10),
+                    Text(
+                      "Please check your network and try again.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                      ),
+                      child: const Text(
+                        "Retry",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }

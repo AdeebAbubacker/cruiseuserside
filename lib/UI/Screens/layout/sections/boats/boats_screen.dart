@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:cruise_buddy/UI/Widgets/noDataCondition/no_data_screen.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/view_model/seeAllMyBookings/see_allmy_bookings_bloc.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +72,10 @@ class _BoatsScreenState extends State<BoatsScreen> {
             return Center(child: CircularProgressIndicator());
           },
           getuseruccess: (value) {
+            if (value.mybookingmodel.data?.isEmpty ?? true) {
+              return NoDataScreen(text: "No bookings yet");
+            }
+
             return ListView.builder(
               padding: EdgeInsets.all(16),
               itemCount: value.mybookingmodel.data?.length,
