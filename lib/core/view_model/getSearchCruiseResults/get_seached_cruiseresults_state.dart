@@ -5,7 +5,7 @@ class GetSeachedCruiseresultsState with _$GetSeachedCruiseresultsState {
   const factory GetSeachedCruiseresultsState.initial() = _Initial;
   const factory GetSeachedCruiseresultsState.loading() = _Loading;
   const factory GetSeachedCruiseresultsState.getuseruccess(
-          {required CategorySearchModel packagesearchresults}) =
+          {required FeaturedBoatsModel packagesearchresults}) =
       _GetSeachedCruiseresults;
 
   const factory GetSeachedCruiseresultsState.getuserFailure(

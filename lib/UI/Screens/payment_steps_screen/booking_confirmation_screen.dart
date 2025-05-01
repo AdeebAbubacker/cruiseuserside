@@ -2,6 +2,7 @@ import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/type_ofday_
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/select_payment_method.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/rectangle_bluebutton_loading.dart';
+import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/view_model/bookMyCruise/book_my_cruise_bloc.dart';
 import 'package:cruise_buddy/core/view_model/viewMyPackage/view_my_package_bloc.dart';
@@ -217,16 +218,23 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
               },
               getBookedFailure: (value) {
                 setState(() => _isLoading = false);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text(
-                          "Booking failed, your cruise is not available in this date")),
+
+                CustomToast.showFlushBar(
+                  context: context,
+                  status: false,
+                  title: "Oops",
+                  content:
+                      "Booking failed, your cruise is not available in this date",
                 );
               },
               noInternet: (value) {
                 setState(() => _isLoading = false);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("No internet connection")),
+
+                CustomToast.showFlushBar(
+                  context: context,
+                  status: false,
+                  title: "Oops",
+                  content: "No Internet please try again",
                 );
               },
             );
@@ -482,11 +490,12 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                             false; // If unavailableDates is null, return false
 
                                         if (isUnavailable) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                                content: Text(
-                                                    "This date is not available.")),
+                                          CustomToast.showFlushBar(
+                                            context: context,
+                                            status: false,
+                                            title: "Oops",
+                                            content:
+                                                "This date is not available.",
                                           );
                                           return;
                                         }
@@ -624,7 +633,14 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                       DateFormat('yyyy-MM-dd')
                                           .format(_selectedDate);
 
-                                  print('ddddddddddddd ');
+                                  print('parms--------------- ');
+                                  print(
+                                      'parms---------------${widget.packageId} ');
+                                  print(
+                                      'parms---------------${formattedDate} ');
+                                  print(
+                                      'parms--------------- ${bookingTypeId}');
+                                  print('parms--------------- ');
                                   context
                                       .read<BookMyCruiseBloc>()
                                       .add(BookMyCruiseEvent.createNewbookings(
@@ -679,11 +695,11 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
           icon: Icon(Icons.add),
           onPressed: () {
             if (max != null && value >= max) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Maximum $label reached'),
-                  duration: Duration(seconds: 2),
-                ),
+              CustomToast.showFlushBar(
+                context: context,
+                status: false,
+                title: "Oops",
+                content: 'Maximum $label reached',
               );
             } else {
               onChanged(value + 1);

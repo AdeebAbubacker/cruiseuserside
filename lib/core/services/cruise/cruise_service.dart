@@ -97,7 +97,7 @@ class CruiseService {
     }
   }
 
-  Future<Either<String, CategorySearchModel>> getSearchResultsList({
+  Future<Either<String, FeaturedBoatsModel>> getSearchResultsList({
     String? location,
     String? amenities,
     String? startDate,
@@ -168,7 +168,7 @@ class CruiseService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
-        final locationdetails = CategorySearchModel.fromJson(data);
+        final locationdetails = FeaturedBoatsModel.fromJson(data);
         return Right(locationdetails);
       } else {
         return Left('Failed to get cruise type: ${response.statusCode}');

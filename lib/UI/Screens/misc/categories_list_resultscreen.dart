@@ -337,20 +337,16 @@ class _CategoriesListResultscreenState
                             builder: (context, state) {
                               return state.map(
                                 initial: (value) {
-                                  return ListView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    itemCount: 12,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                          bottom: 15,
-                                        ),
-                                        child: const SearchResultsContainer(
-                                          price: '',
-                                          imageUrl: '',
-                                        ),
-                                      );
-                                    },
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 100,
+                                    ),
+                                    child: Center(
+                                      child: SpinKitWave(
+                                        color: Colors.blue,
+                                        size: 50.0,
+                                      ),
+                                    ),
                                   );
                                 },
                                 loading: (value) {
@@ -833,20 +829,62 @@ class _CategoriesListResultscreenState
                                   );
                                 },
                                 getuserFailure: (value) {
-                                  return ListView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    itemCount: 12,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                          bottom: 15,
+                                  return Stack(
+                                    children: [
+                                      Positioned(
+                                        bottom: -40,
+                                        child: SvgPicture.asset(
+                                          'assets/icons/cruise_background.svg',
+                                          color: const Color.fromARGB(
+                                              255, 196, 238, 237),
                                         ),
-                                        child: const SearchResultsContainer(
-                                          imageUrl: 'ss',
-                                          price: '',
+                                      ),
+                                      Positioned(
+                                        bottom: 140,
+                                        child: SvgPicture.asset(
+                                          'assets/icons/cruise_background.svg',
+                                          color: const Color.fromARGB(
+                                              255, 181, 235, 233),
                                         ),
-                                      );
-                                    },
+                                      ),
+                                      Positioned(
+                                        bottom: 150,
+                                        child: SvgPicture.asset(
+                                          'assets/icons/cruise_background.svg',
+                                          color: const Color.fromARGB(
+                                              255, 181, 235, 233),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Center(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset(
+                                                  'assets/icons/not_available_404.svg'),
+                                              Text(
+                                                "No Cruise Available",
+                                                style:
+                                                    TextStyles.ubuntu18bluew700,
+                                              ),
+                                              Center(
+                                                child: Text(
+                                                  "It looks like no cruises are available in the ${widget.location} location.",
+                                                  textAlign: TextAlign
+                                                      .center, // Ensures multi-line text is centered
+                                                  style: TextStyles
+                                                      .ubuntu14black55w400, // Optional: Adjust font size or style
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   );
                                 },
                                 noInternet: (value) {

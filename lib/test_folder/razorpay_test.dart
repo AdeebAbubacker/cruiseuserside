@@ -1,3 +1,4 @@
+import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
@@ -23,16 +24,24 @@ class _RazorpayTestScreenState extends State<RazorpayTestScreen> {
 
   // Handle success event
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Payment Successful: ${response.paymentId}'),
-    ));
+   
+      CustomToast.showFlushBar(
+                    context: context,
+                    status: true,
+                    title: "Success",
+                    content:" Payment Successful",
+                  );
   }
 
   // Handle error event
   void _handlePaymentError(PaymentFailureResponse response) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('Payment Failed: ${response.message}'),
-    ));
+        CustomToast.showFlushBar(
+                    context: context,
+                    status: true,
+                    title: "Oops",
+                    content:"Payment Failed",
+                  );
+  
   }
 
   // Open Razorpay payment gateway

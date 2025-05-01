@@ -5,12 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SearchResultsContainer extends StatelessWidget {
+  final String packageId;
   final String cruisename;
   final String imageUrl;
   final String price;
+  final Datum datum;
   const SearchResultsContainer({
+    required this.packageId,
     this.cruisename = "Kerala’s Heritage Haven – Traditional Kerala Décor",
     required this.imageUrl,
+    required this.datum,
     required this.price,
     super.key,
   });
@@ -166,10 +170,11 @@ class SearchResultsContainer extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => BoatDetailScreen(
-                                        packageId: '51',
-                                        datum: Datum(),
-                                      )));
+                                builder: (context) => BoatDetailScreen(
+                                  packageId: packageId,
+                                  datum: datum,
+                                ),
+                              ));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0XFF1F8386),

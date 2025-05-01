@@ -5,6 +5,7 @@ import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/cruise_sele
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/type_ofday_selection.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
+import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -75,15 +76,19 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       if (Platform.isAndroid || Platform.isIOS) {
         await launchUrl(telUri);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Phone calls are not supported on this platform')),
+        CustomToast.showFlushBar(
+          context: context,
+          status: false,
+          title: "Oops",
+          content: 'Phone calls are not supported on this platform',
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An unexpected error occurred: $e')),
-      );
+      CustomToast.showFlushBar(
+          context: context,
+          status: true,
+          title: "Success",
+          content: 'An unexpected error occurred');
     }
   }
 
@@ -109,7 +114,6 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       return null;
     }
 
-  
     return Scaffold(
       backgroundColor: Color(0XFFFFFFFF),
       appBar: AppBar(
@@ -120,22 +124,14 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             },
             icon: Icon(Icons.arrow_back_ios)),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              child: SvgPicture.asset(
-                  'assets/image/boat_details_img/share_icon.svg'),
-              onTap: () {},
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: GestureDetector(
-              child: SvgPicture.asset(
-                  'assets/image/boat_details_img/fav_icon.svg'),
-              onTap: () {},
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: GestureDetector(
+          //     child: SvgPicture.asset(
+          //         'assets/image/boat_details_img/share_icon.svg'),
+          //     onTap: () {},
+          //   ),
+          // ),
         ],
       ),
       body: SingleChildScrollView(
@@ -255,7 +251,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    'Type of Cruise',
+                    'Type of Cruissse',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
@@ -280,7 +276,6 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     ),
                   ),
                   SizedBox(height: 16),
-                 
 
                   Row(
                     children: [

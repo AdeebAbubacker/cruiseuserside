@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:261245076643:android:5caed2b56f45890314ab16",
+        "android_client_info": {
+          "package_name": "com.cruiseowner.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "261245076643-2j4guotigd87shlbbkdivcp5jbnjst8k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6RPgGV4xZTDoF6hWUTDytqjOF_uizCaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "261245076643-2j4guotigd87shlbbkdivcp5jbnjst8k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "261245076643-0m93hj1k08kvum8ipune92l0coo29g67.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cruiseowner.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:261245076643:android:17acf4a51777917114ab16",
         "android_client_info": {
           "package_name": "com.leburacruisebuddy.app"
@@ -19,6 +55,14 @@
           "android_info": {
             "package_name": "com.leburacruisebuddy.app",
             "certificate_hash": "0d0ecd1274951c4e2bca14554fde0ce7c3387a77"
+          }
+        },
+        {
+          "client_id": "261245076643-dfb5001h09hq6ek0o4qd9b0arts05can.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.leburacruisebuddy.app",
+            "certificate_hash": "b6f4f21bb329007ecf0df4e5a9344ae67b3532d8"
           }
         },
         {
@@ -39,10 +83,10 @@
               "client_type": 3
             },
             {
-              "client_id": "261245076643-u3i3iacidsaorbo02nag82l9h7913u0u.apps.googleusercontent.com",
+              "client_id": "261245076643-0m93hj1k08kvum8ipune92l0coo29g67.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.cruiseBuddy"
+                "bundle_id": "com.cruiseowner.app"
               }
             }
           ]

@@ -1,4 +1,5 @@
 import 'package:cruise_buddy/UI/Widgets/Button/full_width_bluebutton.dart';
+import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/routes/app_routes.dart';
 import 'package:cruise_buddy/core/view_model/regsiter/register_bloc.dart';
@@ -49,14 +50,19 @@ class _SignupScreenState extends State<SignupScreen> {
               AppRoutes.navigateToMainLayoutScreen(context);
             },
             registrationFailure: (value) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(value.error)));
+              CustomToast.showFlushBar(
+                context: context,
+                status: false,
+                title: "Oops",
+                content: value.error,
+              );
             },
             noInternet: (value) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("No Internet please try again"),
-                ),
+              CustomToast.showFlushBar(
+                context: context,
+                status: false,
+                title: "Oops",
+                content: "No Internet please try again",
               );
             },
           );

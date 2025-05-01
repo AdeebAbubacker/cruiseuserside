@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:cruise_buddy/core/model/category_search_model/category_search_model.dart';
+
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:cruise_buddy/core/services/cruise/cruise_service.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
