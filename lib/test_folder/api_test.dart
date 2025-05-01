@@ -1,52 +1,38 @@
-import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
-import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
-import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
-import 'package:cruise_buddy/core/services/user/user_service.dart';
-import 'package:cruise_buddy/core/view_model/getUserProfile/get_user_profile_bloc.dart';
-import 'package:cruise_buddy/core/view_model/updateUserProfile/update_user_profile_bloc.dart';
-import 'package:cruise_buddy/core/view_model/viewMyPackage/view_my_package_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-
-class ApiTest extends StatelessWidget {
-  const ApiTest({super.key});
+import 'package:google_sign_in/google_sign_in.dart';
+class dgdfgdfg extends StatelessWidget {
+  Future<void> logoutFromGmail() async {
+    try {
+      await GoogleSignIn().signOut(); // Sign out from Google
+      await FirebaseAuth.instance.signOut(); // Sign out from Firebase
+    } catch (e) {
+      print('Logout failed: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
-      body: SafeArea(
+      appBar: AppBar(title: Text('Home')),
+      body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            BlocBuilder<ViewMyPackageBloc, ViewMyPackageState>(
-              builder: (context, state) {
-                return state.map(
-                  initial: (value) {
-                    return Text("ffffffffffffffff");
-                  },
-                  loading: (value) {
-                    return Text("hhhhhhhhhhhhhhhhhhhhhhh");
-                  },
-                  viewMyPacakge: (value) {
-                    return Text(
-                        "ttttttttttttttttttttt ${value.mybookingmodel.data?.cruise?.name ?? "d"}");
-                  },
-                  getuserFailure: (value) {
-                    return Text("cghfgjcgfj");
-                  },
-                  noInternet: (value) {
-                    return Text("uuuuuuuuuuuuuuuuuu");
-                  },
-                );
-              },
-            ),
-            SizedBox(height: 100),
+            if (user != null)
+              Text('Logged in as: ${user.displayName ?? user.email}'),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                BlocProvider.of<ViewMyPackageBloc>(context)
-                    .add(ViewMyPackageEvent.viewMyPackage(packageId: '53'));
+                await logoutFromGmail();
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => RFYGYFT()),
+                // );
               },
-              child: Text("data"),
+              child: Text('Logout'),
             ),
           ],
         ),

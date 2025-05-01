@@ -65,13 +65,14 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           userEmail = user.email;
         }); // Dispatch event to PostGoogleBloc after successful Google Sign-In
-        print("mobeeeeeeeeeeeeeeeeeeee");
-        // BlocProvider.of<PostGoogleBloc>(context).add(
-        //   PostGoogleEvent.added(
-        //     UId: user.uid,
-        //     name: user.displayName.toString(),
-        //   ),
-        // );
+        print("mobeeeeeeeeeeeeeeeeeeee ${userEmail}");
+        print("mobeeeeeeeeeeeeeeeeeeee ${user.phoneNumber}");
+        BlocProvider.of<PostGoogleBloc>(context).add(
+          PostGoogleEvent.added(
+            UId: user.uid,
+            name: user.displayName.toString(),
+          ),
+        );
       }
     } catch (e) {
       print("Google Sign-In Error: $e");
@@ -184,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       name: loginModel.user?.name ?? "",
                       email: loginModel.user?.email ?? '',
                       phone: loginModel.user?.phoneNumber,
-                      image: '', // Assuming you don't have an image in User
+                      // Assuming you don't have an image in User
                     );
 
                     // Save it to Hive
@@ -220,27 +221,41 @@ class _LoginScreenState extends State<LoginScreen> {
                 loading: (_) {
                   print('loading');
                 },
-                addedSuccess: (success) {
+                addedSuccess: (success) async {
+                  print('success');
+                  final loginModel = success.gmailresponse
+                      .user; // assuming you have loginModel inside state
+
+                  if (loginModel != null) {
+                    // Create UserDetailsDB from LoginModel's user
+                    final userDetails = UserDetailsDB(
+                      name: loginModel.name ?? "",
+                      email: loginModel.email ?? '',
+                      phone: loginModel.phoneNumber,
+                      // Assuming you don't have an image in User
+                    );
+
+                    // Save it to Hive
+                    await userDetailsBox.put('user', userDetails);
+                  }
                   AppRoutes.navigateToMainLayoutScreen(context);
                 },
                 addedFailure: (failure) {
-                 
-                         CustomToast.showFlushBar(
+                  print('failure');
+                  CustomToast.showFlushBar(
                     context: context,
                     status: false,
                     title: "Oops",
-                    content:"${failure.error}",
-                  
+                    content: "Something went wrong",
                   );
                 },
                 noInternet: (value) {
-                       CustomToast.showFlushBar(
+                  CustomToast.showFlushBar(
                     context: context,
                     status: false,
                     title: "Oops",
-                    content:"No Internet please try again",
+                    content: "No Internet please try again",
                   );
-                
                 },
               );
             },
@@ -255,10 +270,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const SizedBox(height: 70),
                   Center(
-                    child: Image.asset(
-                      'assets/email_logo.png',
-                      width: 120,
-                      height: 120,
+                    child: Container(
+                      width: 80, // Equal width and height
+                      height: 80,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color.fromARGB(255, 201, 201, 201),
+                        ),
+                        borderRadius: BorderRadius.circular(1000),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: SvgPicture.asset(
+                            'assets/icons/emailLogo.svg',
+                            width: 50,
+                            height: 50,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -419,9 +449,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset("assets/Google.png"),
-                                ),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SvgPicture.asset(
+                                        'assets/icons/Google.svg')),
                               ),
                             ),
                           );
@@ -444,10 +474,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                               BorderRadius.circular(30),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child:
-                                              Image.asset("assets/Google.png"),
-                                        ),
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SvgPicture.asset(
+                                                'assets/icons/Google.svg')),
                                       ),
                                     ),
                                   );
@@ -471,10 +500,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                               BorderRadius.circular(30),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child:
-                                              Image.asset("assets/Google.png"),
-                                        ),
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SvgPicture.asset(
+                                                'assets/icons/Google.svg')),
                                       ),
                                     ),
                                   );
@@ -493,10 +521,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                               BorderRadius.circular(30),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child:
-                                              Image.asset("assets/Google.png"),
-                                        ),
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SvgPicture.asset(
+                                                'assets/icons/Google.svg')),
                                       ),
                                     ),
                                   );
@@ -515,10 +542,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                               BorderRadius.circular(30),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child:
-                                              Image.asset("assets/Google.png"),
-                                        ),
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SvgPicture.asset(
+                                                'assets/icons/Google.svg')),
                                       ),
                                     ),
                                   );
@@ -545,9 +571,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset("assets/Google.png"),
-                                ),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SvgPicture.asset(
+                                        'assets/icons/Google.svg')),
                               ),
                             ),
                           );
@@ -565,9 +591,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset("assets/Google.png"),
-                                ),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SvgPicture.asset(
+                                        'assets/icons/Google.svg')),
                               ),
                             ),
                           );
@@ -585,9 +611,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset("assets/Google.png"),
-                                ),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SvgPicture.asset(
+                                        'assets/icons/Google.svg')),
                               ),
                             ),
                           );
