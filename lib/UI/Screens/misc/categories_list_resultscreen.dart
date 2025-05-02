@@ -918,6 +918,46 @@ class _CategoriesListResultscreenState
     );
   }
 
+  //     AmenitiesPill(
+  //       image: ,
+  //       text: 'Water Heater',
+  //     ),
+  //     AmenitiesPill(
+  //       image: ,
+  //       text: 'Wi-Fi',
+  //     ),
+  //     AmenitiesPill(
+  //       image: 'assets/icons/projector.svg',
+  //       text: 'Projector',
+  //     ),
+  //     AmenitiesPill(
+  //       image: 'assets/icons/mic.svg',
+  //       text: 'Mic',
+  //     ),
+  //     AmenitiesPill(
+  //       image: 'assets/icons/music.svg',
+  //       text: 'Music System',
+  //     ),
+  //     AmenitiesPill(
+  //       image: 'assets/icons/Tv.svg',
+  //       text: 'TV',
+  //     ),
+  //     AmenitiesPill(
+  //       image: 'assets/icons/iron_box.svg',
+  //       text: 'Iron Box',
+  //     ),
+  Set<String> selectedAmenities = {};
+  final List<Map<String, String>> amenitiesData = [
+    {'image': 'assets/icons/heater.svg', 'text': 'Heater'},
+    {'image': 'assets/icons/projector.svg', 'text': 'Projector'},
+    {'image': 'assets/icons/mic.svg', 'text': 'Mic'},
+    {'image': 'assets/icons/wifi.svg', 'text': 'WiFi'},
+    {'image': 'assets/icons/food.svg', 'text': 'Food'},
+    {'image': 'assets/icons/drinks.svg', 'text': 'Drinks'},
+    {'image': 'assets/icons/music.svg', 'text': 'Music'},
+    {'image': 'assets/icons/Tv.svg', 'text': 'TV'},
+    {'image': 'assets/icons/iron_box.svg', 'text': 'iron Box'},
+  ];
   void _showFilterPopup(
     BuildContext context, {
     required Function(String minAmount, String maxAmount) onApplyPressed,
@@ -1046,39 +1086,62 @@ class _CategoriesListResultscreenState
                           SizedBox(
                             height: 10,
                           ),
+                          // Wrap(
+                          //   spacing: 10,
+                          //   runSpacing: 10,
+                          //   children: [
+                          //     AmenitiesPill(
+                          //       image: 'assets/icons/heater.svg',
+                          //       text: 'Water Heater',
+                          //     ),
+                          //     AmenitiesPill(
+                          //       image: 'assets/icons/wifi.svg',
+                          //       text: 'Wi-Fi',
+                          //     ),
+                          //     AmenitiesPill(
+                          //       image: 'assets/icons/projector.svg',
+                          //       text: 'Projector',
+                          //     ),
+                          //     AmenitiesPill(
+                          //       image: 'assets/icons/mic.svg',
+                          //       text: 'Mic',
+                          //     ),
+                          //     AmenitiesPill(
+                          //       image: 'assets/icons/music.svg',
+                          //       text: 'Music System',
+                          //     ),
+                          //     AmenitiesPill(
+                          //       image: 'assets/icons/Tv.svg',
+                          //       text: 'TV',
+                          //     ),
+                          //     AmenitiesPill(
+                          //       image: 'assets/icons/iron_box.svg',
+                          //       text: 'Iron Box',
+                          //     ),
+                          //   ],
+                          // ),
+
                           Wrap(
-                            spacing: 10,
+                            spacing: 6,
                             runSpacing: 10,
-                            children: [
-                              AmenitiesPill(
-                                image: 'assets/icons/heater.svg',
-                                text: 'Water Heater',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/wifi.svg',
-                                text: 'Wi-Fi',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/projector.svg',
-                                text: 'Projector',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/mic.svg',
-                                text: 'Mic',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/music.svg',
-                                text: 'Music System',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/Tv.svg',
-                                text: 'TV',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/iron_box.svg',
-                                text: 'Iron Box',
-                              ),
-                            ],
+                            children: amenitiesData.map((amenity) {
+                              final isSelected =
+                                  selectedAmenities.contains(amenity['text']);
+                              return AmenitiesPillCore(
+                                image: amenity['image']!,
+                                text: amenity['text']!,
+                                isSelected: isSelected,
+                                onTap: () {
+                                  setState(() {
+                                    if (isSelected) {
+                                      selectedAmenities.remove(amenity['text']);
+                                    } else {
+                                      selectedAmenities.add(amenity['text']!);
+                                    }
+                                  });
+                                },
+                              );
+                            }).toList(),
                           ),
                           SizedBox(height: 20),
                           Center(

@@ -433,9 +433,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.grey,
                         ),
                       ),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text("or sign in with"),
+                        child: Text(
+                          "or sign in with",
+                          style: GoogleFonts.ubuntu(),
+                        ),
                       ),
                       Expanded(
                         child: Container(
