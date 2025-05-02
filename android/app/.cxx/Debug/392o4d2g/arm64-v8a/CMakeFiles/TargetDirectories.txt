@@ -1,0 +1,2 @@
+/Users/slbs/Desktop/cruise/cruiseuserside/android/app/.cxx/Debug/392o4d2g/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/slbs/Desktop/cruise/cruiseuserside/android/app/.cxx/Debug/392o4d2g/arm64-v8a/CMakeFiles/rebuild_cache.dir
