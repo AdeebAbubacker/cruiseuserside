@@ -191,11 +191,28 @@ class TextStyles {
     fontWeight: FontWeight.w300,
   );
   static final TextStyle ubntu14w300grey = ubuntu.copyWith(
-      fontSize: 14,
-      fontWeight: FontWeight.w300,
-      color: const Color.fromARGB(255, 73, 73, 73));
+    fontSize: 14,
+    fontWeight: FontWeight.w300,
+    color: const Color.fromARGB(
+      255,
+      73,
+      73,
+      73,
+    ),
+  );
   static final TextStyle ubntu14w500grey = ubuntu.copyWith(
-      fontSize: 14,
-      fontWeight: FontWeight.w600,
-      color: const Color.fromARGB(255, 9, 9, 9));
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: const Color.fromARGB(
+      255,
+      9,
+      9,
+      9,
+    ),
+  );
+  static final TextStyle ubntu14w400black = ubuntu.copyWith(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: const Color.fromARGB(255, 65, 65, 65),
+  );
 }

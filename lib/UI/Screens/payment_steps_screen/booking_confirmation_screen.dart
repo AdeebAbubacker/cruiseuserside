@@ -286,6 +286,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
             ),
           ),
           body: ListView(
+            physics: BouncingScrollPhysics(),
             padding: const EdgeInsets.all(16.0),
             children: [
               SizedBox(
@@ -318,16 +319,12 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
-                        color: Color(0xffE2E2E2),
+                        color: Color.fromARGB(255, 125, 125, 125),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         '${_currentPage + 1}/${_images.length}',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyles.ubuntu16whitew2700,
                       ),
                     ),
                   ),
@@ -385,10 +382,12 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                         _buildDetailRow('Day', _day.toString()),
                       ],
                     ),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Text(
                       'Booking Type',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyles.ubntu16,
                     ),
                     SizedBox(height: 8),
                     if (widget.datum.bookingTypes!.length == 1)
@@ -411,7 +410,9 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                         initialType: int.tryParse(bookingTypeId) ??
                             1, // Pass the initial value (if any)
                       ),
-                    SizedBox(height: 10),
+                    SizedBox(
+                      height: 40,
+                    ),
                     // Passengers Section
                     _buildEditableSection(
                       title: 'Number of passengers',
@@ -583,9 +584,11 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                     const SizedBox(height: 16),
                     SizedBox(height: 16),
 
-                    Text('Choose your food count',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600)),
+                    Text(
+                      'Choose your food count',
+                      style: TextStyles.ubntu16,
+                    ),
+                    SizedBox(height: 20),
                     _buildFoodCounter('Non-Veg', _nonVegCount,
                         (value) => setState(() => _nonVegCount = value)),
                     _buildFoodCounter('Veg', _vegCount,
@@ -594,25 +597,31 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                         (value) => setState(() => _jainVegCount = value)),
 
                     // Add ons
-                    const SizedBox(height: 16),
-                    const Text('Add-ons (optional)',
-                        style: TextStyle(fontSize: 16)),
+                    const SizedBox(height: 25),
+                    Text(
+                      'Add-ons (optional)',
+                      style: TextStyles.ubntu16,
+                    ),
+                    const SizedBox(height: 10),
                     TextField(
+                      style: TextStyles.ubuntutextfieldText,
                       controller: addoncontroller,
                       focusNode: addonFocusnode,
                       onChanged: (value) => _addOns = value,
                       decoration: InputDecoration(
-                        hintText: 'Beef Biriyani',
+                        hintStyle: TextStyles.ubuntuhintText,
+                        hintText: 'Eg: Need a mic set',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(45)),
                       ),
                     ),
 
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 40),
                     // Grand Total Section
-                    const Text('Grand Total',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w700)),
+                    Text(
+                      'Grand Total',
+                      style: TextStyles.ubntu16,
+                    ),
                     _buildDetailRow('Charges for the trip', '₹${defaultPrice}'),
                     _buildDetailRow('Price Per Person', '₹${pricePerPerson}'),
                     _buildDetailRow(
@@ -620,7 +629,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                     _buildDetailRow('Others', '₹${_others.toStringAsFixed(2)}'),
                     _buildDetailRow('Total', '₹${totalPrice}', isTotal: true),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 40),
 
                     BlocBuilder<BookMyCruiseBloc, BookMyCruiseState>(
                       builder: (context, state) {
@@ -663,6 +672,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                               );
                       },
                     ),
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),
@@ -720,8 +730,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
           child: Text(label, style: TextStyles.ubuntu14black55w400),
         ),
         const Spacer(),
-        Text(value,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        Text(
+          value,
+          style: TextStyles.ubntu14w400black,
+        ),
       ],
     );
   }
@@ -811,7 +823,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Color(0xff1F8386))
-              : const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              : TextStyles.ubntu14w400black,
         ),
       ],
     );
