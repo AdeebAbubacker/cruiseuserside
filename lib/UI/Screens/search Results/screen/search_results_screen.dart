@@ -105,6 +105,229 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         .add(RemoveItemFavouritesEvent.added(favouritesId: favouriteId));
   }
 
+  void _showFilterPopup(
+    BuildContext context, {
+    required Function(String minAmount, String maxAmount) onApplyPressed,
+  }) {
+    double minPrice = 0; // Default minimum price
+    double maxPrice = 120000; // Default maximum price
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              contentPadding: EdgeInsets.zero,
+              content: SizedBox(
+                width: MediaQuery.sizeOf(context).width,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Price range",
+                            style: TextStyles.ubuntu16black15w500,
+                          ),
+                          Text(
+                            '₹ ${minPrice.toInt()} - ${maxPrice.toInt()}',
+                            style: TextStyles.ubuntu14black55w400,
+                          ),
+                          SliderTheme(
+                            data: SliderThemeData(
+                              trackHeight:
+                                  0.8, // General height for both active and inactive tracks
+
+                              thumbColor: ColorConstants
+                                  .lightblueC5, // Color of the thumb
+                              overlayColor: Colors
+                                  .transparent, // You can customize this too if needed
+                              tickMarkShape:
+                                  RoundSliderTickMarkShape(tickMarkRadius: 2),
+                              trackShape:
+                                  RectangularSliderTrackShape(), // You can change the shape if necessary
+                              thumbShape: RoundSliderThumbShape(
+                                  enabledThumbRadius:
+                                      10), // Customize the thumb
+                            ),
+                            child: RangeSlider(
+                              values: RangeValues(minPrice, maxPrice),
+                              min: 0,
+                              max: 120000,
+                              divisions: 5000000,
+                              labels: RangeLabels(
+                                minPrice.toInt().toString(),
+                                maxPrice.toInt().toString(),
+                              ),
+                              onChanged: (RangeValues values) {
+                                setState(() {
+                                  minPrice = values.start;
+                                  maxPrice = values.end;
+                                });
+                              },
+                            ),
+                          ),
+                          Divider(),
+                          SizedBox(
+                            height: 24,
+                          ),
+                          Text(
+                            "Cruise Type",
+                            style: TextStyles.ubuntu16black15w500,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Wrap(
+                            spacing: 3,
+                            runSpacing: 10,
+                            children: [
+                              BoatCategoryPill(
+                                text: 'Open',
+                                isSelected: selectedCruiseType == 'Open',
+                                onTap: () {
+                                  setState(() {
+                                    selectedCruiseType = 'Open';
+                                  });
+                                },
+                              ),
+                              BoatCategoryPill(
+                                text: 'Closed',
+                                isSelected: selectedCruiseType == 'Closed',
+                                onTap: () {
+                                  setState(() {
+                                    selectedCruiseType = 'Closed';
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 24,
+                          ),
+                          Text(
+                            "Amenities",
+                            style: TextStyles.ubuntu16black15w500,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: [
+                              AmenitiesPill(
+                                image: 'assets/icons/heater.svg',
+                                text: 'Water Heater',
+                              ),
+                              AmenitiesPill(
+                                image: 'assets/icons/wifi.svg',
+                                text: 'Wi-Fi',
+                              ),
+                              AmenitiesPill(
+                                image: 'assets/icons/projector.svg',
+                                text: 'Projector',
+                              ),
+                              AmenitiesPill(
+                                image: 'assets/icons/mic.svg',
+                                text: 'Mic',
+                              ),
+                              AmenitiesPill(
+                                image: 'assets/icons/music.svg',
+                                text: 'Music System',
+                              ),
+                              AmenitiesPill(
+                                image: 'assets/icons/Tv.svg',
+                                text: 'TV',
+                              ),
+                              AmenitiesPill(
+                                image: 'assets/icons/iron_box.svg',
+                                text: 'Iron Box',
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Center(
+                            child: SizedBox(
+                              height: 45,
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // Convert min and max prices to strings of integers
+                                  String minAmount =
+                                      minPrice.toInt().toString();
+                                  String maxAmount =
+                                      maxPrice.toInt().toString();
+
+                                  // Pass the selected min and max amounts back to the caller
+                                  onApplyPressed(minAmount, maxAmount);
+                                  Navigator.of(context).pop();
+                                },
+                                // () {
+                                //   // Call Bloc with filters
+                                //   BlocProvider.of<GetSeachedCruiseresultsBloc>(
+                                //           context)
+                                //       .add(GetSeachedCruiseresultsEvent
+                                //           .SeachedCruise(
+                                //     filterCriteria: widget.category,
+                                //     location: widget.location,
+                                //     maxAmount: '0',
+                                //     minAmount: '100000',
+                                //   ));
+                                //   Navigator.of(context).pop();
+                                // },
+
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0XFF1F8386),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 12),
+                                ),
+                                child: Text(
+                                  "Show Results",
+                                  style: TextStyles.ubuntu12whiteFFw400,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  String? selectedCruiseType;
   @override
   void initState() {
     super.initState();
@@ -112,30 +335,30 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
       fetchFavorites();
       BlocProvider.of<GetSeachedCruiseresultsBloc>(context).add(
         GetSeachedCruiseresultsEvent.SeachedCruise(
-          location:
-              widget.location?.isNotEmpty == true ? widget.location : null,
-          filterCriteria: widget.filterCriteria?.isNotEmpty == true
-              ? widget.filterCriteria
-              : null,
-          maxAmount:
-              widget.maxAmount?.isNotEmpty == true ? widget.maxAmount : null,
-          minAmount:
-              widget.minAMount?.isNotEmpty == true ? widget.minAMount : null,
-          startDate:
-              widget.startDate?.isNotEmpty == true ? widget.startDate : null,
-          endDate: widget.endDate?.isNotEmpty == true ? widget.endDate : null,
-          typeOfCruise: widget.typeOfCruise?.isNotEmpty == true
-              ? widget.typeOfCruise
-              : null,
-          noOfPassengers: widget.noOfPassengers?.isNotEmpty == true
-              ? widget.noOfPassengers
-              : null,
-          noOfRooms:
-              widget.noOfRooms?.isNotEmpty == true ? widget.noOfRooms : null,
-          premiumOrDeluxe: widget.premiumOrDeluxe?.isNotEmpty == true
-              ? widget.premiumOrDeluxe
-              : null,
-        ),
+            // location:
+            //     widget.location?.isNotEmpty == true ? widget.location : null,
+            // filterCriteria: widget.filterCriteria?.isNotEmpty == true
+            //     ? widget.filterCriteria
+            //     : null,
+            // maxAmount:
+            //     widget.maxAmount?.isNotEmpty == true ? widget.maxAmount : null,
+            // minAmount:
+            //     widget.minAMount?.isNotEmpty == true ? widget.minAMount : null,
+            // startDate:
+            //     widget.startDate?.isNotEmpty == true ? widget.startDate : null,
+            // endDate: widget.endDate?.isNotEmpty == true ? widget.endDate : null,
+            // typeOfCruise: widget.typeOfCruise?.isNotEmpty == true
+            //     ? widget.typeOfCruise
+            //     : null,
+            // noOfPassengers: widget.noOfPassengers?.isNotEmpty == true
+            //     ? widget.noOfPassengers
+            //     : null,
+            // noOfRooms:
+            //     widget.noOfRooms?.isNotEmpty == true ? widget.noOfRooms : null,
+            // premiumOrDeluxe: widget.premiumOrDeluxe?.isNotEmpty == true
+            //     ? widget.premiumOrDeluxe
+            //     : null,
+            ),
       );
     });
   }
@@ -305,7 +528,38 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                 Material(
                                   color: Colors.transparent,
                                   child: InkWell(
-                                    onTap: () => _showFilterPopup(context),
+                                    onTap: () => _showFilterPopup(
+                                      context,
+                                      onApplyPressed:
+                                          (String minAmount, String maxAmount) {
+                                        // Use the selected minAmount and maxAmount as strings
+                                        print(
+                                            "Selected Min Amount: $minAmount");
+                                        print(
+                                            "Selected Max Amount: $maxAmount");
+
+                                        // Dispatch the BLoC event with the updated filter values
+                                        BlocProvider.of<
+                                                    GetSeachedCruiseresultsBloc>(
+                                                context)
+                                            .add(
+                                          GetSeachedCruiseresultsEvent
+                                              .SeachedCruise(
+                                            // filterCriteria: widget.category,
+                                            // location: widget.location,
+                                            // maxAmount: maxAmount, // Pass as string
+                                            // minAmount: minAmount, // Pass as string
+                                            // cruiseModelName: widget.modelName,
+                                            maxPrice:
+                                                maxAmount, // Pass as string
+                                            minPrice:
+                                                minAmount, // Pass as string
+                                            cruiseType: selectedCruiseType
+                                                ?.toLowerCase(),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                     borderRadius: BorderRadius.circular(8),
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
@@ -559,202 +813,5 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             ),
           );
         });
-  }
-
-  void _showFilterPopup(BuildContext context) {
-    double minPrice = 0; // Default minimum price
-    double maxPrice = 120000; // Default maximum price
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              contentPadding: EdgeInsets.zero,
-              content: SizedBox(
-                width: MediaQuery.sizeOf(context).width,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Price range",
-                            style: TextStyles.ubuntu16black15w500,
-                          ),
-                          Text(
-                            '₹ ${minPrice.toInt()} - ${maxPrice.toInt()}',
-                            style: TextStyles.ubuntu14black55w400,
-                          ),
-                          SliderTheme(
-                            data: SliderThemeData(
-                              trackHeight:
-                                  0.8, // General height for both active and inactive tracks
-
-                              thumbColor: ColorConstants
-                                  .lightblueC5, // Color of the thumb
-                              overlayColor: Colors
-                                  .transparent, // You can customize this too if needed
-                              tickMarkShape:
-                                  RoundSliderTickMarkShape(tickMarkRadius: 2),
-                              trackShape:
-                                  RectangularSliderTrackShape(), // You can change the shape if necessary
-                              thumbShape: RoundSliderThumbShape(
-                                  enabledThumbRadius:
-                                      10), // Customize the thumb
-                            ),
-                            child: RangeSlider(
-                              values: RangeValues(minPrice, maxPrice),
-                              min: 0,
-                              max: 120000,
-                              divisions: 5000000,
-                              labels: RangeLabels(
-                                minPrice.toInt().toString(),
-                                maxPrice.toInt().toString(),
-                              ),
-                              onChanged: (RangeValues values) {
-                                setState(() {
-                                  minPrice = values.start;
-                                  maxPrice = values.end;
-                                });
-                              },
-                            ),
-                          ),
-                          Divider(),
-                          SizedBox(
-                            height: 24,
-                          ),
-                          Text(
-                            "Boat Category",
-                            style: TextStyles.ubuntu16black15w500,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Wrap(
-                            spacing: 3,
-                            runSpacing: 10,
-                            children: [
-                              BoatCategoryPill(
-                                text: 'Full Open Upper Deck',
-                              ),
-                              BoatCategoryPill(
-                                text: 'Semi Upper Deck',
-                              ),
-                              BoatCategoryPill(
-                                text: 'No Upper Deck',
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 24,
-                          ),
-                          Text(
-                            "Amenities",
-                            style: TextStyles.ubuntu16black15w500,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Wrap(
-                            spacing: 10,
-                            runSpacing: 10,
-                            children: [
-                              AmenitiesPill(
-                                image: 'assets/icons/heater.svg',
-                                text: 'Water Heater',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/wifi.svg',
-                                text: 'Wi-Fi',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/projector.svg',
-                                text: 'Projector',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/mic.svg',
-                                text: 'Mic',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/music.svg',
-                                text: 'Music System',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/Tv.svg',
-                                text: 'TV',
-                              ),
-                              AmenitiesPill(
-                                image: 'assets/icons/iron_box.svg',
-                                text: 'Iron Box',
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Center(
-                            child: SizedBox(
-                              height: 45,
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  BlocProvider.of<GetSeachedCruiseresultsBloc>(
-                                          context)
-                                      .add(GetSeachedCruiseresultsEvent
-                                          .SeachedCruise(
-                                    filterCriteria: 'closed',
-                                    location: widget.location.toString(),
-                                    maxAmount: maxPrice.toInt().toString(),
-                                    minAmount: minPrice.toInt().toString(),
-                                  ));
-                                  Navigator.of(context).pop();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0XFF1F8386),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 12),
-                                ),
-                                child: Text(
-                                  "Show Results",
-                                  style: TextStyles.ubuntu12whiteFFw400,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 30),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
   }
 }

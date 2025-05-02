@@ -4,27 +4,13 @@ part of 'get_seached_cruiseresults_bloc.dart';
 class GetSeachedCruiseresultsEvent with _$GetSeachedCruiseresultsEvent {
   const factory GetSeachedCruiseresultsEvent.started() = _Started;
   const factory GetSeachedCruiseresultsEvent.SeachedCruise({
-    String? filterCriteria,
-    String? location,
-    String? minAmount,
-    String? maxAmount,
-    String? startDate,
-    String? endDate,
-    String? typeOfCruise,
-    String? noOfPassengers,
-    String? noOfRooms,
-    String? premiumOrDeluxe,
-    String? amenities,
+    String? foodTitle, // filter[food.title]
+    bool? isVeg, // filter[food.is_veg]
+    String? amenitiesName, // filter[amenities.name]
+    String? cruiseModelName, // filter[cruiseType.model_name]
+    String? cruiseType, // filter[cruiseType.type]
+    String? minPrice, // filter[priceRange][min]
+    String? maxPrice, // filter[priceRange][max]
+    String? locationName, // filter[cruise.location.name]
   }) = _GetSeachedCruiseresultsEvent;
 }
-
-// final String? filterCriteria;
-// final String? location;
-// final String? startDate;
-// final String? endDate;
-// final String? maxAmount;
-// final String? minAMount;
-// final String? typeOfCruise;
-// final String? noOfPassengers;
-// final String? noOfRooms;
-// final String? premiumOrDeluxe;

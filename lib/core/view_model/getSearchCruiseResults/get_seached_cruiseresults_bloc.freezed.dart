@@ -20,17 +20,14 @@ mixin _$GetSeachedCruiseresultsEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function(
-            String? filterCriteria,
-            String? location,
-            String? minAmount,
-            String? maxAmount,
-            String? startDate,
-            String? endDate,
-            String? typeOfCruise,
-            String? noOfPassengers,
-            String? noOfRooms,
-            String? premiumOrDeluxe,
-            String? amenities)
+            String? foodTitle,
+            bool? isVeg,
+            String? amenitiesName,
+            String? cruiseModelName,
+            String? cruiseType,
+            String? minPrice,
+            String? maxPrice,
+            String? locationName)
         SeachedCruise,
   }) =>
       throw _privateConstructorUsedError;
@@ -38,17 +35,14 @@ mixin _$GetSeachedCruiseresultsEvent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function(
-            String? filterCriteria,
-            String? location,
-            String? minAmount,
-            String? maxAmount,
-            String? startDate,
-            String? endDate,
-            String? typeOfCruise,
-            String? noOfPassengers,
-            String? noOfRooms,
-            String? premiumOrDeluxe,
-            String? amenities)?
+            String? foodTitle,
+            bool? isVeg,
+            String? amenitiesName,
+            String? cruiseModelName,
+            String? cruiseType,
+            String? minPrice,
+            String? maxPrice,
+            String? locationName)?
         SeachedCruise,
   }) =>
       throw _privateConstructorUsedError;
@@ -56,17 +50,14 @@ mixin _$GetSeachedCruiseresultsEvent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(
-            String? filterCriteria,
-            String? location,
-            String? minAmount,
-            String? maxAmount,
-            String? startDate,
-            String? endDate,
-            String? typeOfCruise,
-            String? noOfPassengers,
-            String? noOfRooms,
-            String? premiumOrDeluxe,
-            String? amenities)?
+            String? foodTitle,
+            bool? isVeg,
+            String? amenitiesName,
+            String? cruiseModelName,
+            String? cruiseType,
+            String? minPrice,
+            String? maxPrice,
+            String? locationName)?
         SeachedCruise,
     required TResult orElse(),
   }) =>
@@ -160,17 +151,14 @@ class _$StartedImpl implements _Started {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function(
-            String? filterCriteria,
-            String? location,
-            String? minAmount,
-            String? maxAmount,
-            String? startDate,
-            String? endDate,
-            String? typeOfCruise,
-            String? noOfPassengers,
-            String? noOfRooms,
-            String? premiumOrDeluxe,
-            String? amenities)
+            String? foodTitle,
+            bool? isVeg,
+            String? amenitiesName,
+            String? cruiseModelName,
+            String? cruiseType,
+            String? minPrice,
+            String? maxPrice,
+            String? locationName)
         SeachedCruise,
   }) {
     return started();
@@ -181,17 +169,14 @@ class _$StartedImpl implements _Started {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function(
-            String? filterCriteria,
-            String? location,
-            String? minAmount,
-            String? maxAmount,
-            String? startDate,
-            String? endDate,
-            String? typeOfCruise,
-            String? noOfPassengers,
-            String? noOfRooms,
-            String? premiumOrDeluxe,
-            String? amenities)?
+            String? foodTitle,
+            bool? isVeg,
+            String? amenitiesName,
+            String? cruiseModelName,
+            String? cruiseType,
+            String? minPrice,
+            String? maxPrice,
+            String? locationName)?
         SeachedCruise,
   }) {
     return started?.call();
@@ -202,17 +187,14 @@ class _$StartedImpl implements _Started {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(
-            String? filterCriteria,
-            String? location,
-            String? minAmount,
-            String? maxAmount,
-            String? startDate,
-            String? endDate,
-            String? typeOfCruise,
-            String? noOfPassengers,
-            String? noOfRooms,
-            String? premiumOrDeluxe,
-            String? amenities)?
+            String? foodTitle,
+            bool? isVeg,
+            String? amenitiesName,
+            String? cruiseModelName,
+            String? cruiseType,
+            String? minPrice,
+            String? maxPrice,
+            String? locationName)?
         SeachedCruise,
     required TResult orElse(),
   }) {
@@ -267,17 +249,14 @@ abstract class _$$GetSeachedCruiseresultsEventImplCopyWith<$Res> {
       __$$GetSeachedCruiseresultsEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {String? filterCriteria,
-      String? location,
-      String? minAmount,
-      String? maxAmount,
-      String? startDate,
-      String? endDate,
-      String? typeOfCruise,
-      String? noOfPassengers,
-      String? noOfRooms,
-      String? premiumOrDeluxe,
-      String? amenities});
+      {String? foodTitle,
+      bool? isVeg,
+      String? amenitiesName,
+      String? cruiseModelName,
+      String? cruiseType,
+      String? minPrice,
+      String? maxPrice,
+      String? locationName});
 }
 
 /// @nodoc
@@ -295,62 +274,47 @@ class __$$GetSeachedCruiseresultsEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? filterCriteria = freezed,
-    Object? location = freezed,
-    Object? minAmount = freezed,
-    Object? maxAmount = freezed,
-    Object? startDate = freezed,
-    Object? endDate = freezed,
-    Object? typeOfCruise = freezed,
-    Object? noOfPassengers = freezed,
-    Object? noOfRooms = freezed,
-    Object? premiumOrDeluxe = freezed,
-    Object? amenities = freezed,
+    Object? foodTitle = freezed,
+    Object? isVeg = freezed,
+    Object? amenitiesName = freezed,
+    Object? cruiseModelName = freezed,
+    Object? cruiseType = freezed,
+    Object? minPrice = freezed,
+    Object? maxPrice = freezed,
+    Object? locationName = freezed,
   }) {
     return _then(_$GetSeachedCruiseresultsEventImpl(
-      filterCriteria: freezed == filterCriteria
-          ? _value.filterCriteria
-          : filterCriteria // ignore: cast_nullable_to_non_nullable
+      foodTitle: freezed == foodTitle
+          ? _value.foodTitle
+          : foodTitle // ignore: cast_nullable_to_non_nullable
               as String?,
-      location: freezed == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
+      isVeg: freezed == isVeg
+          ? _value.isVeg
+          : isVeg // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      amenitiesName: freezed == amenitiesName
+          ? _value.amenitiesName
+          : amenitiesName // ignore: cast_nullable_to_non_nullable
               as String?,
-      minAmount: freezed == minAmount
-          ? _value.minAmount
-          : minAmount // ignore: cast_nullable_to_non_nullable
+      cruiseModelName: freezed == cruiseModelName
+          ? _value.cruiseModelName
+          : cruiseModelName // ignore: cast_nullable_to_non_nullable
               as String?,
-      maxAmount: freezed == maxAmount
-          ? _value.maxAmount
-          : maxAmount // ignore: cast_nullable_to_non_nullable
+      cruiseType: freezed == cruiseType
+          ? _value.cruiseType
+          : cruiseType // ignore: cast_nullable_to_non_nullable
               as String?,
-      startDate: freezed == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
+      minPrice: freezed == minPrice
+          ? _value.minPrice
+          : minPrice // ignore: cast_nullable_to_non_nullable
               as String?,
-      endDate: freezed == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
+      maxPrice: freezed == maxPrice
+          ? _value.maxPrice
+          : maxPrice // ignore: cast_nullable_to_non_nullable
               as String?,
-      typeOfCruise: freezed == typeOfCruise
-          ? _value.typeOfCruise
-          : typeOfCruise // ignore: cast_nullable_to_non_nullable
-              as String?,
-      noOfPassengers: freezed == noOfPassengers
-          ? _value.noOfPassengers
-          : noOfPassengers // ignore: cast_nullable_to_non_nullable
-              as String?,
-      noOfRooms: freezed == noOfRooms
-          ? _value.noOfRooms
-          : noOfRooms // ignore: cast_nullable_to_non_nullable
-              as String?,
-      premiumOrDeluxe: freezed == premiumOrDeluxe
-          ? _value.premiumOrDeluxe
-          : premiumOrDeluxe // ignore: cast_nullable_to_non_nullable
-              as String?,
-      amenities: freezed == amenities
-          ? _value.amenities
-          : amenities // ignore: cast_nullable_to_non_nullable
+      locationName: freezed == locationName
+          ? _value.locationName
+          : locationName // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -361,44 +325,42 @@ class __$$GetSeachedCruiseresultsEventImplCopyWithImpl<$Res>
 class _$GetSeachedCruiseresultsEventImpl
     implements _GetSeachedCruiseresultsEvent {
   const _$GetSeachedCruiseresultsEventImpl(
-      {this.filterCriteria,
-      this.location,
-      this.minAmount,
-      this.maxAmount,
-      this.startDate,
-      this.endDate,
-      this.typeOfCruise,
-      this.noOfPassengers,
-      this.noOfRooms,
-      this.premiumOrDeluxe,
-      this.amenities});
+      {this.foodTitle,
+      this.isVeg,
+      this.amenitiesName,
+      this.cruiseModelName,
+      this.cruiseType,
+      this.minPrice,
+      this.maxPrice,
+      this.locationName});
 
   @override
-  final String? filterCriteria;
+  final String? foodTitle;
+// filter[food.title]
   @override
-  final String? location;
+  final bool? isVeg;
+// filter[food.is_veg]
   @override
-  final String? minAmount;
+  final String? amenitiesName;
+// filter[amenities.name]
   @override
-  final String? maxAmount;
+  final String? cruiseModelName;
+// filter[cruiseType.model_name]
   @override
-  final String? startDate;
+  final String? cruiseType;
+// filter[cruiseType.type]
   @override
-  final String? endDate;
+  final String? minPrice;
+// filter[priceRange][min]
   @override
-  final String? typeOfCruise;
+  final String? maxPrice;
+// filter[priceRange][max]
   @override
-  final String? noOfPassengers;
-  @override
-  final String? noOfRooms;
-  @override
-  final String? premiumOrDeluxe;
-  @override
-  final String? amenities;
+  final String? locationName;
 
   @override
   String toString() {
-    return 'GetSeachedCruiseresultsEvent.SeachedCruise(filterCriteria: $filterCriteria, location: $location, minAmount: $minAmount, maxAmount: $maxAmount, startDate: $startDate, endDate: $endDate, typeOfCruise: $typeOfCruise, noOfPassengers: $noOfPassengers, noOfRooms: $noOfRooms, premiumOrDeluxe: $premiumOrDeluxe, amenities: $amenities)';
+    return 'GetSeachedCruiseresultsEvent.SeachedCruise(foodTitle: $foodTitle, isVeg: $isVeg, amenitiesName: $amenitiesName, cruiseModelName: $cruiseModelName, cruiseType: $cruiseType, minPrice: $minPrice, maxPrice: $maxPrice, locationName: $locationName)';
   }
 
   @override
@@ -406,43 +368,26 @@ class _$GetSeachedCruiseresultsEventImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GetSeachedCruiseresultsEventImpl &&
-            (identical(other.filterCriteria, filterCriteria) ||
-                other.filterCriteria == filterCriteria) &&
-            (identical(other.location, location) ||
-                other.location == location) &&
-            (identical(other.minAmount, minAmount) ||
-                other.minAmount == minAmount) &&
-            (identical(other.maxAmount, maxAmount) ||
-                other.maxAmount == maxAmount) &&
-            (identical(other.startDate, startDate) ||
-                other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate) &&
-            (identical(other.typeOfCruise, typeOfCruise) ||
-                other.typeOfCruise == typeOfCruise) &&
-            (identical(other.noOfPassengers, noOfPassengers) ||
-                other.noOfPassengers == noOfPassengers) &&
-            (identical(other.noOfRooms, noOfRooms) ||
-                other.noOfRooms == noOfRooms) &&
-            (identical(other.premiumOrDeluxe, premiumOrDeluxe) ||
-                other.premiumOrDeluxe == premiumOrDeluxe) &&
-            (identical(other.amenities, amenities) ||
-                other.amenities == amenities));
+            (identical(other.foodTitle, foodTitle) ||
+                other.foodTitle == foodTitle) &&
+            (identical(other.isVeg, isVeg) || other.isVeg == isVeg) &&
+            (identical(other.amenitiesName, amenitiesName) ||
+                other.amenitiesName == amenitiesName) &&
+            (identical(other.cruiseModelName, cruiseModelName) ||
+                other.cruiseModelName == cruiseModelName) &&
+            (identical(other.cruiseType, cruiseType) ||
+                other.cruiseType == cruiseType) &&
+            (identical(other.minPrice, minPrice) ||
+                other.minPrice == minPrice) &&
+            (identical(other.maxPrice, maxPrice) ||
+                other.maxPrice == maxPrice) &&
+            (identical(other.locationName, locationName) ||
+                other.locationName == locationName));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      filterCriteria,
-      location,
-      minAmount,
-      maxAmount,
-      startDate,
-      endDate,
-      typeOfCruise,
-      noOfPassengers,
-      noOfRooms,
-      premiumOrDeluxe,
-      amenities);
+  int get hashCode => Object.hash(runtimeType, foodTitle, isVeg, amenitiesName,
+      cruiseModelName, cruiseType, minPrice, maxPrice, locationName);
 
   /// Create a copy of GetSeachedCruiseresultsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -459,31 +404,18 @@ class _$GetSeachedCruiseresultsEventImpl
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function(
-            String? filterCriteria,
-            String? location,
-            String? minAmount,
-            String? maxAmount,
-            String? startDate,
-            String? endDate,
-            String? typeOfCruise,
-            String? noOfPassengers,
-            String? noOfRooms,
-            String? premiumOrDeluxe,
-            String? amenities)
+            String? foodTitle,
+            bool? isVeg,
+            String? amenitiesName,
+            String? cruiseModelName,
+            String? cruiseType,
+            String? minPrice,
+            String? maxPrice,
+            String? locationName)
         SeachedCruise,
   }) {
-    return SeachedCruise(
-        filterCriteria,
-        location,
-        minAmount,
-        maxAmount,
-        startDate,
-        endDate,
-        typeOfCruise,
-        noOfPassengers,
-        noOfRooms,
-        premiumOrDeluxe,
-        amenities);
+    return SeachedCruise(foodTitle, isVeg, amenitiesName, cruiseModelName,
+        cruiseType, minPrice, maxPrice, locationName);
   }
 
   @override
@@ -491,31 +423,18 @@ class _$GetSeachedCruiseresultsEventImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function(
-            String? filterCriteria,
-            String? location,
-            String? minAmount,
-            String? maxAmount,
-            String? startDate,
-            String? endDate,
-            String? typeOfCruise,
-            String? noOfPassengers,
-            String? noOfRooms,
-            String? premiumOrDeluxe,
-            String? amenities)?
+            String? foodTitle,
+            bool? isVeg,
+            String? amenitiesName,
+            String? cruiseModelName,
+            String? cruiseType,
+            String? minPrice,
+            String? maxPrice,
+            String? locationName)?
         SeachedCruise,
   }) {
-    return SeachedCruise?.call(
-        filterCriteria,
-        location,
-        minAmount,
-        maxAmount,
-        startDate,
-        endDate,
-        typeOfCruise,
-        noOfPassengers,
-        noOfRooms,
-        premiumOrDeluxe,
-        amenities);
+    return SeachedCruise?.call(foodTitle, isVeg, amenitiesName, cruiseModelName,
+        cruiseType, minPrice, maxPrice, locationName);
   }
 
   @override
@@ -523,33 +442,20 @@ class _$GetSeachedCruiseresultsEventImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(
-            String? filterCriteria,
-            String? location,
-            String? minAmount,
-            String? maxAmount,
-            String? startDate,
-            String? endDate,
-            String? typeOfCruise,
-            String? noOfPassengers,
-            String? noOfRooms,
-            String? premiumOrDeluxe,
-            String? amenities)?
+            String? foodTitle,
+            bool? isVeg,
+            String? amenitiesName,
+            String? cruiseModelName,
+            String? cruiseType,
+            String? minPrice,
+            String? maxPrice,
+            String? locationName)?
         SeachedCruise,
     required TResult orElse(),
   }) {
     if (SeachedCruise != null) {
-      return SeachedCruise(
-          filterCriteria,
-          location,
-          minAmount,
-          maxAmount,
-          startDate,
-          endDate,
-          typeOfCruise,
-          noOfPassengers,
-          noOfRooms,
-          premiumOrDeluxe,
-          amenities);
+      return SeachedCruise(foodTitle, isVeg, amenitiesName, cruiseModelName,
+          cruiseType, minPrice, maxPrice, locationName);
     }
     return orElse();
   }
@@ -590,29 +496,23 @@ class _$GetSeachedCruiseresultsEventImpl
 abstract class _GetSeachedCruiseresultsEvent
     implements GetSeachedCruiseresultsEvent {
   const factory _GetSeachedCruiseresultsEvent(
-      {final String? filterCriteria,
-      final String? location,
-      final String? minAmount,
-      final String? maxAmount,
-      final String? startDate,
-      final String? endDate,
-      final String? typeOfCruise,
-      final String? noOfPassengers,
-      final String? noOfRooms,
-      final String? premiumOrDeluxe,
-      final String? amenities}) = _$GetSeachedCruiseresultsEventImpl;
+      {final String? foodTitle,
+      final bool? isVeg,
+      final String? amenitiesName,
+      final String? cruiseModelName,
+      final String? cruiseType,
+      final String? minPrice,
+      final String? maxPrice,
+      final String? locationName}) = _$GetSeachedCruiseresultsEventImpl;
 
-  String? get filterCriteria;
-  String? get location;
-  String? get minAmount;
-  String? get maxAmount;
-  String? get startDate;
-  String? get endDate;
-  String? get typeOfCruise;
-  String? get noOfPassengers;
-  String? get noOfRooms;
-  String? get premiumOrDeluxe;
-  String? get amenities;
+  String? get foodTitle; // filter[food.title]
+  bool? get isVeg; // filter[food.is_veg]
+  String? get amenitiesName; // filter[amenities.name]
+  String? get cruiseModelName; // filter[cruiseType.model_name]
+  String? get cruiseType; // filter[cruiseType.type]
+  String? get minPrice; // filter[priceRange][min]
+  String? get maxPrice; // filter[priceRange][max]
+  String? get locationName;
 
   /// Create a copy of GetSeachedCruiseresultsEvent
   /// with the given fields replaced by the non-null parameter values.

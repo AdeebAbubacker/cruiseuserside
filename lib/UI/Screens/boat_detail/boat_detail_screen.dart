@@ -136,6 +136,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
         ],
       ),
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -447,7 +448,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       ),
                     ),
                   SizedBox(
-                    height: 17,
+                    height: 30,
                   ),
                   FullWidthRectangleBlueButton(
                     onPressed: () {
@@ -462,7 +463,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     text: 'Book Now',
                   ),
                   SizedBox(
-                    height: 17,
+                    height: 50,
                   ),
                 ],
               ),

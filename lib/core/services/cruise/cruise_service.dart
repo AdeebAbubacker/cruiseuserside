@@ -100,14 +100,14 @@ class CruiseService {
   Future<Either<String, FeaturedBoatsModel>> getSearchResultsList({
     String? location,
     String? amenities,
-    String? startDate,
-    String? endDate,
-    String? bookingType, // e.g., full_day_cruise
-    String? premiumOrDeluxe, // e.g., premium or delux
+    String? bookingType,
+    String? premiumOrDeluxe,
     String? minAmount,
     String? maxAmount,
-    String? cruiseModelName, // e.g., full_upper_deck
-    String? cruiseType, // e.g., open or closed
+    String? cruiseModelName,
+    String? cruiseType,
+    String? foodTitle,
+    bool? isVeg,
   }) async {
     try {
       final hasInternet = await _connectivityChecker.hasInternetAccess();
@@ -119,27 +119,19 @@ class CruiseService {
       _headers['Authorization'] = 'Bearer $token';
 
       String urlString =
-          '$url/package?include=cruise.cruiseType,cruise.ratings,cruise.cruisesImages,cruise.location,itineraries,amenities,food,packageImages,bookingTypes,unavailableDates';
+          '$url/package?include=cruise.location,cruise.cruiseType,cruise.ratings,cruise.cruisesImages,cruise.location,itineraries,amenities,food,packageImages,bookingTypes,unavailableDates';
 
-      if (location?.isNotEmpty == true) {
-        urlString += '&filter[cruise.location.name]=$location';
-      }
+      // if (location?.isNotEmpty == true) {
+      //   urlString += '&filter[cruise.location.name]=$location';
+      // }
 
-      if (startDate?.isNotEmpty == true) {
-        urlString += '&filter[dateRange][start]=$startDate';
-      }
+      // if (bookingType?.isNotEmpty == true) {
+      //   urlString += '&filter[bookingTypes.name]=$bookingType';
+      // }
 
-      if (endDate?.isNotEmpty == true) {
-        urlString += '&filter[dateRange][end]=$endDate';
-      }
-
-      if (bookingType?.isNotEmpty == true) {
-        urlString += '&filter[bookingTypes.name]=$bookingType';
-      }
-
-      if (premiumOrDeluxe?.isNotEmpty == true) {
-        urlString += '&filter[name]=$premiumOrDeluxe';
-      }
+      // if (premiumOrDeluxe?.isNotEmpty == true) {
+      //   urlString += '&filter[name]=$premiumOrDeluxe';
+      // }
 
       if (minAmount?.isNotEmpty == true) {
         urlString += '&filter[priceRange][min]=$minAmount';
@@ -161,6 +153,14 @@ class CruiseService {
         urlString += '&filter[cruiseType.type]=$cruiseType';
       }
 
+      // if (foodTitle?.isNotEmpty == true) {
+      //   urlString += '&filter[food.title]=$foodTitle';
+      // }
+
+      // if (isVeg != null) {
+      //   urlString += '&filter[food.is_veg]=${isVeg.toString()}';
+      // }
+
       final response = await http.get(
         Uri.parse(urlString),
         headers: _headers,
@@ -168,12 +168,16 @@ class CruiseService {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
-        final locationdetails = FeaturedBoatsModel.fromJson(data);
-        return Right(locationdetails);
+
+        final locationDetails = FeaturedBoatsModel.fromJson(data);
+        print('---- ${locationDetails.data?.length}');
+        return Right(locationDetails);
       } else {
-        return Left('Failed to get cruise type: ${response.statusCode}');
+        print('---- Failed to get cruise results${response.body}');
+        return Left('Failed to get cruise results: ${response.statusCode}');
       }
     } catch (e) {
+      print('---- Error to get cruise results');
       return Left('Error: $e');
     }
   }

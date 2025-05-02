@@ -99,6 +99,21 @@ class _CategoriesSectionState extends State<CategoriesSection> {
     });
   }
 
+  String mapCruiseModelName(String? modelName) {
+    final firstWord = (modelName ?? '').split(' ').first.toLowerCase();
+
+    switch (firstWord) {
+      case 'full':
+        return 'full_upper_deck';
+      case 'semi':
+        return 'semi_upper_deck';
+      case 'normal':
+        return 'normal';
+      default:
+        return 'normal';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GetCruiseTypesBloc, GetCruiseTypesState>(
@@ -261,7 +276,9 @@ class _CategoriesSectionState extends State<CategoriesSection> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => CategoriesListResultscreen(
-                                category: '${openCruiseTypes?[index].type}',
+                                modelName: mapCruiseModelName(
+                                  openCruiseTypes?[index].modelName,
+                                ),
                                 location: '',
                               ),
                             ),

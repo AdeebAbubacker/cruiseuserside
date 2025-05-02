@@ -17,15 +17,14 @@ class GetSeachedCruiseresultsBloc
 
       try {
         final result = await userService.getSearchResultsList(
-          cruiseType: event.filterCriteria,
-          location: event.location,
-          maxAmount: event.maxAmount,
-          minAmount: event.minAmount,
-          // bookingType: "closed",
-          // premiumOrDeluxe: event.premiumOrDeluxe,
-          //cruiseModelName: event.typeOfCruise,
-          startDate: event.startDate,
-          endDate: event.endDate,
+          foodTitle: event.foodTitle,
+          isVeg: event.isVeg,
+          amenities: event.amenitiesName,
+          cruiseModelName: event.cruiseModelName,
+          cruiseType: event.cruiseType,
+          minAmount: event.minPrice,
+          maxAmount: event.maxPrice,
+          location: event.locationName,
         );
 
         await result.fold((failure) async {
@@ -33,13 +32,16 @@ class GetSeachedCruiseresultsBloc
             print('No interne');
             emit(const GetSeachedCruiseresultsState.noInternet());
           } else {
+            print('No getuserFailure');
             emit(GetSeachedCruiseresultsState.getuserFailure(error: failure));
           }
         }, (success) async {
+          print('success');
           emit(GetSeachedCruiseresultsState.getuseruccess(
               packagesearchresults: success));
         });
       } catch (e) {
+        print('e');
         print('catch');
         emit(GetSeachedCruiseresultsState.getuserFailure(
             error: 'An error occurred: $e'));

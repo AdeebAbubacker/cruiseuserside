@@ -32,6 +32,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   late Razorpay _razorpay;
   bool _isLoading = false;
   String bookingTypeId = '1';
+  List<String> imageUrls = [];
   @override
   void initState() {
     super.initState();
@@ -44,6 +45,17 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
         bookingTypeId = widget.datum.bookingTypes!.first.id
             .toString(); // Set the booking type ID directly
       }
+      imageUrls = [
+        (widget.datum?.cruise?.images?.isNotEmpty == true
+                ? widget.datum!.cruise!.images![0].cruiseImg
+                : null) ??
+            'assets/image/boat_details_img/boat_detail_img.png',
+        ...?widget.datum?.images?.map(
+          (e) =>
+              e.packageImg ??
+              'assets/image/boat_details_img/boat_detail_img.png',
+        ),
+      ];
       BlocProvider.of<ViewMyPackageBloc>(context)
           .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
     });
@@ -160,7 +172,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
   FocusNode addonFocusnode = FocusNode();
   TextEditingController addoncontroller = TextEditingController();
-  int _currentPage = 0;
+
+  int _currentIndex = 0;
   String _selectedCruiseType = 'Day Cruise';
   int _numRooms = 1;
   int _day = 1;
@@ -182,11 +195,6 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   bool _isEditingPassengers = false;
   bool _isEditingDate = false;
 
-  final List<String> _images = [
-    'assets/image/boat_details_img/boat_detail_img.png',
-    'assets/image/boat_details_img/boat_detail_img.png',
-    'assets/image/boat_details_img/boat_detail_img.png'
-  ];
   int maxAdults = 1; // default fallback
   int maxRooms = 1;
   List<UnavailableDate>? unavailableDates;
@@ -289,25 +297,40 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
             physics: BouncingScrollPhysics(),
             padding: const EdgeInsets.all(16.0),
             children: [
-              SizedBox(
-                height: 20,
-              ),
               Stack(
                 children: [
                   SizedBox(
-                    height: 210,
+                    height: 200,
                     child: PageView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _images.length,
-                      onPageChanged: (int pageIndex) {
+                      itemCount: imageUrls.length,
+                      onPageChanged: (index) {
                         setState(() {
-                          _currentPage = pageIndex;
+                          _currentIndex = index;
                         });
                       },
                       itemBuilder: (context, index) {
+                        final imageUrl = imageUrls[index];
+
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                          child: Image.asset(_images[index], fit: BoxFit.fill),
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: imageUrl.startsWith('http')
+                                ? Image.network(
+                                    imageUrl,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(
+                                        'assets/image/boat_details_img/boat_detail_img.png',
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                  )
+                                : Image.asset(
+                                    imageUrl,
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
                         );
                       },
                     ),
@@ -323,7 +346,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        '${_currentPage + 1}/${_images.length}',
+                        '${_currentIndex + 1}/${imageUrls.length}',
                         style: TextStyles.ubuntu16whitew2700,
                       ),
                     ),

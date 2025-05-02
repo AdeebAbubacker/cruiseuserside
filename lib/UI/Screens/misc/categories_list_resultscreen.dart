@@ -25,11 +25,11 @@ import 'package:http/http.dart' as http;
 import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
 class CategoriesListResultscreen extends StatefulWidget {
-  final String category;
+  final String modelName;
   final String location;
   const CategoriesListResultscreen({
     super.key,
-    required this.category,
+    required this.modelName,
     required this.location,
   });
 
@@ -48,15 +48,19 @@ class _CategoriesListResultscreenState
   @override
   void initState() {
     super.initState();
-
+    print('ddf');
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       fetchFavorites();
       BlocProvider.of<GetSeachedCruiseresultsBloc>(context)
           .add(GetSeachedCruiseresultsEvent.SeachedCruise(
-        filterCriteria: widget.category,
-        location: widget.location,
-        maxAmount: '1000000',
-        minAmount: '0',
+        // foodTitle: 'et',
+        //   isVeg: true,
+        // amenitiesName: 'dolorum',
+        cruiseModelName: widget.modelName,
+        // cruiseType: 'closed',
+        // minPrice: '600',
+        // maxPrice: '1000',
+        //locationName: 'kochi',
       ));
     });
   }
@@ -109,6 +113,7 @@ class _CategoriesListResultscreenState
     }
   }
 
+  String? selectedCruiseType;
   @override
   Widget build(BuildContext context) {
     String truncateString(String? value, int maxLength) {
@@ -165,10 +170,14 @@ class _CategoriesListResultscreenState
                                       context)
                                   .add(
                                 GetSeachedCruiseresultsEvent.SeachedCruise(
-                                  filterCriteria: widget.category,
-                                  location: widget.location,
-                                  maxAmount: maxAmount, // Pass as string
-                                  minAmount: minAmount, // Pass as string
+                                  // filterCriteria: widget.category,
+                                  // location: widget.location,
+                                  // maxAmount: maxAmount, // Pass as string
+                                  // minAmount: minAmount, // Pass as string
+                                  cruiseModelName: widget.modelName,
+                                  maxPrice: maxAmount, // Pass as string
+                                  minPrice: minAmount, // Pass as string
+                                  cruiseType: selectedCruiseType?.toLowerCase(),
                                 ),
                               );
                             },
@@ -997,7 +1006,7 @@ class _CategoriesListResultscreenState
                             height: 24,
                           ),
                           Text(
-                            "Boat Category",
+                            "Cruise Type",
                             style: TextStyles.ubuntu16black15w500,
                           ),
                           SizedBox(
@@ -1008,13 +1017,22 @@ class _CategoriesListResultscreenState
                             runSpacing: 10,
                             children: [
                               BoatCategoryPill(
-                                text: 'Full Open Upper Deck',
+                                text: 'Open',
+                                isSelected: selectedCruiseType == 'Open',
+                                onTap: () {
+                                  setState(() {
+                                    selectedCruiseType = 'Open';
+                                  });
+                                },
                               ),
                               BoatCategoryPill(
-                                text: 'Semi Upper Deck',
-                              ),
-                              BoatCategoryPill(
-                                text: 'No Upper Deck',
+                                text: 'Closed',
+                                isSelected: selectedCruiseType == 'Closed',
+                                onTap: () {
+                                  setState(() {
+                                    selectedCruiseType = 'Closed';
+                                  });
+                                },
                               ),
                             ],
                           ),
