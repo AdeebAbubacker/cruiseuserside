@@ -215,4 +215,9 @@ class TextStyles {
     fontWeight: FontWeight.w500,
     color: const Color.fromARGB(255, 65, 65, 65),
   );
+  static final TextStyle ubntu15w600black = ubuntu.copyWith(
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+    color: const Color.fromARGB(255, 17, 17, 17),
+  );
 }

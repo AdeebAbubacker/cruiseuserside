@@ -627,7 +627,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                     _buildDetailRow(
                         'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
                     _buildDetailRow('Others', '₹${_others.toStringAsFixed(2)}'),
-                    _buildDetailRow('Total', '₹${totalPrice}', isTotal: true),
+                    _builTotalDetailRow('Total', '₹${totalPrice}',
+                        isTotal: true),
 
                     const SizedBox(height: 40),
 
@@ -824,6 +825,23 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                   fontWeight: FontWeight.w600,
                   color: Color(0xff1F8386))
               : TextStyles.ubntu14w400black,
+        ),
+      ],
+    );
+  }
+
+  Widget _builTotalDetailRow(String label, String value,
+      {bool isTotal = false}) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 8.0),
+          child: Text(label, style: TextStyles.ubuntu14black55w400),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: TextStyles.ubntu15w600black,
         ),
       ],
     );
