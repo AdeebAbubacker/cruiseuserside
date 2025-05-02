@@ -156,4 +156,25 @@ class TextStyles {
     fontWeight: FontWeight.bold,
     color: const Color(0xFF555555),
   );
+  static final TextStyle ubuntu15normal = ubuntu.copyWith(
+    fontSize: 14,
+  );
+  static final TextStyle ubuntu18w700 = ubuntu.copyWith(
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+  );
+  static final TextStyle ubuntu17 = ubuntu.copyWith(
+    fontSize: 17,
+    fontWeight: FontWeight.w200,
+  );
+  static final TextStyle ubuntutextfieldText = ubuntu.copyWith(
+    fontSize: 14,
+    fontWeight: FontWeight.w200,
+    color: const Color.fromARGB(255, 51, 51, 51),
+  );
+  static final TextStyle ubuntuhintText = ubuntu.copyWith(
+    fontSize: 14,
+    fontWeight: FontWeight.w200,
+    color: const Color.fromARGB(255, 111, 111, 111),
+  );
 }

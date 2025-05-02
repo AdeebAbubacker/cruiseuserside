@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:in_app_update/in_app_update.dart';
@@ -47,6 +48,11 @@ class _LoginScreenState extends State<LoginScreen> {
   // Google Sign-In Function
   Future<void> signInWithGoogle() async {
     try {
+      GoogleSignIn googleSignIn = GoogleSignIn();
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.signOut();
+        print("Signed out");
+      }
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) return; // User canceled sign-in
 
@@ -318,8 +324,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 12),
                   TextField(
+                    style: TextStyles.ubuntutextfieldText,
                     decoration: InputDecoration(
                       hintText: "Enter your email",
+                      hintStyle: TextStyles.ubuntuhintText,
                       errorText: emailErrorText,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(32),
@@ -333,6 +341,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     controller: emailController,
                     focusNode: emailFocusNode,
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Row(
                     children: [
@@ -351,9 +362,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   TextField(
+                    style: TextStyles.ubuntutextfieldText,
                     obscureText: isTextVisible,
                     decoration: InputDecoration(
                         hintText: "Enter your password",
+                        hintStyle: TextStyles.ubuntuhintText,
                         errorText: passwordErrorText,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(10.0),
@@ -399,7 +412,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyles.ubuntu16black23w300),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 22),
                   FullWidthBlueButton(
                     text: 'Login',
                     onPressed: () {

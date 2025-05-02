@@ -3,6 +3,7 @@ import 'package:cruise_buddy/UI/Screens/Auth/login_screens.dart';
 import 'package:cruise_buddy/UI/Screens/misc/privacy_policy.dart';
 import 'package:cruise_buddy/UI/Screens/misc/terms_and_c_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
+import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
 import 'package:cruise_buddy/core/services/auth/auth_services.dart';
@@ -10,6 +11,7 @@ import 'package:cruise_buddy/core/view_model/updateUserProfile/update_user_profi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -270,29 +272,35 @@ class _AccountScreenState extends State<AccountScreen> {
               const SizedBox(height: 20),
               if (isEditing) ...[
                 BuildEditableField(
+                  hinttext: 'Enter yoy name',
                   textEditingController: nameController,
                   focusNode: nameFocusnode,
                 ),
                 BuildEditableField(
+                  hinttext: 'Enter your email',
                   textEditingController: emailController,
                   focusNode: emailFocusnode,
                 ),
                 BuildEditableField(
+                  hinttext: 'Enter your phone',
                   textEditingController: phoneController,
                   focusNode: phoneNoFocusnode,
                 ),
               ] else ...[
-                Text(nameController.text,
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold)),
+                Text(
+                  nameController.text,
+                  style: TextStyles.ubuntu18w700,
+                ),
                 const SizedBox(height: 5),
-                Text(emailController.text,
-                    style:
-                        const TextStyle(fontSize: 14, color: Colors.black54)),
+                Text(
+                  emailController.text,
+                  style: TextStyles.ubuntu17,
+                ),
                 const SizedBox(height: 5),
-                Text(phoneController.text,
-                    style:
-                        const TextStyle(fontSize: 14, color: Colors.black54)),
+                Text(
+                  phoneController.text,
+                  style: TextStyles.ubuntu17,
+                ),
               ],
               const SizedBox(height: 30),
               ListView(
@@ -316,7 +324,12 @@ class _AccountScreenState extends State<AccountScreen> {
                       'assets/icons/support_settings.svg',
                       color: Colors.blue,
                     ), // or Icons.rule, Icons.article, Icons.gavel
-                    title: const Text('Get Support'),
+                    title: Text(
+                      'Get Support',
+                      style: GoogleFonts.ubuntu(
+                        fontSize: 15,
+                      ),
+                    ),
 
                     onTap: () {
                       makeCall('9072855886', context);
@@ -329,7 +342,8 @@ class _AccountScreenState extends State<AccountScreen> {
                       'assets/icons/privacy_settings.svg',
                       color: Colors.blue,
                     ),
-                    title: const Text('Privacy Policy'),
+                    title: Text('Privacy Policy',
+                        style: TextStyles.ubuntu15normal),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -348,7 +362,10 @@ class _AccountScreenState extends State<AccountScreen> {
                       'assets/icons/terms&c.svg',
                       color: Colors.blue,
                     ),
-                    title: const Text('Terms and Conditions'),
+                    title: Text(
+                      'Terms and Conditions',
+                      style: TextStyles.ubuntu15normal,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -367,9 +384,11 @@ class _AccountScreenState extends State<AccountScreen> {
                       'assets/icons/app_version_settings.svg',
                       color: Colors.blue,
                     ),
-                    title: const Text('App Version'),
+                    title:
+                        Text('App Version', style: TextStyles.ubuntu15normal),
                     trailing: Text(
                       "v1.0.17",
+                      style: TextStyles.ubuntu15normal,
                     ),
                   ),
                   SizedBox(height: 5),
@@ -379,9 +398,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       'assets/icons/logout_settings.svg',
                       color: Colors.blue,
                     ),
-                    title: const Text(
-                      'Logout',
-                    ),
+                    title: Text('Logout', style: TextStyles.ubuntu15normal),
                     trailing: SvgPicture.asset(
                       'assets/image/profile/arrow_right.svg',
                     ),
@@ -414,6 +431,9 @@ class _AccountScreenState extends State<AccountScreen> {
                         print("Logout Error: $e"); // Handle errors gracefully
                       }
                     },
+                  ),
+                  SizedBox(
+                    height: 30,
                   ),
                 ],
               ),
@@ -495,12 +515,14 @@ class DottedBorderPainter extends CustomPainter {
 }
 
 class BuildEditableField extends StatelessWidget {
+  final String hinttext;
   FocusNode focusNode = FocusNode();
   TextEditingController textEditingController = TextEditingController();
   BuildEditableField({
     super.key,
     required this.textEditingController,
     required this.focusNode,
+    required this.hinttext,
   });
 
   @override
@@ -511,8 +533,11 @@ class BuildEditableField extends StatelessWidget {
         padding: const EdgeInsets.all(5.0),
         child: TextField(
           focusNode: focusNode,
+          style: TextStyles.ubuntutextfieldText,
           controller: textEditingController,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
+            hintText: hinttext,
+            hintStyle: TextStyles.ubuntuhintText,
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(25))),
             focusedBorder: OutlineInputBorder(
