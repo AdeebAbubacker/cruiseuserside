@@ -18,6 +18,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -281,10 +282,17 @@ class _AccountScreenState extends State<AccountScreen> {
                   textEditingController: emailController,
                   focusNode: emailFocusnode,
                 ),
-                BuildEditableField(
-                  hinttext: 'Enter your phone',
-                  textEditingController: phoneController,
+                // BuildEditableField(
+                //   hinttext: 'Enter your phone',
+                //   textEditingController: phoneController,
+                //   focusNode: phoneNoFocusnode,
+                // ),
+                StyledPhoneNumberField(
+                  controller: phoneController,
                   focusNode: phoneNoFocusnode,
+                  onChanged: (value) {
+                    print('Phone: $value');
+                  },
                 ),
               ] else ...[
                 Text(
@@ -556,6 +564,59 @@ class BuildEditableField extends StatelessWidget {
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 15),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class StyledPhoneNumberField extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final Function(String)? onChanged;
+
+  const StyledPhoneNumberField({
+    super.key,
+    required this.controller,
+    required this.focusNode,
+    this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: IntlPhoneField(
+          controller: controller,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            hintText: 'Enter phone number',
+            hintStyle: TextStyle(color: Colors.grey),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+              borderSide:
+                  const BorderSide(color: Color.fromARGB(255, 210, 176, 176)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+              borderSide: const BorderSide(
+                  color: Color.fromARGB(255, 108, 108, 108), width: 1.7),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+              borderSide: const BorderSide(
+                color: Color(0xFFFFC1C1), // light red
+                width: 1.5,
+              ),
+            ),
+          ),
+          initialCountryCode: 'IN',
+          onChanged: (phone) {
+            if (onChanged != null) onChanged!(phone.completeNumber);
+          },
         ),
       ),
     );
