@@ -740,9 +740,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       children: [
         Row(
           children: [
-            Text(title,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            Text(
+              title,
+              style: TextStyles.ubntu16,
+            ),
             const Spacer(),
             GestureDetector(
               onTap: onTap,
