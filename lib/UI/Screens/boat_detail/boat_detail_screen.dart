@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/model/featured_boats_model/featured_boats_model.dart';
@@ -187,7 +188,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     ),
                     child: Text(
                       '${_currentIndex + 1}/${imageUrls.length}',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      style: TextStyles.ubuntu16whitew2700,
                     ),
                   ),
                 ),
@@ -203,11 +204,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       Expanded(
                         child: Text(
                           '₹ ${widget.datum?.bookingTypes?[0].pricePerDay} / day',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.teal,
-                          ),
+                          style: TextStyles.ubuntublue20w600,
                         ),
                       ),
                       Container(
@@ -230,11 +227,16 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                                           widget.datum!.avgRating.toString())
                                       .toStringAsFixed(1)
                                   : "4.3",
+                              style: TextStyles.ubuntu16black23w300,
                             ),
+                            SizedBox(width: 4),
                           ],
                         ),
                       ),
                     ],
+                  ),
+                  SizedBox(
+                    height: 30,
                   ),
                   SizedBox(height: 8),
                   Row(
@@ -249,10 +251,10 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 30),
                   Text(
-                    'Type of Cruissse',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    'Type of Cruise',
+                    style: TextStyles.ubntu16,
                   ),
                   SizedBox(height: 8),
                   Container(
@@ -268,14 +270,10 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     alignment: Alignment.center,
                     child: Text(
                       widget.datum?.name ?? "N/A",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
+                      style: TextStyles.ubntu16w300,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 25),
 
                   Row(
                     children: [
@@ -287,8 +285,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       SizedBox(width: 12),
                       Text(
                         'Cruise Ship',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyles.ubntu16w300,
                       ),
                       Spacer(),
                       SizedBox(width: 9),
@@ -301,15 +298,15 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: 25),
                   Text(
                     'Description',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyles.ubntu16,
                   ),
                   SizedBox(height: 8),
                   Text(
                     widget.datum?.cruise?.description.toString() ?? "N/A",
-                    style: TextStyle(fontSize: 14),
+                    style: TextStyles.ubntu14w300grey,
                   ),
                   SizedBox(height: 15),
                   _buildInfoRow(Icons.people, "Passenger Capacity",
@@ -317,17 +314,20 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   SizedBox(height: 10),
                   // _buildInfoRow(
                   //     Icons.access_time, "Boat Timing", "09:00 PM - 06:00 AM"),
-                  const SizedBox(height: 16.0),
+                  SizedBox(height: 30),
                   Text(
                     "Location",
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                    style: TextStyles.ubntu16,
                   ),
+
                   const SizedBox(height: 8.0),
                   Row(
                     children: [
                       Expanded(
-                        child: Text(address.isNotEmpty ? address : 'Unknown'),
+                        child: Text(
+                          address.isNotEmpty ? address : 'Unknown',
+                          style: TextStyles.ubntu14w300grey,
+                        ),
                       ),
                       Expanded(
                         child: Container(
@@ -395,12 +395,11 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       // )),
                     ],
                   ),
-                  const SizedBox(height: 16.0),
+                  const SizedBox(height: 30.0),
                   if ((widget.datum?.amenities?.isNotEmpty ?? false))
                     Text(
                       "Amenities",
-                      style: TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.bold),
+                      style: TextStyles.ubntu16,
                     ),
 
                   const SizedBox(height: 8.0),
@@ -420,11 +419,10 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     },
                   ),
 
-                  const SizedBox(height: 16.0),
+                  SizedBox(height: 25),
                   Text(
                     "Reviews",
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                    style: TextStyles.ubntu16,
                   ),
                   const SizedBox(height: 8.0),
                   Column(
@@ -488,7 +486,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
           Expanded(
             child: Text(
               amenity.toString(),
-              style: TextStyle(fontSize: 14),
+              style: TextStyles.ubntu14w300grey,
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -505,9 +503,14 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: TextStyle(fontSize: 16.0, color: Colors.grey)),
-            Text(subtitle,
-                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+            Text(
+              title,
+              style: TextStyles.ubntu14w300grey,
+            ),
+            Text(
+              subtitle,
+              style: TextStyles.ubntu14w500grey,
+            ),
           ],
         ),
       ],
@@ -565,11 +568,16 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   children: [
                     Text(
                       review["name"],
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: GoogleFonts.ubuntu(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       review["username"],
-                      style: TextStyle(fontSize: 12.0, color: Colors.grey),
+                      style: GoogleFonts.ubuntu(
+                        fontSize: 12.0,
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ),
@@ -591,7 +599,8 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             // Review Text with "Show More/Less"
             Text(
               review["reviewText"],
-              maxLines: showMore ? null : 3,
+              style: GoogleFonts.ubuntu(),
+              maxLines: showMore ? null : 15,
               overflow: showMore ? TextOverflow.visible : TextOverflow.ellipsis,
             ),
             const SizedBox(height: 8.0),
