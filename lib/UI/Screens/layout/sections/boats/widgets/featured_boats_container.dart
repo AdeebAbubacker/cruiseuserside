@@ -20,7 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class PillWidget extends StatelessWidget {
-  final String image;
+  final String? image;
   final String text;
 
   const PillWidget({
@@ -29,38 +29,59 @@ class PillWidget extends StatelessWidget {
     required this.text,
   });
 
+  bool _isSvg(String path) => path.toLowerCase().endsWith('.svg');
+
   @override
   Widget build(BuildContext context) {
+    const fallbackAsset = 'assets/icons/heater.svg';
+
+    Widget buildImage(String? imgUrl) {
+      if (imgUrl == null || imgUrl.isEmpty) {
+        return SvgPicture.asset(fallbackAsset, width: 14, height: 14);
+      }
+
+      if (_isSvg(imgUrl)) {
+        return SvgPicture.network(
+          imgUrl,
+          width: 14,
+          height: 14,
+          placeholderBuilder: (context) =>
+              SvgPicture.asset(fallbackAsset, width: 14, height: 14),
+          errorBuilder: (context, error, stackTrace) =>
+              SvgPicture.asset(fallbackAsset, width: 14, height: 14),
+        );
+      } else {
+        return Image.network(
+          imgUrl,
+          width: 14,
+          height: 14,
+          errorBuilder: (context, error, stackTrace) =>
+              SvgPicture.asset(fallbackAsset, width: 14, height: 14),
+        );
+      }
+    }
+
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 3,
-        vertical: 5,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(25),
         border: Border.all(
-          color: Color(0xFFE2E2E2),
+          color: const Color(0xFFE2E2E2),
           width: 1.5,
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(width: 8),
-          SvgPicture.asset(
-            image,
-            width: 14,
-            height: 14,
-          ),
-          SizedBox(width: 4),
+          const SizedBox(width: 8),
+          buildImage(image),
+          const SizedBox(width: 4),
           Text(
             text,
-            style: GoogleFonts.ubuntu(
-              fontSize: 9,
-            ),
+            style: GoogleFonts.ubuntu(fontSize: 9),
           ),
-          SizedBox(width: 3),
+          const SizedBox(width: 3),
         ],
       ),
     );
@@ -251,7 +272,8 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
               loading: (value) {},
               addedSuccess: (value) {
                 CustomToast.itemAddedToast(
-                    context: context, );
+                  context: context,
+                );
                 setState(() {
                   loadingFavorites.remove(value
                       .postedfavouritemitemodel.favorite?.package?.id
@@ -567,20 +589,37 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                         children: [
                                                           const SizedBox(
                                                               height: 10),
+                                                          // AmenityRow(
+                                                          //   amenities: value
+                                                          //           .featuredBoats
+                                                          //           .data?[
+                                                          //               index]
+                                                          //           .amenities!
+                                                          //           .map(
+                                                          //               (e) => {
+                                                          //                     "name": e.name,
+                                                          //                     "icon": 'assets/icons/heater.svg'
+                                                          //                   })
+                                                          //           .toList() ??
+                                                          //       [],
+                                                          // ),
                                                           AmenityRow(
                                                             amenities: value
                                                                     .featuredBoats
                                                                     .data?[
                                                                         index]
-                                                                    .amenities!
-                                                                    .map(
-                                                                        (e) => {
-                                                                              "name": e.name,
-                                                                              "icon": 'assets/icons/heater.svg'
-                                                                            })
+                                                                    .amenities
+                                                                    ?.map((e) =>
+                                                                        Amenity(
+                                                                          name: e.name ??
+                                                                              '',
+                                                                          icon: e.icon ??
+                                                                              '', // Or e.icon if available
+                                                                        ))
                                                                     .toList() ??
                                                                 [],
                                                           ),
+
                                                           SizedBox(
                                                             height: 10,
                                                           ),

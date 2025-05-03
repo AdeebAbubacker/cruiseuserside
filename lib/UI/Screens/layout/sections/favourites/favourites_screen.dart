@@ -382,16 +382,17 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                     
                             AmenityRow(
-                              amenities: favourite?.package?.amenities!
-                                      .map((e) => {
-                                            "name": e.name,
-                                            "icon":
-                                                'assets/icons/heater.svg', // Replace with dynamic logic if needed
-                                          })
+                              amenities: favourite?.package?.amenities
+                                      ?.map((e) => Amenity(
+                                            name: e.name ?? '',
+                                            icon: e.icon ?? '',
+                                          ))
                                       .toList() ??
                                   [],
                             ),
+
                             const SizedBox(height: 8),
                             Text(
                               favourite?.package?.cruise?.name ?? "",

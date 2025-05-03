@@ -142,7 +142,7 @@ class CruiseService {
       }
 
       if (amenities?.isNotEmpty == true) {
-        urlString += '&filter[amenities.name]=$amenities';
+        urlString += '&filter[amenities]=$amenities';
       }
 
       if (cruiseModelName?.isNotEmpty == true) {

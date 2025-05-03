@@ -395,7 +395,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     title:
                         Text('App Version', style: TextStyles.ubuntu15normal),
                     trailing: Text(
-                      "v1.0.17",
+                      "v1.0.19",
                       style: TextStyles.ubuntu15normal,
                     ),
                   ),

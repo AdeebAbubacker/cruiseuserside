@@ -196,17 +196,17 @@ class SearchResultsContainer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 10),
-                AmenityRow(
-                  amenities: datum?.amenities!
-                          .map((e) => {
-                                "name": e.name,
-                                "icon":
-                                    'assets/icons/heater.svg', // Replace with dynamic logic if needed
-                              })
-                          .toList() ??
-                      [],
-                ),
+                SizedBox(height: 10),AmenityRow(
+  amenities: datum?.amenities!
+          ?.map((e) => Amenity(
+                name: e.name ?? '',
+                icon: e.icon ?? '',
+              ))
+          .toList() ??
+      [],
+),
+
+            
                 SizedBox(height: 5),
                 Text(
                   truncateString(cruisename, 43),

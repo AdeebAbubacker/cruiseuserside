@@ -110,7 +110,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     {'image': 'assets/icons/heater.svg', 'text': 'Heater'},
     {'image': 'assets/icons/projector.svg', 'text': 'Projector'},
     {'image': 'assets/icons/mic.svg', 'text': 'Mic'},
-    {'image': 'assets/icons/wifi.svg', 'text': 'WiFi'},
+    {'image': 'assets/icons/wifi.svg', 'text': 'WIFI'},
     {'image': 'assets/icons/food.svg', 'text': 'Food'},
     {'image': 'assets/icons/drinks.svg', 'text': 'Drinks'},
     {'image': 'assets/icons/music.svg', 'text': 'Music'},
@@ -532,6 +532,11 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                       context,
                                       onApplyPressed:
                                           (String minAmount, String maxAmount) {
+                                        String? amenitiesName =
+                                            selectedAmenities.isNotEmpty
+                                                ? selectedAmenities.join(',')
+                                                : null;
+                                        print('myy ammmy --- ${amenitiesName}');
                                         // Use the selected minAmount and maxAmount as strings
                                         print(
                                             "Selected Min Amount: $minAmount");
@@ -556,6 +561,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                                 minAmount, // Pass as string
                                             cruiseType: selectedCruiseType
                                                 ?.toLowerCase(),
+                                            amenitiesName: amenitiesName,
                                           ),
                                         );
                                       },

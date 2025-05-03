@@ -592,12 +592,11 @@ class _LocationsBasedCruiseScreenState
                                       children: [
                                         AmenityRow(
                                           amenities: value?.cruisemodel
-                                                  .data[index]?.amenities!
-                                                  .map((e) => {
-                                                        "name": e.name,
-                                                        "icon":
-                                                            'assets/icons/heater.svg', // Replace with dynamic logic if needed
-                                                      })
+                                                  .data[index]?.amenities
+                                                  ?.map((e) => Amenity(
+                                                        name: e.name ?? '',
+                                                        icon: e.icon ?? '',
+                                                      ))
                                                   .toList() ??
                                               [],
                                         ),

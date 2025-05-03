@@ -164,6 +164,11 @@ class _CategoriesListResultscreenState
                               // Use the selected minAmount and maxAmount as strings
                               print("Selected Min Amount: $minAmount");
                               print("Selected Max Amount: $maxAmount");
+                              String? amenitiesName =
+                                  selectedAmenities.isNotEmpty
+                                      ? selectedAmenities.join(',')
+                                      : null;
+                              print('myy ammmy --- ${amenitiesName}');
 
                               // Dispatch the BLoC event with the updated filter values
                               BlocProvider.of<GetSeachedCruiseresultsBloc>(
@@ -178,6 +183,7 @@ class _CategoriesListResultscreenState
                                   maxPrice: maxAmount, // Pass as string
                                   minPrice: minAmount, // Pass as string
                                   cruiseType: selectedCruiseType?.toLowerCase(),
+                                  amenitiesName: amenitiesName,
                                 ),
                               );
                             },
@@ -758,13 +764,15 @@ class _CategoriesListResultscreenState
                                                         amenities: value
                                                                 .packagesearchresults
                                                                 ?.data?[index]
-                                                                ?.amenities!
-                                                                .map((e) => {
-                                                                      "name": e
-                                                                          .name,
-                                                                      "icon":
-                                                                          'assets/icons/heater.svg', // Replace with dynamic logic if needed
-                                                                    })
+                                                                ?.amenities
+                                                                ?.map(
+                                                                    (e) =>
+                                                                        Amenity(
+                                                                          name: e.name ??
+                                                                              '',
+                                                                          icon: e.icon ??
+                                                                              '',
+                                                                        ))
                                                                 .toList() ??
                                                             [],
                                                       ),
