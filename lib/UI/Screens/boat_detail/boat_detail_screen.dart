@@ -53,15 +53,15 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       "date": "23 Nov 2021",
     },
   ];
-
+Box<UserDetailsDB>? userDetailsBox;
   bool showMore = false;
   @override
   void initState() {
     super.initState();
      WidgetsBinding.instance.addPostFrameCallback((_) async {
-   _fetchUserData();
+   _getUSerData();
     });
-    _fetchUserData();
+  
     imageUrls = [
       (widget.datum?.cruise?.images?.isNotEmpty == true
               ? widget.datum!.cruise!.images![0].cruiseImg
@@ -76,19 +76,23 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
 
   String name = 'Guest';
   String email = 'N/A';
-  final userDetailsBox = Hive.box('userDetails'); // Use the already opened box
 
-  Future _fetchUserData() async {
-    UserDetailsDB userDetails = userDetailsBox.get('user');
-   
-
-    if (userDetails != null) {
+    Future<void> _getUSerData() async {
+    try {
+      final userdetailsbox = Hive.box<UserDetailsDB>('userDetailsBox');
+      final userDetails = userdetailsbox.get('user');
+      if (userDetails != null) {
       setState(() {
         name = userDetails.name ?? 'Guest';
         email = userDetails.email ?? 'N/A';
       });
     }
+    } catch (error) {
+      print('Error fetching data from Hive: $error');
+      // Handle errors appropriately, e.g., display an error message
+    }
   }
+
 
   void makeCall(String number, BuildContext context) async {
     final numberWithCountryCode =

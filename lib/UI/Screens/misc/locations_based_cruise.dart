@@ -49,7 +49,7 @@ class _LocationsBasedCruiseScreenState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       fetchFavorites();
-      _fetchUserData();
+       _getUSerData();
       BlocProvider.of<ListCruiseonLocationBloc>(context)
           .add(ListCruiseonLocationEvent.getCruise(location: widget.location));
     });
@@ -57,18 +57,23 @@ class _LocationsBasedCruiseScreenState
 
   String name = 'Guest';
   String email = 'N/A';
-  final userDetailsBox = Hive.box('userDetails'); // Use the already opened box
 
-  Future _fetchUserData() async {
-    UserDetailsDB userDetails = userDetailsBox.get('user');
-
-    if (userDetails != null) {
+    Future<void> _getUSerData() async {
+    try {
+      final userdetailsbox = Hive.box<UserDetailsDB>('userDetailsBox');
+      final userDetails = userdetailsbox.get('user');
+      if (userDetails != null) {
       setState(() {
         name = userDetails.name ?? 'Guest';
         email = userDetails.email ?? 'N/A';
       });
     }
+    } catch (error) {
+      print('Error fetching data from Hive: $error');
+      // Handle errors appropriately, e.g., display an error message
+    }
   }
+
 
   Future<void> fetchFavorites() async {
     final token = await GetSharedPreferences.getAccessToken();
