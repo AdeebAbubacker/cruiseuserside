@@ -22,7 +22,8 @@ class BookingconfirmationScreen extends StatefulWidget {
   const BookingconfirmationScreen({
     super.key,
     required this.packageId,
-    required this.datum,required this.name,
+    required this.datum,
+    required this.name,
     required this.email,
   });
 
@@ -34,7 +35,7 @@ class BookingconfirmationScreen extends StatefulWidget {
 class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   late Razorpay _razorpay;
   bool _isLoading = false;
-  String bookingTypeId ="1";
+  String bookingTypeId = "1";
   List<String> imageUrls = [];
   @override
   void initState() {
@@ -44,6 +45,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      print("my user name is ${widget.name}");
+      print("my user email is ${widget.email}");
       if (widget.datum.bookingTypes!.length == 1) {
         bookingTypeId = widget.datum.bookingTypes?.first.id.toString() ??
             "1"; // Set the booking type ID directly
@@ -225,7 +228,6 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                 setState(() => _isLoading = false);
                 print('order id ${value.bookingresponse.booking?.orderId}');
 
-                print("deey");
                 openCheckout(
                     orderid: value.bookingresponse.booking?.orderId.toString(),
                     totalamount: totalPrice); // Call Razorpay on success

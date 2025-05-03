@@ -71,9 +71,10 @@ class _CategoriesListResultscreenState
 
   String name = 'Guest';
   String email = 'N/A';
-  Future<void> _fetchUserData() async {
-    final box = await Hive.openBox('userDetails');
-    final userDetails = box.get('user') as UserDetailsDB?;
+  final userDetailsBox = Hive.box('userDetails'); // Use the already opened box
+
+  Future _fetchUserData() async {
+    UserDetailsDB userDetails = userDetailsBox.get('user');
 
     if (userDetails != null) {
       setState(() {

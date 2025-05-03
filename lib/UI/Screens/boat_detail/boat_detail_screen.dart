@@ -58,6 +58,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
   @override
   void initState() {
     super.initState();
+     WidgetsBinding.instance.addPostFrameCallback((_) async {
+   _fetchUserData();
+    });
     _fetchUserData();
     imageUrls = [
       (widget.datum?.cruise?.images?.isNotEmpty == true
@@ -73,9 +76,11 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
 
   String name = 'Guest';
   String email = 'N/A';
-  Future<void> _fetchUserData() async {
-    final box = await Hive.openBox('userDetails');
-    final userDetails = box.get('user') as UserDetailsDB?;
+  final userDetailsBox = Hive.box('userDetails'); // Use the already opened box
+
+  Future _fetchUserData() async {
+    UserDetailsDB userDetails = userDetailsBox.get('user');
+   
 
     if (userDetails != null) {
       setState(() {
@@ -84,6 +89,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       });
     }
   }
+
   void makeCall(String number, BuildContext context) async {
     final numberWithCountryCode =
         number.startsWith('+') ? number : '+91$number';
@@ -471,8 +477,8 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => BookingconfirmationScreen(
-                                  name: name,
-                                  email: email,
+                                    name: name,
+                                    email: email,
                                     packageId: widget.packageId,
                                     datum: widget.datum,
                                   )));

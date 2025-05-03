@@ -32,6 +32,7 @@ class BookMyCruiseBloc extends Bloc<BookMyCruiseEvent, BookMyCruiseState> {
             emit(BookMyCruiseState.getBookedFailure(error: failure));
           }
         }, (success) async {
+          print('blaaah');
           emit(
             BookMyCruiseState.getBookedBoats(
               bookingresponse: success,

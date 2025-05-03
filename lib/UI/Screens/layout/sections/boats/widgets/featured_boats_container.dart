@@ -117,16 +117,19 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
     super.initState();
     _scales = List.generate(10, (index) => 1.0);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      fetchFavorites();  _fetchUserData();
+      fetchFavorites();
+      _fetchUserData();
       BlocProvider.of<GetFeaturedBoatsBloc>(context)
           .add(GetFeaturedBoatsEvent.getFeaturedBoats());
     });
   }
+
   String name = 'Guest';
   String email = 'N/A';
-  Future<void> _fetchUserData() async {
-    final box = await Hive.openBox('userDetails');
-    final userDetails = box.get('user') as UserDetailsDB?;
+  final userDetailsBox = Hive.box('userDetails'); // Use the already opened box
+
+  Future _fetchUserData() async {
+    UserDetailsDB userDetails = userDetailsBox.get('user');
 
     if (userDetails != null) {
       setState(() {
@@ -135,6 +138,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
       });
     }
   }
+
   Future<void> fetchFavorites() async {
     final token = await GetSharedPreferences.getAccessToken();
     final response = await http.get(
@@ -745,8 +749,8 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                               builder: (context) => BookingconfirmationScreen(
                                                                   packageId:
                                                                       "${value.featuredBoats.data?[index].id}",
-                                                               name: name,
-                                                               email: email,
+                                                                  name: name,
+                                                                  email: email,
                                                                   datum: value
                                                                           .featuredBoats
                                                                           .data?[index] ??
