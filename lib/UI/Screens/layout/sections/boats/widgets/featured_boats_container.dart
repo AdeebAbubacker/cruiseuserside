@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
+import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/featured_shimmer_card.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
@@ -114,12 +117,24 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
     super.initState();
     _scales = List.generate(10, (index) => 1.0);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      fetchFavorites();
+      fetchFavorites();  _fetchUserData();
       BlocProvider.of<GetFeaturedBoatsBloc>(context)
           .add(GetFeaturedBoatsEvent.getFeaturedBoats());
     });
   }
+  String name = 'Guest';
+  String email = 'N/A';
+  Future<void> _fetchUserData() async {
+    final box = await Hive.openBox('userDetails');
+    final userDetails = box.get('user') as UserDetailsDB?;
 
+    if (userDetails != null) {
+      setState(() {
+        name = userDetails.name ?? 'Guest';
+        email = userDetails.email ?? 'N/A';
+      });
+    }
+  }
   Future<void> fetchFavorites() async {
     final token = await GetSharedPreferences.getAccessToken();
     final response = await http.get(
@@ -730,6 +745,8 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                               builder: (context) => BookingconfirmationScreen(
                                                                   packageId:
                                                                       "${value.featuredBoats.data?[index].id}",
+                                                               name: name,
+                                                               email: email,
                                                                   datum: value
                                                                           .featuredBoats
                                                                           .data?[index] ??

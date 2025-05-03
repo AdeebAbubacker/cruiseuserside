@@ -7,11 +7,13 @@ import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmatio
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/model/featured_boats_model/featured_boats_model.dart';
@@ -56,7 +58,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
   @override
   void initState() {
     super.initState();
-
+    _fetchUserData();
     imageUrls = [
       (widget.datum?.cruise?.images?.isNotEmpty == true
               ? widget.datum!.cruise!.images![0].cruiseImg
@@ -69,6 +71,19 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     ];
   }
 
+  String name = 'Guest';
+  String email = 'N/A';
+  Future<void> _fetchUserData() async {
+    final box = await Hive.openBox('userDetails');
+    final userDetails = box.get('user') as UserDetailsDB?;
+
+    if (userDetails != null) {
+      setState(() {
+        name = userDetails.name ?? 'Guest';
+        email = userDetails.email ?? 'N/A';
+      });
+    }
+  }
   void makeCall(String number, BuildContext context) async {
     final numberWithCountryCode =
         number.startsWith('+') ? number : '+91$number';
@@ -456,6 +471,8 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => BookingconfirmationScreen(
+                                  name: name,
+                                  email: email,
                                     packageId: widget.packageId,
                                     datum: widget.datum,
                                   )));

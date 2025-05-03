@@ -17,10 +17,13 @@ import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 class BookingconfirmationScreen extends StatefulWidget {
   final String packageId;
   final DatumTest datum;
+  final String name;
+  final String email;
   const BookingconfirmationScreen({
     super.key,
     required this.packageId,
-    required this.datum,
+    required this.datum,required this.name,
+    required this.email,
   });
 
   @override
@@ -31,7 +34,7 @@ class BookingconfirmationScreen extends StatefulWidget {
 class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   late Razorpay _razorpay;
   bool _isLoading = false;
-  String bookingTypeId = '1';
+  String bookingTypeId ="1";
   List<String> imageUrls = [];
   @override
   void initState() {
@@ -42,8 +45,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (widget.datum.bookingTypes!.length == 1) {
-        bookingTypeId = widget.datum.bookingTypes!.first.id
-            .toString(); // Set the booking type ID directly
+        bookingTypeId = widget.datum.bookingTypes?.first.id.toString() ??
+            "1"; // Set the booking type ID directly
       }
       imageUrls = [
         (widget.datum?.cruise?.images?.isNotEmpty == true
@@ -58,6 +61,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       ];
       BlocProvider.of<ViewMyPackageBloc>(context)
           .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
+      print("booking typeid ${bookingTypeId}");
     });
   }
 
@@ -98,12 +102,12 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       'key': 'rzp_live_ZAFN8qKXodIxis',
       'amount': '100',
       'currency': 'INR',
-      'name': 'Test',
-      'description': 'Course' ' ' + 'Fee',
+      'name': widget.name,
+      'description': 'Cruise' ' ' + 'Payment',
       'order_id': orderid,
       'prefill': {
-        'contact': '8848055651',
-        'email': 'test@gmail.com',
+        'contact': '9949055351',
+        'email': widget.email,
       },
       'method': {
         'upi': true,
@@ -180,6 +184,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   int _numAdults = 1;
   int _numKids = 0;
   DateTime _selectedDate = DateTime.now();
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
   String _location = "Kottayam";
   int _nonVegCount = 0;
   int _vegCount = 0;
@@ -190,7 +196,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   final double _tax = 600;
   final double _discounts = 0.0;
   final double _others = 0.0;
-
+  TextEditingController _dateController = TextEditingController();
   bool _isEditingBoatDetails = false;
   bool _isEditingPassengers = false;
   bool _isEditingDate = false;
@@ -367,27 +373,27 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       onTap: () => setState(
                           () => _isEditingBoatDetails = !_isEditingBoatDetails),
                       editingWidgets: [
-                        DropdownButtonFormField<String>(
-                          value: _selectedCruiseType,
-                          decoration:
-                              const InputDecoration(labelText: 'Cruise Type'),
-                          items: <String>[
-                            'Day Cruise',
-                            'Full Day Cruise',
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            if (newValue != null) {
-                              setState(() {
-                                _selectedCruiseType = newValue;
-                              });
-                            }
-                          },
-                        ),
+                        // DropdownButtonFormField<String>(
+                        //   value: _selectedCruiseType,
+                        //   decoration:
+                        //       const InputDecoration(labelText: 'Cruise Type'),
+                        //   items: <String>[
+                        //     'Day Cruise',
+                        //     'Full Day Cruise',
+                        //   ].map<DropdownMenuItem<String>>((String value) {
+                        //     return DropdownMenuItem<String>(
+                        //       value: value,
+                        //       child: Text(value),
+                        //     );
+                        //   }).toList(),
+                        //   onChanged: (String? newValue) {
+                        //     if (newValue != null) {
+                        //       setState(() {
+                        //         _selectedCruiseType = newValue;
+                        //       });
+                        //     }
+                        //   },
+                        // ),
                         _buildNumericInput(
                           'No of Rooms',
                           _numRooms,
@@ -400,7 +406,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                             (value) => setState(() => _day = value)),
                       ],
                       displayWidgets: [
-                        _buildDetailRow('Type of Cruise', _selectedCruiseType),
+                        // _buildDetailRow('Type of Cruise', _selectedCruiseType),
                         _buildDetailRow('No of Rooms', _numRooms.toString()),
                         _buildDetailRow('Day', _day.toString()),
                       ],
@@ -427,10 +433,13 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       BookingTypeSelectorWidget(
                         onTypeSelected: (selectedType) {
                           print("Selected booking type: $selectedType");
+                          setState(() {
+                            bookingTypeId = selectedType.toString();
+                          });
                           _onBookingTypeSelected(
                               selectedType.toString()); // Set the selected type
                         },
-                        initialType: int.tryParse(bookingTypeId) ??
+                        initialType: int.tryParse(bookingTypeId.toString()) ??
                             1, // Pass the initial value (if any)
                       ),
                     SizedBox(
@@ -473,6 +482,137 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
                     // Date
                     // Date section
+                    // _buildEditableSection(
+                    //   unavailable_date: unavailableDates,
+                    //   title: 'Date',
+                    //   isEditing: _isEditingDate,
+                    //   onTap: () =>
+                    //       setState(() => _isEditingDate = !_isEditingDate),
+                    //   editingWidgets: [
+                    //     GestureDetector(
+                    //       onTap: () async {
+                    //         await showDialog(
+                    //           context: context,
+                    //           builder: (context) {
+                    //             return AlertDialog(
+                    //               contentPadding: EdgeInsets.all(12),
+                    //               content: Container(
+                    //                 width:
+                    //                     MediaQuery.of(context).size.width * 0.9,
+                    //                 height: 460,
+                    //                 child: TableCalendar(
+                    //                   firstDay: DateTime(2000),
+                    //                   lastDay: DateTime(2101),
+                    //                   focusedDay: _selectedDate,
+                    //                   selectedDayPredicate: (day) =>
+                    //                       isSameDay(_selectedDate, day),
+                    //                   onDaySelected: (selectedDay, focusedDay) {
+                    //                     bool isUnavailable = unavailableDates
+                    //                             ?.any((range) {
+                    //                           if (range.startDate == null ||
+                    //                               range.endDate == null)
+                    //                             return false;
+
+                    //                           return selectedDay.isAfter(
+                    //                                   range.startDate!.subtract(
+                    //                                       Duration(days: 1))) &&
+                    //                               selectedDay.isBefore(range
+                    //                                   .endDate!
+                    //                                   .add(Duration(days: 1)));
+                    //                         }) ??
+                    //                         false; // If unavailableDates is null, return false
+
+                    //                     if (isUnavailable) {
+                    //                       CustomToast.showFlushBar(
+                    //                         context: context,
+                    //                         status: false,
+                    //                         title: "Oops",
+                    //                         content:
+                    //                             "This date is not available.",
+                    //                       );
+                    //                       return;
+                    //                     }
+
+                    //                     setState(() {
+                    //                       _selectedDate = selectedDay;
+                    //                     });
+                    //                     Navigator.pop(context);
+                    //                   },
+                    //                   calendarBuilders: CalendarBuilders(
+                    //                     defaultBuilder:
+                    //                         (context, day, focusedDay) {
+                    //                       bool isUnavailable = unavailableDates
+                    //                               ?.any((range) {
+                    //                             if (range.startDate == null ||
+                    //                                 range.endDate == null)
+                    //                               return false;
+                    //                             return day.isAfter(range
+                    //                                     .startDate!
+                    //                                     .subtract(Duration(
+                    //                                         days: 1))) &&
+                    //                                 day.isBefore(range.endDate!
+                    //                                     .add(
+                    //                                         Duration(days: 1)));
+                    //                           }) ??
+                    //                           false; // If unavailableDates is null, return false
+
+                    //                       if (isUnavailable) {
+                    //                         return Container(
+                    //                           alignment: Alignment.center,
+                    //                           decoration: BoxDecoration(
+                    //                             color: Colors.red,
+                    //                             shape: BoxShape.circle,
+                    //                           ),
+                    //                           child: Text(
+                    //                             '${day.day}',
+                    //                             style: TextStyle(
+                    //                                 color: Colors.white),
+                    //                           ),
+                    //                         );
+                    //                       }
+                    //                       return null;
+                    //                     },
+                    //                   ),
+                    //                   headerStyle: HeaderStyle(
+                    //                     formatButtonVisible: true,
+                    //                     leftChevronVisible: true,
+                    //                     rightChevronVisible: true,
+                    //                     titleTextStyle: TextStyle(
+                    //                       fontSize: 18,
+                    //                       fontWeight: FontWeight.bold,
+                    //                     ),
+                    //                     formatButtonShowsNext: false,
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             );
+                    //           },
+                    //         );
+                    //       },
+                    //       child: Container(
+                    //         height: 40,
+                    //         width: MediaQuery.of(context).size.width * 0.8,
+                    //         decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(36),
+                    //           border: Border.all(width: 1),
+                    //         ),
+                    //         child: Center(
+                    //           child: Text(
+                    //             DateFormat('dd/MM/yyyy').format(_selectedDate),
+                    //             style: TextStyle(
+                    //                 fontSize: 16, fontWeight: FontWeight.w500),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    //   displayWidgets: [
+                    //     _buildDetailRow(
+                    //       'Date',
+                    //       DateFormat('dd/MM/yyyy').format(_selectedDate),
+                    //     ),
+                    //   ],
+                    // ),
                     _buildEditableSection(
                       unavailable_date: unavailableDates,
                       title: 'Date',
@@ -482,103 +622,131 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       editingWidgets: [
                         GestureDetector(
                           onTap: () async {
-                            await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  contentPadding: EdgeInsets.all(12),
-                                  content: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.9,
-                                    height: 460,
-                                    child: TableCalendar(
-                                      firstDay: DateTime(2000),
-                                      lastDay: DateTime(2101),
-                                      focusedDay: _selectedDate,
-                                      selectedDayPredicate: (day) =>
-                                          isSameDay(_selectedDate, day),
-                                      onDaySelected: (selectedDay, focusedDay) {
-                                        bool isUnavailable = unavailableDates
-                                                ?.any((range) {
-                                              if (range.startDate == null ||
-                                                  range.endDate == null)
-                                                return false;
-
-                                              return selectedDay.isAfter(
-                                                      range.startDate!.subtract(
-                                                          Duration(days: 1))) &&
-                                                  selectedDay.isBefore(range
-                                                      .endDate!
-                                                      .add(Duration(days: 1)));
-                                            }) ??
-                                            false; // If unavailableDates is null, return false
-
-                                        if (isUnavailable) {
-                                          CustomToast.showFlushBar(
-                                            context: context,
-                                            status: false,
-                                            title: "Oops",
-                                            content:
-                                                "This date is not available.",
-                                          );
-                                          return;
-                                        }
-
-                                        setState(() {
-                                          _selectedDate = selectedDay;
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                      calendarBuilders: CalendarBuilders(
-                                        defaultBuilder:
-                                            (context, day, focusedDay) {
+                            if (bookingTypeId == "1") {
+                              // Single date selection
+                              await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    contentPadding: EdgeInsets.all(12),
+                                    content: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
+                                      height: 460,
+                                      child: TableCalendar(
+                                        firstDay: DateTime(2000),
+                                        lastDay: DateTime(2101),
+                                        focusedDay: _selectedDate,
+                                        selectedDayPredicate: (day) =>
+                                            isSameDay(_selectedDate, day),
+                                        onDaySelected:
+                                            (selectedDay, focusedDay) {
                                           bool isUnavailable = unavailableDates
                                                   ?.any((range) {
                                                 if (range.startDate == null ||
                                                     range.endDate == null)
                                                   return false;
-                                                return day.isAfter(range
+
+                                                return selectedDay.isAfter(range
                                                         .startDate!
                                                         .subtract(Duration(
                                                             days: 1))) &&
-                                                    day.isBefore(range.endDate!
-                                                        .add(
+                                                    selectedDay.isBefore(
+                                                        range.endDate!.add(
                                                             Duration(days: 1)));
                                               }) ??
-                                              false; // If unavailableDates is null, return false
+                                              false;
 
                                           if (isUnavailable) {
-                                            return Container(
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                color: Colors.red,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Text(
-                                                '${day.day}',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
+                                            CustomToast.showFlushBar(
+                                              context: context,
+                                              status: false,
+                                              title: "Oops",
+                                              content:
+                                                  "This date is not available.",
                                             );
+                                            return;
                                           }
-                                          return null;
+
+                                          setState(() {
+                                            _selectedDate = selectedDay;
+                                            _dateController.text =
+                                                DateFormat('dd/MM/yyyy')
+                                                    .format(selectedDay);
+                                          });
+                                          Navigator.pop(context);
                                         },
-                                      ),
-                                      headerStyle: HeaderStyle(
-                                        formatButtonVisible: true,
-                                        leftChevronVisible: true,
-                                        rightChevronVisible: true,
-                                        titleTextStyle: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
+                                        calendarBuilders: CalendarBuilders(
+                                          defaultBuilder:
+                                              (context, day, focusedDay) {
+                                            bool isUnavailable =
+                                                unavailableDates?.any((range) {
+                                                      if (range.startDate ==
+                                                              null ||
+                                                          range.endDate == null)
+                                                        return false;
+                                                      return day.isAfter(range
+                                                              .startDate!
+                                                              .subtract(Duration(
+                                                                  days: 1))) &&
+                                                          day.isBefore(range
+                                                              .endDate!
+                                                              .add(Duration(
+                                                                  days: 1)));
+                                                    }) ??
+                                                    false;
+
+                                            if (isUnavailable) {
+                                              return Container(
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.red,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Text(
+                                                  '${day.day}',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              );
+                                            }
+                                            return null;
+                                          },
                                         ),
-                                        formatButtonShowsNext: false,
+                                        headerStyle: HeaderStyle(
+                                          formatButtonVisible: true,
+                                          leftChevronVisible: true,
+                                          rightChevronVisible: true,
+                                          titleTextStyle: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          formatButtonShowsNext: false,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
-                            );
+                                  );
+                                },
+                              );
+                            } else {
+                              // Date range selection
+                              final picked = await showDateRangePicker(
+                                context: context,
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2101),
+                                initialDateRange: DateTimeRange(
+                                    start: startDate, end: endDate),
+                              );
+
+                              if (picked != null) {
+                                setState(() {
+                                  startDate = picked.start;
+                                  endDate = picked.end;
+                                  _dateController.text =
+                                      "${DateFormat('dd/MM/yyyy').format(startDate)} - ${DateFormat('dd/MM/yyyy').format(endDate)}";
+                                });
+                              }
+                            }
                           },
                           child: Container(
                             height: 40,
@@ -589,7 +757,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                DateFormat('dd/MM/yyyy').format(_selectedDate),
+                                bookingTypeId == "1"
+                                    ? DateFormat('dd/MM/yyyy')
+                                        .format(_selectedDate)
+                                    : "${DateFormat('dd/MM/yyyy').format(startDate)} - ${DateFormat('dd/MM/yyyy').format(endDate)}",
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w500),
                               ),
@@ -600,10 +771,13 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       displayWidgets: [
                         _buildDetailRow(
                           'Date',
-                          DateFormat('dd/MM/yyyy').format(_selectedDate),
+                          bookingTypeId == "1"
+                              ? DateFormat('dd/MM/yyyy').format(_selectedDate)
+                              : "${DateFormat('dd/MM/yyyy').format(startDate)} - ${DateFormat('dd/MM/yyyy').format(endDate)}",
                         ),
                       ],
                     ),
+
                     const SizedBox(height: 16),
                     SizedBox(height: 16),
 
@@ -665,21 +839,42 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                   String formattedDate =
                                       DateFormat('yyyy-MM-dd')
                                           .format(_selectedDate);
+                                  String formattedstartDate =
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(startDate);
+                                  String formattedendDate =
+                                      DateFormat('yyyy-MM-dd').format(endDate);
 
-                                  print('parms--------------- ');
                                   print(
-                                      'parms---------------${widget.packageId} ');
+                                      'parms packageId---------------${widget.packageId} ');
                                   print(
-                                      'parms---------------${formattedDate} ');
+                                      'parms formattedDate---------------${formattedDate} ');
+                                  print('startdate ${formattedstartDate}');
+                                  print('endDate ${formattedendDate}');
                                   print(
-                                      'parms--------------- ${bookingTypeId}');
-                                  print('parms--------------- ');
+                                      'parms bookingTypeId--------------- ${bookingTypeId}');
+                                  print(
+                                      'parms _nonVegCount--------------- ${_nonVegCount}');
+                                  print(
+                                      'parms _vegCount--------------- ${_vegCount}');
+                                  print(
+                                      'parms _jainVegCount--------------- ${_jainVegCount}');
+                                  print(
+                                      'parms customerNotet--------------- ${addoncontroller.text}');
+                                  print(
+                                      'parms totalAmount--------------- ${totalPrice.toString()}');
                                   context
                                       .read<BookMyCruiseBloc>()
                                       .add(BookMyCruiseEvent.createNewbookings(
                                         packageId: widget.packageId,
-                                        startdate: formattedDate,
-                                        bookingtype: bookingTypeId,
+                                        startdate:
+                                            bookingTypeId.toString() == "1"
+                                                ? formattedDate
+                                                : formattedstartDate,
+                                        endDate: bookingTypeId.toString() == "2"
+                                            ? formattedendDate
+                                            : null,
+                                        bookingtype: bookingTypeId.toString(),
                                         nonVegCount: _nonVegCount > 0
                                             ? _nonVegCount.toString()
                                             : null,

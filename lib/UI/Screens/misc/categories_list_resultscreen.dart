@@ -4,7 +4,9 @@ import 'dart:convert';
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/featured_shimmer_card.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
+import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
+import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 
@@ -20,6 +22,7 @@ import 'package:cruise_buddy/core/constants/colors/app_colors.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/model/featured_boats_model/featured_boats_model.dart';
@@ -51,6 +54,7 @@ class _CategoriesListResultscreenState
     print('ddf');
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       fetchFavorites();
+      _fetchUserData();
       BlocProvider.of<GetSeachedCruiseresultsBloc>(context)
           .add(GetSeachedCruiseresultsEvent.SeachedCruise(
         // foodTitle: 'et',
@@ -63,6 +67,20 @@ class _CategoriesListResultscreenState
         //locationName: 'kochi',
       ));
     });
+  }
+
+  String name = 'Guest';
+  String email = 'N/A';
+  Future<void> _fetchUserData() async {
+    final box = await Hive.openBox('userDetails');
+    final userDetails = box.get('user') as UserDetailsDB?;
+
+    if (userDetails != null) {
+      setState(() {
+        name = userDetails.name ?? 'Guest';
+        email = userDetails.email ?? 'N/A';
+      });
+    }
   }
 
   Future<void> fetchFavorites() async {
@@ -455,389 +473,409 @@ class _CategoriesListResultscreenState
                                         final favouriteId = packageId != null
                                             ? favoritePackageMap[packageId]
                                             : null;
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                            bottom: 15,
-                                          ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: 320,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(13),
-                                              border: Border.all(
-                                                color: Color(0xFFE2E2E2),
-                                                width: 1.5,
-                                              ),
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BoatDetailScreen(
+                                                          packageId: value
+                                                                  .packagesearchresults
+                                                                  .data?[index]
+                                                                  .id
+                                                                  .toString() ??
+                                                              "53",
+                                                          datum: value
+                                                                  .packagesearchresults
+                                                                  .data?[index] ??
+                                                              DatumTest(),
+                                                        )));
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 15,
                                             ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  height: 150,
-                                                  child: Stack(
-                                                    children: [
-                                                      ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  13),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  13),
-                                                        ),
-                                                        child:
-                                                            // Image.network(
-                                                            //   '${value.packagesearchresults.data?[index].cruise?.images?[0].cruiseImg}',
-                                                            //   width:
-                                                            //       double.infinity,
-                                                            //   height: 160,
-                                                            //   fit: BoxFit.cover,
-                                                            //   loadingBuilder:
-                                                            //       (context, child,
-                                                            //           loadingProgress) {
-                                                            //     if (loadingProgress ==
-                                                            //         null) {
-                                                            //       return child;
-                                                            //     }
-                                                            //     return Container(
-                                                            //       width: double
-                                                            //           .infinity,
-                                                            //       height: 130,
-                                                            //       color: Colors
-                                                            //               .grey[
-                                                            //           300], // Placeholder background
-                                                            //       child: const Center(
-                                                            //           child:
-                                                            //               CircularProgressIndicator()),
-                                                            //     );
-                                                            //   },
-                                                            //   errorBuilder:
-                                                            //       (context, error,
-                                                            //           stackTrace) {
-                                                            //     return Container(
-                                                            //       width: double
-                                                            //           .infinity,
-                                                            //       height: 130,
-                                                            //       decoration:
-                                                            //           BoxDecoration(
-                                                            //         image:
-                                                            //             DecorationImage(
-                                                            //           image: AssetImage(
-                                                            //               'assets/image/boat_details_img/boat_detail_img.png'),
-                                                            //           fit: BoxFit
-                                                            //               .cover,
-                                                            //         ),
-                                                            //       ),
-                                                            //     );
-                                                            //   },
-                                                            // )),
-                                                            Container(
-                                                          width:
-                                                              double.infinity,
-                                                          height:
-                                                              160, // Consistent height for all states
-                                                          child: Image.network(
-                                                            value
-                                                                        .packagesearchresults
-                                                                        .data?[
-                                                                            index]
-                                                                        .cruise
-                                                                        ?.images
-                                                                        ?.isNotEmpty ==
-                                                                    true
-                                                                ? value
-                                                                        .packagesearchresults
-                                                                        .data![
-                                                                            index]
-                                                                        .cruise!
-                                                                        .images![
-                                                                            0]
-                                                                        .cruiseImg ??
-                                                                    ''
-                                                                : '',
-                                                            fit: BoxFit.cover,
-                                                            loadingBuilder:
-                                                                (context, child,
-                                                                    loadingProgress) {
-                                                              if (loadingProgress ==
-                                                                  null) {
-                                                                return child;
-                                                              }
-                                                              return Container(
-                                                                width: double
-                                                                    .infinity,
-                                                                height:
-                                                                    160, // Same height
-                                                                color: Colors
-                                                                        .grey[
-                                                                    300], // Background during loading
-                                                                child:
-                                                                    const Center(
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: 320,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(13),
+                                                border: Border.all(
+                                                  color: Color(0xFFE2E2E2),
+                                                  width: 1.5,
+                                                ),
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    height: 150,
+                                                    child: Stack(
+                                                      children: [
+                                                        ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    13),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    13),
+                                                          ),
+                                                          child:
+                                                              // Image.network(
+                                                              //   '${value.packagesearchresults.data?[index].cruise?.images?[0].cruiseImg}',
+                                                              //   width:
+                                                              //       double.infinity,
+                                                              //   height: 160,
+                                                              //   fit: BoxFit.cover,
+                                                              //   loadingBuilder:
+                                                              //       (context, child,
+                                                              //           loadingProgress) {
+                                                              //     if (loadingProgress ==
+                                                              //         null) {
+                                                              //       return child;
+                                                              //     }
+                                                              //     return Container(
+                                                              //       width: double
+                                                              //           .infinity,
+                                                              //       height: 130,
+                                                              //       color: Colors
+                                                              //               .grey[
+                                                              //           300], // Placeholder background
+                                                              //       child: const Center(
+                                                              //           child:
+                                                              //               CircularProgressIndicator()),
+                                                              //     );
+                                                              //   },
+                                                              //   errorBuilder:
+                                                              //       (context, error,
+                                                              //           stackTrace) {
+                                                              //     return Container(
+                                                              //       width: double
+                                                              //           .infinity,
+                                                              //       height: 130,
+                                                              //       decoration:
+                                                              //           BoxDecoration(
+                                                              //         image:
+                                                              //             DecorationImage(
+                                                              //           image: AssetImage(
+                                                              //               'assets/image/boat_details_img/boat_detail_img.png'),
+                                                              //           fit: BoxFit
+                                                              //               .cover,
+                                                              //         ),
+                                                              //       ),
+                                                              //     );
+                                                              //   },
+                                                              // )),
+                                                              Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height:
+                                                                160, // Consistent height for all states
+                                                            child:
+                                                                Image.network(
+                                                              value
+                                                                          .packagesearchresults
+                                                                          .data?[
+                                                                              index]
+                                                                          .cruise
+                                                                          ?.images
+                                                                          ?.isNotEmpty ==
+                                                                      true
+                                                                  ? value
+                                                                          .packagesearchresults
+                                                                          .data![
+                                                                              index]
+                                                                          .cruise!
+                                                                          .images![
+                                                                              0]
+                                                                          .cruiseImg ??
+                                                                      ''
+                                                                  : '',
+                                                              fit: BoxFit.cover,
+                                                              loadingBuilder:
+                                                                  (context,
+                                                                      child,
+                                                                      loadingProgress) {
+                                                                if (loadingProgress ==
+                                                                    null) {
+                                                                  return child;
+                                                                }
+                                                                return Container(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  height:
+                                                                      160, // Same height
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      300], // Background during loading
                                                                   child:
-                                                                      CircularProgressIndicator(),
-                                                                ),
-                                                              );
-                                                            },
-                                                            errorBuilder:
-                                                                (context, error,
-                                                                    stackTrace) {
-                                                              return Container(
-                                                                width: double
-                                                                    .infinity,
-                                                                height:
-                                                                    160, // Same height
-                                                                decoration:
-                                                                    const BoxDecoration(
-                                                                  image:
-                                                                      DecorationImage(
-                                                                    image: AssetImage(
-                                                                        'assets/image/boat_details_img/boat_detail_img.png'),
-                                                                    fit: BoxFit
-                                                                        .cover,
+                                                                      const Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(),
                                                                   ),
-                                                                ),
-                                                              );
-                                                            },
+                                                                );
+                                                              },
+                                                              errorBuilder:
+                                                                  (context,
+                                                                      error,
+                                                                      stackTrace) {
+                                                                return Container(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  height:
+                                                                      160, // Same height
+                                                                  decoration:
+                                                                      const BoxDecoration(
+                                                                    image:
+                                                                        DecorationImage(
+                                                                      image: AssetImage(
+                                                                          'assets/image/boat_details_img/boat_detail_img.png'),
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      Positioned(
-                                                        top: 8,
-                                                        right: 8,
-                                                        child: InkWell(
-                                                          radius: 40,
-                                                          onTap: () {
-                                                            if (isFavoriteList
-                                                                    .length <
-                                                                (value
-                                                                        .packagesearchresults
-                                                                        .data
-                                                                        ?.length ??
-                                                                    0)) {
-                                                              isFavoriteList =
-                                                                  List.generate(
-                                                                      value
+                                                        Positioned(
+                                                          top: 8,
+                                                          right: 8,
+                                                          child: InkWell(
+                                                            radius: 40,
+                                                            onTap: () {
+                                                              if (isFavoriteList
+                                                                      .length <
+                                                                  (value
                                                                           .packagesearchresults
-                                                                          .data!
-                                                                          .length,
-                                                                      (i) =>
-                                                                          false);
-                                                            }
-                                                            toggleFavorite(
-                                                              packageId:
-                                                                  packageId,
-                                                              isFavorite:
-                                                                  isFavorite,
-                                                              favouriteId:
-                                                                  favouriteId,
-                                                            );
-                                                          },
+                                                                          .data
+                                                                          ?.length ??
+                                                                      0)) {
+                                                                isFavoriteList = List.generate(
+                                                                    value
+                                                                        .packagesearchresults
+                                                                        .data!
+                                                                        .length,
+                                                                    (i) =>
+                                                                        false);
+                                                              }
+                                                              toggleFavorite(
+                                                                packageId:
+                                                                    packageId,
+                                                                isFavorite:
+                                                                    isFavorite,
+                                                                favouriteId:
+                                                                    favouriteId,
+                                                              );
+                                                            },
+                                                            child: Container(
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              25)),
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                        5.0),
+                                                                child:
+                                                                    AnimatedSwitcher(
+                                                                  duration: const Duration(
+                                                                      milliseconds:
+                                                                          300),
+                                                                  transitionBuilder:
+                                                                      (child,
+                                                                          animation) {
+                                                                    return ScaleTransition(
+                                                                        scale:
+                                                                            animation,
+                                                                        child:
+                                                                            child);
+                                                                  },
+                                                                  child: loadingFavorites
+                                                                          .contains(
+                                                                              packageId)
+                                                                      ? const SizedBox(
+                                                                          height:
+                                                                              20,
+                                                                          width:
+                                                                              20,
+                                                                          child:
+                                                                              CircularProgressIndicator(
+                                                                            strokeWidth:
+                                                                                2,
+                                                                          ),
+                                                                        )
+                                                                      : Icon(
+                                                                          isFavorite
+                                                                              ? Icons.favorite
+                                                                              : Icons.favorite_border,
+                                                                          color:
+                                                                              const Color(0XFF4FC2C5),
+                                                                          size:
+                                                                              20,
+                                                                        ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                          top: 110,
+                                                          right: 8,
                                                           child: Container(
+                                                            width: 68,
+                                                            height: 30,
                                                             decoration: BoxDecoration(
                                                                 color: Colors
                                                                     .white,
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
-                                                                            25)),
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(5.0),
-                                                              child:
-                                                                  AnimatedSwitcher(
-                                                                duration:
-                                                                    const Duration(
-                                                                        milliseconds:
-                                                                            300),
-                                                                transitionBuilder:
-                                                                    (child,
-                                                                        animation) {
-                                                                  return ScaleTransition(
-                                                                      scale:
-                                                                          animation,
-                                                                      child:
-                                                                          child);
-                                                                },
-                                                                child: loadingFavorites
-                                                                        .contains(
-                                                                            packageId)
-                                                                    ? const SizedBox(
-                                                                        height:
-                                                                            20,
-                                                                        width:
-                                                                            20,
-                                                                        child:
-                                                                            CircularProgressIndicator(
-                                                                          strokeWidth:
-                                                                              2,
-                                                                        ),
-                                                                      )
-                                                                    : Icon(
-                                                                        isFavorite
-                                                                            ? Icons.favorite
-                                                                            : Icons.favorite_border,
-                                                                        color: const Color(
-                                                                            0XFF4FC2C5),
-                                                                        size:
-                                                                            20,
-                                                                      ),
-                                                              ),
+                                                                            24)),
+                                                            child: Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                    width: 10),
+                                                                Icon(
+                                                                  Icons.star,
+                                                                  color: Colors
+                                                                      .amber,
+                                                                  size: 24,
+                                                                ),
+                                                                Text(
+                                                                  "${(value.packagesearchresults.data?[index].avgRating != null && value.packagesearchresults.data?[index].avgRating.toString() != "null") ? double.parse(value.packagesearchresults.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3"}",
+                                                                ),
+                                                                SizedBox(
+                                                                    width: 10),
+                                                              ],
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      Positioned(
-                                                        top: 110,
-                                                        right: 8,
-                                                        child: Container(
-                                                          width: 68,
-                                                          height: 30,
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          24)),
-                                                          child: Row(
-                                                            children: [
-                                                              SizedBox(
-                                                                  width: 10),
-                                                              Icon(
-                                                                Icons.star,
-                                                                color: Colors
-                                                                    .amber,
-                                                                size: 24,
+                                                        Positioned(
+                                                            top: 10,
+                                                            left: 10,
+                                                            child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .circular(
+                                                                        6,
+                                                                      )),
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                        8.0),
+                                                                child: Text(
+                                                                  "${value.packagesearchresults.data?[index].name}",
+                                                                  style: TextStyles
+                                                                      .ubuntu12blue23w700,
+                                                                ),
                                                               ),
-                                                              Text(
-                                                                "${(value.packagesearchresults.data?[index].avgRating != null && value.packagesearchresults.data?[index].avgRating.toString() != "null") ? double.parse(value.packagesearchresults.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3"}",
-                                                              ),
-                                                              SizedBox(
-                                                                  width: 10),
-                                                            ],
-                                                          ),
+                                                            )),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 12),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SizedBox(height: 10),
+                                                        AmenityRow(
+                                                          amenities: value
+                                                                  .packagesearchresults
+                                                                  ?.data?[index]
+                                                                  ?.amenities
+                                                                  ?.map((e) =>
+                                                                      Amenity(
+                                                                        name: e.name ??
+                                                                            '',
+                                                                        icon: e.icon ??
+                                                                            '',
+                                                                      ))
+                                                                  .toList() ??
+                                                              [],
                                                         ),
-                                                      ),
-                                                      Positioned(
-                                                          top: 10,
-                                                          left: 10,
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                                    color: Colors
-                                                                        .white,
+                                                        Text(
+                                                          truncateString(
+                                                              '${value.packagesearchresults.data?[index].cruise?.name}',
+                                                              43),
+                                                          style: TextStyles
+                                                              .ubuntu16black15w500,
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              "₹${('${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}' == 'null') ? "1000" : '${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}'}",
+                                                              style: TextStyles
+                                                                  .ubuntu18bluew700,
+                                                            ),
+                                                            Spacer(),
+                                                            SizedBox(
+                                                              height: 45,
+                                                              child:
+                                                                  ElevatedButton(
+                                                                onPressed: () {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) => BookingconfirmationScreen(
+                                                                                packageId: value.packagesearchresults.data?[index].id.toString() ?? "53",
+                                                                                datum: value.packagesearchresults.data?[index] ?? DatumTest(),
+                                                                                name: name, // Pass the name
+                                                                                email: email, // Pass the email
+                                                                              )));
+                                                                },
+                                                                style: ElevatedButton
+                                                                    .styleFrom(
+                                                                  backgroundColor:
+                                                                      Color(
+                                                                          0XFF1F8386),
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
                                                                     borderRadius:
                                                                         BorderRadius
-                                                                            .circular(
-                                                                      6,
-                                                                    )),
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: Text(
-                                                                "${value.packagesearchresults.data?[index].name}",
-                                                                style: TextStyles
-                                                                    .ubuntu12blue23w700,
-                                                              ),
-                                                            ),
-                                                          )),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 12),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      SizedBox(height: 10),
-                                                      AmenityRow(
-                                                        amenities: value
-                                                                .packagesearchresults
-                                                                ?.data?[index]
-                                                                ?.amenities
-                                                                ?.map(
-                                                                    (e) =>
-                                                                        Amenity(
-                                                                          name: e.name ??
-                                                                              '',
-                                                                          icon: e.icon ??
-                                                                              '',
-                                                                        ))
-                                                                .toList() ??
-                                                            [],
-                                                      ),
-                                                      Text(
-                                                        truncateString(
-                                                            '${value.packagesearchresults.data?[index].cruise?.name}',
-                                                            43),
-                                                        style: TextStyles
-                                                            .ubuntu16black15w500,
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          Text(
-                                                            "₹${('${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}' == 'null') ? "1000" : '${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}'}",
-                                                            style: TextStyles
-                                                                .ubuntu18bluew700,
-                                                          ),
-                                                          Spacer(),
-                                                          SizedBox(
-                                                            height: 45,
-                                                            child:
-                                                                ElevatedButton(
-                                                              onPressed: () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) =>
-                                                                            BoatDetailScreen(
-                                                                              packageId: value.packagesearchresults.data?[index].id.toString() ?? "53",
-                                                                              datum: value.packagesearchresults.data?[index] ?? DatumTest(),
-                                                                            )));
-                                                              },
-                                                              style:
-                                                                  ElevatedButton
-                                                                      .styleFrom(
-                                                                backgroundColor:
-                                                                    Color(
-                                                                        0XFF1F8386),
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              8),
+                                                                            .circular(8),
+                                                                  ),
+                                                                  padding: EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          16,
+                                                                      vertical:
+                                                                          12),
                                                                 ),
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            16,
-                                                                        vertical:
-                                                                            12),
-                                                              ),
-                                                              child: Text(
-                                                                "Book Now",
-                                                                style: TextStyles
-                                                                    .ubuntu12whiteFFw400,
+                                                                child: Text(
+                                                                  "Book Now",
+                                                                  style: TextStyles
+                                                                      .ubuntu12whiteFFw400,
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                    ],
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         );
