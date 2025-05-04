@@ -22,14 +22,20 @@ class ViewMyPackageBloc extends Bloc<ViewMyPackageEvent, ViewMyPackageState> {
 
         await result.fold((failure) async {
           if (failure == "No internet") {
+            print('---------------- "No internet"');
             emit(const ViewMyPackageState.noInternet());
           } else {
+            print('---------------- ${failure}');
             emit(ViewMyPackageState.getuserFailure(error: failure));
           }
         }, (success) async {
+          print('----------------success ${success}');
+          print('----------------success ${success.data?.id.toString()}');
+          print('----------------success ${success?.unavailableDate}');
           emit(ViewMyPackageState.viewMyPacakge(mybookingmodel: success));
         });
       } catch (e) {
+        print('---------------- ${e}');
         emit(ViewMyPackageState.getuserFailure(error: 'An error occurred: $e'));
       }
     });

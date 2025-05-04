@@ -618,62 +618,75 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                             null ||
                                         value.packagesearchresults.data!
                                             .isEmpty) {
-                                      return Stack(
-                                        children: [
-                                          Positioned(
-                                            bottom: -40,
-                                            child: SvgPicture.asset(
-                                              'assets/icons/cruise_background.svg',
-                                              color: const Color.fromARGB(
-                                                  255, 196, 238, 237),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: 140,
-                                            child: SvgPicture.asset(
-                                              'assets/icons/cruise_background.svg',
-                                              color: const Color.fromARGB(
-                                                  255, 181, 235, 233),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: 150,
-                                            child: SvgPicture.asset(
-                                              'assets/icons/cruise_background.svg',
-                                              color: const Color.fromARGB(
-                                                  255, 181, 235, 233),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Center(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  SvgPicture.asset(
-                                                      'assets/icons/not_available_404.svg'),
-                                                  Text(
-                                                    "No Cruise Found",
-                                                    style: TextStyles
-                                                        .ubuntu18bluew700,
-                                                  ),
-                                                  Center(
-                                                    child: Text(
-                                                      "It looks like no cruise are available in this price range.",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyles
-                                                          .ubuntu14black55w400,
-                                                    ),
-                                                  ),
-                                                ],
+                                      return SizedBox(
+                                        width: double.infinity,
+                                        child: Stack(
+                                          children: [
+                                            Positioned(
+                                              bottom: -40,
+                                              child: SizedBox(
+                                                width: double.infinity,
+                                                child: SvgPicture.asset(
+                                                  'assets/icons/cruise_background.svg',
+                                                  color: const Color.fromARGB(
+                                                      255, 196, 238, 237),     fit: BoxFit.fill, // or BoxFit.cover
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                            Positioned(
+                                              bottom: 140,
+                                              child: SizedBox(
+                                                width: double.infinity,
+                                                child: SvgPicture.asset(
+                                                  'assets/icons/cruise_background.svg',
+                                                  color: const Color.fromARGB(
+                                                      255, 181, 235, 233),     fit: BoxFit.fill, // or BoxFit.cover
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              bottom: 150,
+                                              child: SizedBox(
+                                                width: double.infinity,
+                                                child: SvgPicture.asset(
+                                                  'assets/icons/cruise_background.svg',
+                                                  color: const Color.fromARGB(
+                                                      255, 181, 235, 233),     fit: BoxFit.fill, // or BoxFit.cover
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Center(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                        'assets/icons/not_available_404.svg'),
+                                                    Text(
+                                                      "No Cruise Found",
+                                                      style: TextStyles
+                                                          .ubuntu18bluew700,
+                                                    ),
+                                                    Center(
+                                                      child: Text(
+                                                        "It looks like no cruise are available in this price range.",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyles
+                                                            .ubuntu14black55w400,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       );
                                     }
                                     return Padding(
@@ -740,62 +753,74 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                     );
                                   },
                                   getuserFailure: (value) {
-                                    return Stack(
-                                      children: [
-                                        Positioned(
-                                          bottom: -40,
-                                          child: SvgPicture.asset(
-                                            'assets/icons/cruise_background.svg',
-                                            color: const Color.fromARGB(
-                                                255, 196, 238, 237),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 140,
-                                          child: SvgPicture.asset(
-                                            'assets/icons/cruise_background.svg',
-                                            color: const Color.fromARGB(
-                                                255, 181, 235, 233),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 150,
-                                          child: SvgPicture.asset(
-                                            'assets/icons/cruise_background.svg',
-                                            color: const Color.fromARGB(
-                                                255, 181, 235, 233),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Center(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SvgPicture.asset(
-                                                    'assets/icons/not_available_404.svg'),
-                                                Text(
-                                                  "No Cruise Available",
-                                                  style: TextStyles
-                                                      .ubuntu18bluew700,
-                                                ),
-                                                Center(
-                                                  child: Text(
-                                                    "It looks like no cruises are available in the ${widget.location} location.",
-                                                    textAlign: TextAlign
-                                                        .center, // Ensures multi-line text is centered
-                                                    style: TextStyles
-                                                        .ubuntu14black55w400, // Optional: Adjust font size or style
-                                                  ),
-                                                ),
-                                              ],
+                                    return SizedBox(
+                                      width: double.infinity,
+                                      child: Stack(
+                                        children: [
+                                          Positioned(
+                                            bottom: -40,
+                                            child: SizedBox(
+                                              width: double.infinity,
+                                              child: SvgPicture.asset(
+                                                'assets/icons/cruise_background.svg',
+                                                color: const Color.fromARGB(
+                                                    255, 196, 238, 237),
+                                                fit: BoxFit
+                                                    .fill, // or BoxFit.cover
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          Positioned(
+                                            bottom: 140,
+                                            child: SvgPicture.asset(
+                                              'assets/icons/cruise_background.svg',
+                                              color: const Color.fromARGB(
+                                                  255, 181, 235, 233),
+                                              fit: BoxFit
+                                                  .fill, // or BoxFit.cover
+                                            ),
+                                          ),
+                                          Positioned(
+                                            bottom: 150,
+                                            child: SvgPicture.asset(
+                                              'assets/icons/cruise_background.svg',
+                                              color: const Color.fromARGB(
+                                                  255, 181, 235, 233),
+                                              fit: BoxFit
+                                                  .fill, // or BoxFit.cover
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Center(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                      'assets/icons/not_available_404.svg'),
+                                                  Text(
+                                                    "No Cruise Available",
+                                                    style: TextStyles
+                                                        .ubuntu18bluew700,
+                                                  ),
+                                                  Center(
+                                                    child: Text(
+                                                      "It looks like no cruises are available in the ${widget.location} location.",
+                                                      textAlign: TextAlign
+                                                          .center, // Ensures multi-line text is centered
+                                                      style: TextStyles
+                                                          .ubuntu14black55w400, // Optional: Adjust font size or style
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   },
                                   noInternet: (value) {

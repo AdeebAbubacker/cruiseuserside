@@ -252,6 +252,7 @@ class _CategoriesSectionState extends State<CategoriesSection> {
                 itemCount: openCruiseTypes?.length ?? 0,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
+                  final imageUrl = openCruiseTypes?[index].image;
                   return Padding(
                     padding: EdgeInsets.only(
                       left: index == 0 ? 30 : 10,
@@ -301,14 +302,35 @@ class _CategoriesSectionState extends State<CategoriesSection> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  "${openCruiseTypes?[index].image}",
-                                  width: 200,
-                                  height: 110,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: (imageUrl != null &&
+                                          imageUrl.isNotEmpty)
+                                      ? Image.network(
+                                          imageUrl,
+                                          width: 200,
+                                          height: 110,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Container(
+                                              width: 200,
+                                              height: 110,
+                                              color: Colors.grey[300],
+                                              alignment: Alignment.center,
+                                              child: Icon(
+                                                  Icons.image_not_supported,
+                                                  color: Colors.grey[700]),
+                                            );
+                                          },
+                                        )
+                                      : Container(
+                                          width: 200,
+                                          height: 110,
+                                          color: Colors.grey[300],
+                                          alignment: Alignment.center,
+                                          child: Icon(Icons.image_not_supported,
+                                              color: Colors.grey[700]),
+                                        )),
                               SizedBox(height: 10),
                               Text(
                                 "${openCruiseTypes?[index].modelName}",

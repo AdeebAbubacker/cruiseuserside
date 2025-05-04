@@ -178,53 +178,69 @@ class _BoatsScreenState extends State<BoatsScreen> {
             );
           },
           getuserFailure: (value) {
-            return Stack(
-              children: [
-                Positioned(
-                  bottom: -40,
-                  child: SvgPicture.asset(
-                    'assets/icons/cruise_background.svg',
-                    color: const Color.fromARGB(255, 196, 238, 237),
-                  ),
-                ),
-                Positioned(
-                  bottom: 140,
-                  child: SvgPicture.asset(
-                    'assets/icons/cruise_background.svg',
-                    color: const Color.fromARGB(255, 181, 235, 233),
-                  ),
-                ),
-                Positioned(
-                  bottom: 150,
-                  child: SvgPicture.asset(
-                    'assets/icons/cruise_background.svg',
-                    color: const Color.fromARGB(255, 181, 235, 233),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset('assets/icons/not_available_404.svg'),
-                        Text(
-                          "No Booking Yet",
-                          style: TextStyles.ubuntu18bluew700,
-                        ),
-                        Center(
-                          child: Text(
-                            "It looks like no bookings yet.",
-                            textAlign: TextAlign.center,
-                            style: TextStyles.ubuntu14black55w400,
-                          ),
-                        ),
-                      ],
+            return SizedBox(
+              width: double.infinity,
+              child: Stack(
+                children: [
+                  Positioned(
+                    bottom: -40,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: SvgPicture.asset(
+                        'assets/icons/cruise_background.svg',
+                        color: const Color.fromARGB(255, 196, 238, 237),
+                        fit: BoxFit.fill, // or BoxFit.cover
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  Positioned(
+                    bottom: 140,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: SvgPicture.asset(
+                        'assets/icons/cruise_background.svg',
+                        color: const Color.fromARGB(255, 181, 235, 233),
+                        fit: BoxFit.fill, // or BoxFit.cover
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 150,
+                    child: SizedBox(
+                      child: SvgPicture.asset(
+                        width: double.infinity,
+                        'assets/icons/cruise_background.svg',
+                        color: const Color.fromARGB(255, 181, 235, 233),
+                        fit: BoxFit.fill, // or BoxFit.cover
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                              'assets/icons/not_available_404.svg'),
+                          Text(
+                            "No Booking Yet",
+                            style: TextStyles.ubuntu18bluew700,
+                          ),
+                          Center(
+                            child: Text(
+                              "It looks like no bookings yet.",
+                              textAlign: TextAlign.center,
+                              style: TextStyles.ubuntu14black55w400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             );
           },
           noInternet: (value) {

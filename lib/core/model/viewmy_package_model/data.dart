@@ -19,7 +19,7 @@ class Data {
   List<dynamic>? food;
   List<dynamic>? itineraries;
   List<BookingType>? bookingTypes;
-  List<featuredBoats.UnavailableDate>? unavailableDate;
+
 
   Data({
     this.id,
@@ -33,7 +33,7 @@ class Data {
     this.food,
     this.itineraries,
     this.bookingTypes,
-    this.unavailableDate,
+   
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -56,10 +56,7 @@ class Data {
         bookingTypes: (json['bookingTypes'] as List<dynamic>?)
             ?.map((e) => BookingType.fromJson(e as Map<String, dynamic>))
             .toList(),
-        unavailableDate: (json['unavailableDate'] as List<dynamic>?)
-            ?.map((e) => featuredBoats.UnavailableDate.fromJson(
-                e as Map<String, dynamic>))
-            .toList(),
+      
       );
 
   Map<String, dynamic> toJson() => {
@@ -74,6 +71,6 @@ class Data {
         'food': food,
         'itineraries': itineraries,
         'bookingTypes': bookingTypes?.map((e) => e.toJson()).toList(),
-        'unavailableDate': unavailableDate?.map((e) => e.toJson()).toList(),
+       
       };
 }

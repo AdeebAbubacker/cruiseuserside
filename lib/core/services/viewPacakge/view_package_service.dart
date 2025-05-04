@@ -45,7 +45,7 @@ class ViewPackageService {
 
       // Build URL with query parameters as per the 'curl' example
       final uri = Uri.parse(
-        '$url/package/$pacakgeId?include=cruise.cruiseType%2Ccruise.ratings%2Ccruise.cruisesImages%2Ccruise.location%2Citineraries%2Camenities%2Cfood%2CpackageImages%2CbookingTypes%2CunavailableDates&filter[cruise.max_capacity]=45',
+        '$url/package/$pacakgeId?include=cruise.cruiseType,cruise.ratings,cruise.cruisesImages,cruise.location,itineraries,amenities,food,packageImages,bookingTypes',
       );
 
       // Send GET request

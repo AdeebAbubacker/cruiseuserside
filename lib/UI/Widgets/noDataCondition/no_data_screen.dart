@@ -8,35 +8,51 @@ class NoDataScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         Positioned(
           bottom: 140,
-          child: SvgPicture.asset(
-            'assets/icons/cruise_background.svg',
-            colorFilter: const ColorFilter.mode(
-              Color.fromARGB(255, 194, 244, 242),
-              BlendMode.srcIn,
+          child: SizedBox(
+            width: screenWidth,
+            child: SvgPicture.asset(
+              'assets/icons/cruise_background.svg', 
+              width: screenWidth,
+              fit: BoxFit.fill, // or BoxFit.cover
+              colorFilter: const ColorFilter.mode(
+                Color.fromARGB(255, 194, 244, 242),
+                BlendMode.srcIn,
+              ),
             ),
           ),
         ),
         Positioned(
           bottom: -50,
-          child: SvgPicture.asset(
-            'assets/icons/cruise_background.svg',
-            colorFilter: const ColorFilter.mode(
-              Color.fromARGB(255, 194, 244, 242),
-              BlendMode.srcIn,
+          child: SizedBox(
+            width: screenWidth,
+            child: SvgPicture.asset(
+              'assets/icons/cruise_background.svg',
+              width: screenWidth,
+              fit: BoxFit.fill, // or BoxFit.cover
+              colorFilter: const ColorFilter.mode(
+                Color.fromARGB(255, 194, 244, 242),
+                BlendMode.srcIn,
+              ),
             ),
           ),
         ),
         Positioned(
           bottom: 130,
-          child: SvgPicture.asset(
-            'assets/icons/cruise_background.svg',
-            colorFilter: const ColorFilter.mode(
-              Color.fromARGB(255, 194, 244, 242),
-              BlendMode.srcIn,
+          child: SizedBox(
+            width: screenWidth,
+            child: SvgPicture.asset(
+              'assets/icons/cruise_background.svg', 
+              width: screenWidth,
+              fit: BoxFit.fill, // or BoxFit.cover
+              colorFilter: const ColorFilter.mode(
+                Color.fromARGB(255, 194, 244, 242),
+                BlendMode.srcIn,
+              ),
             ),
           ),
         ),
@@ -46,7 +62,10 @@ class NoDataScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset('assets/icons/not_available_404.svg'),
+                SizedBox(
+                    width: screenWidth,
+                    child:
+                        SvgPicture.asset('assets/icons/not_available_404.svg')),
                 SizedBox(height: 20), // Adds spacing between elements
                 Text(
                   "No Cruise Available",

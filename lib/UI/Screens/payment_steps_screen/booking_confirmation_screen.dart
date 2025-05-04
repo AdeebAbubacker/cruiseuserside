@@ -84,26 +84,9 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     String? orderid,
     required int totalamount,
   }) {
-    // var options = {
-    //   'key': 'rzp_live_9YK0kUaQLzZd55',
-    //   'amount': '100', // Amount should be in paise (e.g., 100 = 1 INR)
-    //   'currency': 'INR',
-    //   'name': 'Cruise Buddy',
-    //   'order_id': orderid ?? "order_PvwS5g5uKP5e4m",
-    //   'description': 'Premium House Boat',
-    //   'retry': {'enabled': true, 'max_count': 1},
-    //   'send_sms_hash': true,
-    //   'prefill': {
-    //     'contact': '8848055651',
-    //     'email': 'test@razorpay.com',
-    //   },
-    //   'external': {
-    //     'wallets': ['paytm'],
-    //   }
-    // };
     var options = {
       'key': 'rzp_live_ZAFN8qKXodIxis',
-      'amount': '100',
+      'amount': (totalamount * 100).toString(),
       'currency': 'INR',
       'name': widget.name,
       'description': 'Cruise' ' ' + 'Payment',
@@ -131,11 +114,15 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   void handlePaymentErrorResponse(PaymentFailureResponse response) {
     showAlertDialog(context, "Payment Failed",
         "Code: ${response.code}\nDescription: ${response.message}\nMetadata: ${response.error.toString()}");
+    BlocProvider.of<ViewMyPackageBloc>(context)
+        .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
   }
 
   void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
     showAlertDialog(
         context, "Payment Successful", "Payment ID: ${response.paymentId}");
+    BlocProvider.of<ViewMyPackageBloc>(context)
+        .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
   }
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {
@@ -214,6 +201,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   final List unavaibledates = [];
   @override
   Widget build(BuildContext context) {
+    print("sds ${widget.packageId}");
     unavailableDates = widget.datum.unavailableDate ?? [];
 
     return MultiBlocListener(
@@ -242,6 +230,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                   content:
                       "Booking failed, your cruise is not available in this date",
                 );
+
+                BlocProvider.of<ViewMyPackageBloc>(context).add(
+                    ViewMyPackageEvent.viewMyPackage(
+                        packageId: widget.packageId));
               },
               noInternet: (value) {
                 setState(() => _isLoading = false);
@@ -265,8 +257,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                   maxAdults =
                       value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
 
-                  unavailableDates =
-                      value.mybookingmodel.data?.unavailableDate ?? [];
+                  unavailableDates = value.mybookingmodel.unavailableDate ?? [];
                   defaultPrice = parsePrice(
                     value.mybookingmodel?.data?.bookingTypes?[0].defaultPrice
                         .toString(),
@@ -281,7 +272,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                           ?.toString() ??
                       '');
                   print(
-                      "defaultprice is ${value.mybookingmodel?.data?.bookingTypes?[0].defaultPrice?.toString()}");
+                      "defaultprice is ${value.mybookingmodel.data?.bookingTypes?[0].defaultPrice}");
                   totalPrice = defaultPrice + pricePerPerson * 1;
                 });
               },
