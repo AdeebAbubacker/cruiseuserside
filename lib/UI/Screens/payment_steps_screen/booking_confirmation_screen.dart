@@ -13,6 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../core/model/featured_boats_model/featured_boats_model.dart';
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart'
+    as featuredBoats;
 
 class BookingconfirmationScreen extends StatefulWidget {
   final String packageId;
@@ -113,7 +115,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
   void handlePaymentErrorResponse(PaymentFailureResponse response) {
     showAlertDialog(context, "Payment Failed",
-        "Code: ${response.code}\nDescription: ${response.message}\nMetadata: ${response.error.toString()}");
+        "Code: ${response.code}/nDescription: ${response.message}/nMetadata: ${response.error.toString()}");
     BlocProvider.of<ViewMyPackageBloc>(context)
         .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
   }
@@ -193,7 +195,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
   int maxAdults = 1; // default fallback
   int maxRooms = 1;
-  List<UnavailableDate>? unavailableDates;
+  List<featuredBoats.UnavailableDate>? unavailableDates;
   int defaultPrice = 0;
   int totalPrice = 0;
   int pricePerDay = 0;
@@ -219,6 +221,9 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                 openCheckout(
                     orderid: value.bookingresponse.booking?.orderId.toString(),
                     totalamount: totalPrice); // Call Razorpay on success
+                BlocProvider.of<ViewMyPackageBloc>(context).add(
+                    ViewMyPackageEvent.viewMyPackage(
+                        packageId: widget.packageId));
               },
               getBookedFailure: (value) {
                 setState(() => _isLoading = false);
