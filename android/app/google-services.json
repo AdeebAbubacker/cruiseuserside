@@ -66,6 +66,14 @@
           }
         },
         {
+          "client_id": "261245076643-cuckj5b8vg9dolv1tpk22l4bjdo9gv9g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.leburacruisebuddy.app",
+            "certificate_hash": "cb3344e55c5e22213f031b428fee9b6afeddfddb"
+          }
+        },
+        {
           "client_id": "261245076643-dfb5001h09hq6ek0o4qd9b0arts05can.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
