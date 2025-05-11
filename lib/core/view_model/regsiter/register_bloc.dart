@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/registration_model/registration_model.dart';
+import 'package:cruise_buddy/core/model/validation/register_validation/regsiter_validation.dart';
 import 'package:cruise_buddy/core/services/auth/auth_services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -25,6 +26,10 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         await result.fold((failure) async {
           if (failure == "No internet") {
             emit(const RegisterState.noInternet());
+          } else if (failure is RegsiterValidation) {
+            print("login validation ${failure.message}");
+            emit(RegisterState.registervaldationFailure(
+                registervaldationFailure: failure));
           } else {
             emit(RegisterState.registrationFailure(error: failure));
           }

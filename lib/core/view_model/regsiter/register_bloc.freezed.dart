@@ -389,6 +389,8 @@ mixin _$RegisterState {
     required TResult Function(RegistrationModel registerModel)
         registrationSuccess,
     required TResult Function(String error) registrationFailure,
+    required TResult Function(RegsiterValidation registervaldationFailure)
+        registervaldationFailure,
     required TResult Function() noInternet,
   }) =>
       throw _privateConstructorUsedError;
@@ -398,6 +400,8 @@ mixin _$RegisterState {
     TResult? Function()? loading,
     TResult? Function(RegistrationModel registerModel)? registrationSuccess,
     TResult? Function(String error)? registrationFailure,
+    TResult? Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult? Function()? noInternet,
   }) =>
       throw _privateConstructorUsedError;
@@ -407,6 +411,8 @@ mixin _$RegisterState {
     TResult Function()? loading,
     TResult Function(RegistrationModel registerModel)? registrationSuccess,
     TResult Function(String error)? registrationFailure,
+    TResult Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) =>
@@ -417,6 +423,8 @@ mixin _$RegisterState {
     required TResult Function(_Loading value) loading,
     required TResult Function(_RegistrationSuccess value) registrationSuccess,
     required TResult Function(LoginFailure value) registrationFailure,
+    required TResult Function(_RegisterValidation value)
+        registervaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) =>
       throw _privateConstructorUsedError;
@@ -426,6 +434,7 @@ mixin _$RegisterState {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_RegistrationSuccess value)? registrationSuccess,
     TResult? Function(LoginFailure value)? registrationFailure,
+    TResult? Function(_RegisterValidation value)? registervaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) =>
       throw _privateConstructorUsedError;
@@ -435,6 +444,7 @@ mixin _$RegisterState {
     TResult Function(_Loading value)? loading,
     TResult Function(_RegistrationSuccess value)? registrationSuccess,
     TResult Function(LoginFailure value)? registrationFailure,
+    TResult Function(_RegisterValidation value)? registervaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) =>
@@ -508,6 +518,8 @@ class _$InitialImpl implements _Initial {
     required TResult Function(RegistrationModel registerModel)
         registrationSuccess,
     required TResult Function(String error) registrationFailure,
+    required TResult Function(RegsiterValidation registervaldationFailure)
+        registervaldationFailure,
     required TResult Function() noInternet,
   }) {
     return initial();
@@ -520,6 +532,8 @@ class _$InitialImpl implements _Initial {
     TResult? Function()? loading,
     TResult? Function(RegistrationModel registerModel)? registrationSuccess,
     TResult? Function(String error)? registrationFailure,
+    TResult? Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult? Function()? noInternet,
   }) {
     return initial?.call();
@@ -532,6 +546,8 @@ class _$InitialImpl implements _Initial {
     TResult Function()? loading,
     TResult Function(RegistrationModel registerModel)? registrationSuccess,
     TResult Function(String error)? registrationFailure,
+    TResult Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) {
@@ -548,6 +564,8 @@ class _$InitialImpl implements _Initial {
     required TResult Function(_Loading value) loading,
     required TResult Function(_RegistrationSuccess value) registrationSuccess,
     required TResult Function(LoginFailure value) registrationFailure,
+    required TResult Function(_RegisterValidation value)
+        registervaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
     return initial(this);
@@ -560,6 +578,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_RegistrationSuccess value)? registrationSuccess,
     TResult? Function(LoginFailure value)? registrationFailure,
+    TResult? Function(_RegisterValidation value)? registervaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
     return initial?.call(this);
@@ -572,6 +591,7 @@ class _$InitialImpl implements _Initial {
     TResult Function(_Loading value)? loading,
     TResult Function(_RegistrationSuccess value)? registrationSuccess,
     TResult Function(LoginFailure value)? registrationFailure,
+    TResult Function(_RegisterValidation value)? registervaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) {
@@ -632,6 +652,8 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(RegistrationModel registerModel)
         registrationSuccess,
     required TResult Function(String error) registrationFailure,
+    required TResult Function(RegsiterValidation registervaldationFailure)
+        registervaldationFailure,
     required TResult Function() noInternet,
   }) {
     return loading();
@@ -644,6 +666,8 @@ class _$LoadingImpl implements _Loading {
     TResult? Function()? loading,
     TResult? Function(RegistrationModel registerModel)? registrationSuccess,
     TResult? Function(String error)? registrationFailure,
+    TResult? Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult? Function()? noInternet,
   }) {
     return loading?.call();
@@ -656,6 +680,8 @@ class _$LoadingImpl implements _Loading {
     TResult Function()? loading,
     TResult Function(RegistrationModel registerModel)? registrationSuccess,
     TResult Function(String error)? registrationFailure,
+    TResult Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) {
@@ -672,6 +698,8 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(_Loading value) loading,
     required TResult Function(_RegistrationSuccess value) registrationSuccess,
     required TResult Function(LoginFailure value) registrationFailure,
+    required TResult Function(_RegisterValidation value)
+        registervaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
     return loading(this);
@@ -684,6 +712,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_RegistrationSuccess value)? registrationSuccess,
     TResult? Function(LoginFailure value)? registrationFailure,
+    TResult? Function(_RegisterValidation value)? registervaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
     return loading?.call(this);
@@ -696,6 +725,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function(_Loading value)? loading,
     TResult Function(_RegistrationSuccess value)? registrationSuccess,
     TResult Function(LoginFailure value)? registrationFailure,
+    TResult Function(_RegisterValidation value)? registervaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) {
@@ -785,6 +815,8 @@ class _$RegistrationSuccessImpl implements _RegistrationSuccess {
     required TResult Function(RegistrationModel registerModel)
         registrationSuccess,
     required TResult Function(String error) registrationFailure,
+    required TResult Function(RegsiterValidation registervaldationFailure)
+        registervaldationFailure,
     required TResult Function() noInternet,
   }) {
     return registrationSuccess(registerModel);
@@ -797,6 +829,8 @@ class _$RegistrationSuccessImpl implements _RegistrationSuccess {
     TResult? Function()? loading,
     TResult? Function(RegistrationModel registerModel)? registrationSuccess,
     TResult? Function(String error)? registrationFailure,
+    TResult? Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult? Function()? noInternet,
   }) {
     return registrationSuccess?.call(registerModel);
@@ -809,6 +843,8 @@ class _$RegistrationSuccessImpl implements _RegistrationSuccess {
     TResult Function()? loading,
     TResult Function(RegistrationModel registerModel)? registrationSuccess,
     TResult Function(String error)? registrationFailure,
+    TResult Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) {
@@ -825,6 +861,8 @@ class _$RegistrationSuccessImpl implements _RegistrationSuccess {
     required TResult Function(_Loading value) loading,
     required TResult Function(_RegistrationSuccess value) registrationSuccess,
     required TResult Function(LoginFailure value) registrationFailure,
+    required TResult Function(_RegisterValidation value)
+        registervaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
     return registrationSuccess(this);
@@ -837,6 +875,7 @@ class _$RegistrationSuccessImpl implements _RegistrationSuccess {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_RegistrationSuccess value)? registrationSuccess,
     TResult? Function(LoginFailure value)? registrationFailure,
+    TResult? Function(_RegisterValidation value)? registervaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
     return registrationSuccess?.call(this);
@@ -849,6 +888,7 @@ class _$RegistrationSuccessImpl implements _RegistrationSuccess {
     TResult Function(_Loading value)? loading,
     TResult Function(_RegistrationSuccess value)? registrationSuccess,
     TResult Function(LoginFailure value)? registrationFailure,
+    TResult Function(_RegisterValidation value)? registervaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) {
@@ -946,6 +986,8 @@ class _$LoginFailureImpl implements LoginFailure {
     required TResult Function(RegistrationModel registerModel)
         registrationSuccess,
     required TResult Function(String error) registrationFailure,
+    required TResult Function(RegsiterValidation registervaldationFailure)
+        registervaldationFailure,
     required TResult Function() noInternet,
   }) {
     return registrationFailure(error);
@@ -958,6 +1000,8 @@ class _$LoginFailureImpl implements LoginFailure {
     TResult? Function()? loading,
     TResult? Function(RegistrationModel registerModel)? registrationSuccess,
     TResult? Function(String error)? registrationFailure,
+    TResult? Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult? Function()? noInternet,
   }) {
     return registrationFailure?.call(error);
@@ -970,6 +1014,8 @@ class _$LoginFailureImpl implements LoginFailure {
     TResult Function()? loading,
     TResult Function(RegistrationModel registerModel)? registrationSuccess,
     TResult Function(String error)? registrationFailure,
+    TResult Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) {
@@ -986,6 +1032,8 @@ class _$LoginFailureImpl implements LoginFailure {
     required TResult Function(_Loading value) loading,
     required TResult Function(_RegistrationSuccess value) registrationSuccess,
     required TResult Function(LoginFailure value) registrationFailure,
+    required TResult Function(_RegisterValidation value)
+        registervaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
     return registrationFailure(this);
@@ -998,6 +1046,7 @@ class _$LoginFailureImpl implements LoginFailure {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_RegistrationSuccess value)? registrationSuccess,
     TResult? Function(LoginFailure value)? registrationFailure,
+    TResult? Function(_RegisterValidation value)? registervaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
     return registrationFailure?.call(this);
@@ -1010,6 +1059,7 @@ class _$LoginFailureImpl implements LoginFailure {
     TResult Function(_Loading value)? loading,
     TResult Function(_RegistrationSuccess value)? registrationSuccess,
     TResult Function(LoginFailure value)? registrationFailure,
+    TResult Function(_RegisterValidation value)? registervaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) {
@@ -1030,6 +1080,180 @@ abstract class LoginFailure implements RegisterState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoginFailureImplCopyWith<_$LoginFailureImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$RegisterValidationImplCopyWith<$Res> {
+  factory _$$RegisterValidationImplCopyWith(_$RegisterValidationImpl value,
+          $Res Function(_$RegisterValidationImpl) then) =
+      __$$RegisterValidationImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({RegsiterValidation registervaldationFailure});
+}
+
+/// @nodoc
+class __$$RegisterValidationImplCopyWithImpl<$Res>
+    extends _$RegisterStateCopyWithImpl<$Res, _$RegisterValidationImpl>
+    implements _$$RegisterValidationImplCopyWith<$Res> {
+  __$$RegisterValidationImplCopyWithImpl(_$RegisterValidationImpl _value,
+      $Res Function(_$RegisterValidationImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of RegisterState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? registervaldationFailure = null,
+  }) {
+    return _then(_$RegisterValidationImpl(
+      registervaldationFailure: null == registervaldationFailure
+          ? _value.registervaldationFailure
+          : registervaldationFailure // ignore: cast_nullable_to_non_nullable
+              as RegsiterValidation,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$RegisterValidationImpl implements _RegisterValidation {
+  const _$RegisterValidationImpl({required this.registervaldationFailure});
+
+  @override
+  final RegsiterValidation registervaldationFailure;
+
+  @override
+  String toString() {
+    return 'RegisterState.registervaldationFailure(registervaldationFailure: $registervaldationFailure)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RegisterValidationImpl &&
+            (identical(
+                    other.registervaldationFailure, registervaldationFailure) ||
+                other.registervaldationFailure == registervaldationFailure));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, registervaldationFailure);
+
+  /// Create a copy of RegisterState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RegisterValidationImplCopyWith<_$RegisterValidationImpl> get copyWith =>
+      __$$RegisterValidationImplCopyWithImpl<_$RegisterValidationImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(RegistrationModel registerModel)
+        registrationSuccess,
+    required TResult Function(String error) registrationFailure,
+    required TResult Function(RegsiterValidation registervaldationFailure)
+        registervaldationFailure,
+    required TResult Function() noInternet,
+  }) {
+    return registervaldationFailure(this.registervaldationFailure);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(RegistrationModel registerModel)? registrationSuccess,
+    TResult? Function(String error)? registrationFailure,
+    TResult? Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
+    TResult? Function()? noInternet,
+  }) {
+    return registervaldationFailure?.call(this.registervaldationFailure);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(RegistrationModel registerModel)? registrationSuccess,
+    TResult Function(String error)? registrationFailure,
+    TResult Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
+    TResult Function()? noInternet,
+    required TResult orElse(),
+  }) {
+    if (registervaldationFailure != null) {
+      return registervaldationFailure(this.registervaldationFailure);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_RegistrationSuccess value) registrationSuccess,
+    required TResult Function(LoginFailure value) registrationFailure,
+    required TResult Function(_RegisterValidation value)
+        registervaldationFailure,
+    required TResult Function(_NoInternet value) noInternet,
+  }) {
+    return registervaldationFailure(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_RegistrationSuccess value)? registrationSuccess,
+    TResult? Function(LoginFailure value)? registrationFailure,
+    TResult? Function(_RegisterValidation value)? registervaldationFailure,
+    TResult? Function(_NoInternet value)? noInternet,
+  }) {
+    return registervaldationFailure?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_RegistrationSuccess value)? registrationSuccess,
+    TResult Function(LoginFailure value)? registrationFailure,
+    TResult Function(_RegisterValidation value)? registervaldationFailure,
+    TResult Function(_NoInternet value)? noInternet,
+    required TResult orElse(),
+  }) {
+    if (registervaldationFailure != null) {
+      return registervaldationFailure(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _RegisterValidation implements RegisterState {
+  const factory _RegisterValidation(
+          {required final RegsiterValidation registervaldationFailure}) =
+      _$RegisterValidationImpl;
+
+  RegsiterValidation get registervaldationFailure;
+
+  /// Create a copy of RegisterState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$RegisterValidationImplCopyWith<_$RegisterValidationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1079,6 +1303,8 @@ class _$NoInternetImpl implements _NoInternet {
     required TResult Function(RegistrationModel registerModel)
         registrationSuccess,
     required TResult Function(String error) registrationFailure,
+    required TResult Function(RegsiterValidation registervaldationFailure)
+        registervaldationFailure,
     required TResult Function() noInternet,
   }) {
     return noInternet();
@@ -1091,6 +1317,8 @@ class _$NoInternetImpl implements _NoInternet {
     TResult? Function()? loading,
     TResult? Function(RegistrationModel registerModel)? registrationSuccess,
     TResult? Function(String error)? registrationFailure,
+    TResult? Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult? Function()? noInternet,
   }) {
     return noInternet?.call();
@@ -1103,6 +1331,8 @@ class _$NoInternetImpl implements _NoInternet {
     TResult Function()? loading,
     TResult Function(RegistrationModel registerModel)? registrationSuccess,
     TResult Function(String error)? registrationFailure,
+    TResult Function(RegsiterValidation registervaldationFailure)?
+        registervaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) {
@@ -1119,6 +1349,8 @@ class _$NoInternetImpl implements _NoInternet {
     required TResult Function(_Loading value) loading,
     required TResult Function(_RegistrationSuccess value) registrationSuccess,
     required TResult Function(LoginFailure value) registrationFailure,
+    required TResult Function(_RegisterValidation value)
+        registervaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
     return noInternet(this);
@@ -1131,6 +1363,7 @@ class _$NoInternetImpl implements _NoInternet {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_RegistrationSuccess value)? registrationSuccess,
     TResult? Function(LoginFailure value)? registrationFailure,
+    TResult? Function(_RegisterValidation value)? registervaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
     return noInternet?.call(this);
@@ -1143,6 +1376,7 @@ class _$NoInternetImpl implements _NoInternet {
     TResult Function(_Loading value)? loading,
     TResult Function(_RegistrationSuccess value)? registrationSuccess,
     TResult Function(LoginFailure value)? registrationFailure,
+    TResult Function(_RegisterValidation value)? registervaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) {

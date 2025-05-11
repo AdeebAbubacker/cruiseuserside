@@ -8,5 +8,8 @@ class RegisterState with _$RegisterState {
       {required RegistrationModel registerModel}) = _RegistrationSuccess;
   const factory RegisterState.registrationFailure({required String error}) =
       LoginFailure;
+  const factory RegisterState.registervaldationFailure(
+      {required RegsiterValidation registervaldationFailure}) = _RegisterValidation;
+
   const factory RegisterState.noInternet() = _NoInternet;
 }

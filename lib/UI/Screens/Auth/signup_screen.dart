@@ -22,6 +22,8 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController retypepasswordController = TextEditingController();
+  bool isPasswordVisible = false;
+  bool isRetypePasswordVisible = false;
 
   bool isTextVisible = false;
   bool isChecked = false;
@@ -49,6 +51,19 @@ class _SignupScreenState extends State<SignupScreen> {
             registrationSuccess: (value) {
               AppRoutes.navigateToMainLayoutScreen(context);
             },
+            registervaldationFailure: (value) {
+              CustomToast.showFlushBar(
+                context: context,
+                status: false,
+                title: "Oops",
+                content: value.registervaldationFailure.message
+                        .toString()
+                        .split('.')
+                        .first
+                        .trim() +
+                    '.',
+              );
+            },
             registrationFailure: (value) {
               CustomToast.showFlushBar(
                 context: context,
@@ -68,7 +83,7 @@ class _SignupScreenState extends State<SignupScreen> {
           );
         },
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: SingleChildScrollView(
@@ -159,7 +174,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   const SizedBox(height: 12),
                   TextField(
-                    obscureText: false,
+                    obscureText: !isPasswordVisible,
                     decoration: InputDecoration(
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -169,12 +184,14 @@ class _SignupScreenState extends State<SignupScreen> {
                         suffixIcon: GestureDetector(
                             onTap: () {
                               setState(() {
-                                //  isTextVisible = !isTextVisible;
+                                isPasswordVisible = !isPasswordVisible;
                               });
                             },
-                            child: Icon(isTextVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off)),
+                            child: Icon(
+                              isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            )),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(32))),
                     controller: passwordController,
@@ -187,7 +204,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   const SizedBox(height: 12),
                   TextField(
-                    obscureText: false,
+                    obscureText: !isRetypePasswordVisible,
                     decoration: InputDecoration(
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -197,12 +214,15 @@ class _SignupScreenState extends State<SignupScreen> {
                         suffixIcon: GestureDetector(
                             onTap: () {
                               setState(() {
-                                //  isTextVisible = !isTextVisible;
+                                isRetypePasswordVisible =
+                                    !isRetypePasswordVisible;
                               });
                             },
-                            child: Icon(isTextVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off)),
+                            child: Icon(
+                              isRetypePasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            )),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(32))),
                     controller: retypepasswordController,

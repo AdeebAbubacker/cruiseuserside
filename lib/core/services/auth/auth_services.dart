@@ -3,6 +3,7 @@ import 'package:cruise_buddy/core/constants/functions/connection/connectivity_ch
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/login_model/login_model.dart';
 import 'package:cruise_buddy/core/model/validation/login_validation/login_validation.dart';
+import 'package:cruise_buddy/core/model/validation/register_validation/regsiter_validation.dart';
 import 'package:cruise_buddy/core/model/verifiedgoogle_id_model/verifiedgoogle_id_model.dart';
 import 'package:cruise_buddy/core/model/registration_model/registration_model.dart';
 import 'package:http/http.dart' as http;
@@ -60,7 +61,7 @@ class AuthServices {
     }
   }
 
-  Future<Either<String, RegistrationModel>> register({
+  Future<Either<dynamic, RegistrationModel>> register({
     required String name,
     required String email,
     required String password,
@@ -99,7 +100,13 @@ class AuthServices {
         final loginModel = RegistrationModel.fromJson(data);
         print(loginModel.user?.name);
         return Right(loginModel);
-      } else {
+      } else if (response.statusCode == 422) {
+        final data = json.decode(response.body);
+
+        final registerModel = RegsiterValidation.fromJson(data);
+      
+        return left(registerModel);
+      }else {
         print('erorr ${response.body}');
         // Server responded with an error, return the error message
         return Left('Error: ${response.statusCode} - ${response.body}');
