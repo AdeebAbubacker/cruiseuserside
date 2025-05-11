@@ -118,7 +118,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
     _scales = List.generate(10, (index) => 1.0);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       fetchFavorites();
-     _getUSerData();
+      _getUSerData();
       BlocProvider.of<GetFeaturedBoatsBloc>(context)
           .add(GetFeaturedBoatsEvent.getFeaturedBoats());
     });
@@ -128,17 +128,16 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
   String email = 'N/A';
   Box<UserDetailsDB>? userDetailsBox;
 
-
-    Future<void> _getUSerData() async {
+  Future<void> _getUSerData() async {
     try {
       final userdetailsbox = Hive.box<UserDetailsDB>('userDetailsBox');
       final userDetails = userdetailsbox.get('user');
       if (userDetails != null) {
-      setState(() {
-        name = userDetails.name ?? 'Guest';
-        email = userDetails.email ?? 'N/A';
-      });
-    }
+        setState(() {
+          name = userDetails.name ?? 'Guest';
+          email = userDetails.email ?? 'N/A';
+        });
+      }
     } catch (error) {
       print('Error fetching data from Hive: $error');
       // Handle errors appropriately, e.g., display an error message
@@ -491,51 +490,82 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                                 Radius.circular(
                                                                     13),
                                                           ),
-                                                          child: Image.network(
-                                                            "${value.featuredBoats.data?[index].cruise?.images?[0].cruiseImg ?? ""}",
-                                                            width:
-                                                                double.infinity,
-                                                            height: 130,
-                                                            fit: BoxFit.cover,
-                                                            loadingBuilder:
-                                                                (context, child,
-                                                                    loadingProgress) {
-                                                              if (loadingProgress ==
-                                                                  null) {
-                                                                return child;
-                                                              }
-                                                              return Container(
-                                                                width: double
-                                                                    .infinity,
-                                                                height: 130,
-                                                                color: Colors
-                                                                        .grey[
-                                                                    300], // Placeholder background
-                                                                child: const Center(
-                                                                    child:
-                                                                        CircularProgressIndicator()),
-                                                              );
-                                                            },
-                                                            errorBuilder:
-                                                                (context, error,
-                                                                    stackTrace) {
-                                                              return Container(
-                                                                width: double
-                                                                    .infinity,
-                                                                height: 130,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  image:
-                                                                      DecorationImage(
-                                                                    image: AssetImage(
-                                                                        'assets/image/boat_details_img/boat_detail_img.png'),
-                                                                    fit: BoxFit
-                                                                        .cover,
+                                                          child: value
+                                                                      .featuredBoats
+                                                                      .data?[
+                                                                          index]
+                                                                      .cruise
+                                                                      ?.images
+                                                                      ?.isNotEmpty ??
+                                                                  false
+                                                              ? Image.network(
+                                                                  "${value.featuredBoats.data?[index].cruise?.images?[0].cruiseImg ?? ""}",
+                                                                  width: double
+                                                                      .infinity,
+                                                                  height: 130,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  loadingBuilder:
+                                                                      (context,
+                                                                          child,
+                                                                          loadingProgress) {
+                                                                    if (loadingProgress ==
+                                                                        null) {
+                                                                      return child;
+                                                                    }
+                                                                    return Container(
+                                                                      width: double
+                                                                          .infinity,
+                                                                      height:
+                                                                          130,
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          300], 
+                                                                      child: const Center(
+                                                                          child:
+                                                                              CircularProgressIndicator()),
+                                                                    );
+                                                                  },
+                                                                  errorBuilder:
+                                                                      (context,
+                                                                          error,
+                                                                          stackTrace) {
+                                                                    return Container(
+                                                                      width: double
+                                                                          .infinity,
+                                                                      height:
+                                                                          130,
+                                                                      decoration:
+                                                                          const BoxDecoration(
+                                                                        image:
+                                                                            DecorationImage(
+                                                                          image:
+                                                                              AssetImage('assets/image/boat_details_img/boat_detail_img.png'),
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                )
+                                                              : Container(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  height: 130,
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      300], // Placeholder background
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .camera_alt, // Camera icon as a placeholder
+                                                                    color: Colors
+                                                                            .grey[
+                                                                        700],
                                                                   ),
                                                                 ),
-                                                              );
-                                                            },
-                                                          ),
                                                         ),
                                                         Positioned(
                                                           bottom: 8,
