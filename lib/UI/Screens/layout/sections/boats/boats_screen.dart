@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -77,6 +78,7 @@ class _BoatsScreenState extends State<BoatsScreen> {
             }
 
             return ListView.builder(
+              physics: BouncingScrollPhysics(),
               padding: EdgeInsets.all(16),
               itemCount: value.mybookingmodel.data?.length,
               itemBuilder: (context, index) {
@@ -87,90 +89,115 @@ class _BoatsScreenState extends State<BoatsScreen> {
                         'https://via.placeholder.com/100'
                     : 'https://via.placeholder.com/100';
                 GlobalKey qrKey = GlobalKey();
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  elevation: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                imageUrl,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Icon(Icons.image_not_supported),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    booking?.package?.cruise?.name ?? "N/A",
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text("Paid Price: ₹${booking?.amountPaid}"),
-                                  Text(
-                                      "Amount to Pay: ₹${booking?.balanceAmount}"),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // QR Code
-                            Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
+                return Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 20,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey.shade300, // Light grey border
+                        width: 0.8, // Thin border
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: RepaintBoundary(
-                                key: qrKey, // Attach the GlobalKey here
-                                child: QrImageView(
-                                  data: booking?.orderId.toString() ?? "N/A",
-                                  version: QrVersions.auto,
-                                  size: 100,
-                                  backgroundColor: Colors.white,
+                                child: Image.network(
+                                  imageUrl,
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(Icons.image_not_supported),
                                 ),
                               ),
-                            ),
-
-                            // WhatsApp Share Button
-                            ElevatedButton.icon(
-                              onPressed: () async {
-                                if (qrKey.currentContext != null) {
-                                  _shareQr(qrKey,
-                                      booking?.orderId.toString() ?? "N/A");
-                                } else {
-                                  print(
-                                      'QR code widget context is not available.');
-                                }
-                              },
-                              icon: Icon(Icons.share),
-                              label: Text("Share"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                foregroundColor: Colors.white,
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      booking?.package?.cruise?.name ?? "N/A",
+                                      style: GoogleFonts.ubuntu(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      "Paid Price: ${booking?.amountPaid != null ? '₹${booking!.amountPaid}' : 'N/A'}",
+                                      style: GoogleFonts.ubuntu(),
+                                    ),
+                                    Text(
+                                      "Amount to Pay: ${booking?.balanceAmount != null ? '₹${booking!.balanceAmount}' : 'N/A'}",
+                                      style: GoogleFonts.ubuntu(),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // QR Code
+                              Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: RepaintBoundary(
+                                  key: qrKey, // Attach the GlobalKey here
+                                  child: QrImageView(
+                                    data: booking?.orderId.toString() ?? "N/A",
+                                    version: QrVersions.auto,
+                                    size: 60,
+                                    backgroundColor: Colors.white,
+                                  ),
+                                ),
+                              ),
+
+                              // WhatsApp Share Button
+                              ElevatedButton.icon(
+                                onPressed: () async {
+                                  if (qrKey.currentContext != null) {
+                                    _shareQr(qrKey,
+                                        booking?.orderId.toString() ?? "N/A");
+                                  } else {
+                                    print(
+                                        'QR code widget context is not available.');
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.share,
+                                  color: Colors.white,
+                                ),
+                                label: Text(
+                                  "Share",
+                                  style: GoogleFonts.ubuntu(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
