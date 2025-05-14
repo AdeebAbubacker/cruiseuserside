@@ -279,6 +279,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                   print(
                       "defaultprice is ${value.mybookingmodel.data?.bookingTypes?[0].defaultPrice}");
                   totalPrice = defaultPrice + pricePerPerson * 1;
+                  maxRooms = value.mybookingmodel?.data?.cruise?.rooms ?? 1;
+                  print('dey my roooms ${maxRooms}');
                 });
               },
             );
@@ -371,42 +373,14 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       onTap: () => setState(
                           () => _isEditingBoatDetails = !_isEditingBoatDetails),
                       editingWidgets: [
-                        // DropdownButtonFormField<String>(
-                        //   value: _selectedCruiseType,
-                        //   decoration:
-                        //       const InputDecoration(labelText: 'Cruise Type'),
-                        //   items: <String>[
-                        //     'Day Cruise',
-                        //     'Full Day Cruise',
-                        //   ].map<DropdownMenuItem<String>>((String value) {
-                        //     return DropdownMenuItem<String>(
-                        //       value: value,
-                        //       child: Text(value),
-                        //     );
-                        //   }).toList(),
-                        //   onChanged: (String? newValue) {
-                        //     if (newValue != null) {
-                        //       setState(() {
-                        //         _selectedCruiseType = newValue;
-                        //       });
-                        //     }
-                        //   },
-                        // ),
-                        _buildNumericInput(
-                          'No of Rooms',
-                          _numRooms,
-                          (value) => setState(
-                            () => _numRooms = value,
-                          ),
-                          max: maxRooms,
-                        ),
-                        _buildNumericInput('Day', _day,
-                            (value) => setState(() => _day = value)),
+                        _buildDetailRow('No of Rooms', maxRooms.toString()),
+                        // _buildNumericInput('Day', _day,
+                        //     (value) => setState(() => _day = value)),
                       ],
                       displayWidgets: [
                         // _buildDetailRow('Type of Cruise', _selectedCruiseType),
-                        _buildDetailRow('No of Rooms', _numRooms.toString()),
-                        _buildDetailRow('Day', _day.toString()),
+                        _buildDetailRow('No of Rooms', maxRooms.toString()),
+                        // _buildDetailRow('Day', _day.toString()),
                       ],
                     ),
                     SizedBox(
@@ -974,12 +948,12 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
               style: TextStyles.ubntu16,
             ),
             const Spacer(),
-            GestureDetector(
-              onTap: onTap,
-              child: isEditing
-                  ? const Icon(Icons.check)
-                  : SvgPicture.asset('assets/icons/Edit_icon.svg'),
-            ),
+            // GestureDetector(
+            //   onTap: onTap,
+            //   child: isEditing
+            //       ? const Icon(Icons.check)
+            //       : SvgPicture.asset('assets/icons/Edit_icon.svg'),
+            // ),
           ],
         ),
         if (isEditing) ...editingWidgets else ...displayWidgets,

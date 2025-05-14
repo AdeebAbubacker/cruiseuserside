@@ -19,7 +19,6 @@ import 'package:cruise_buddy/core/view_model/seeAllMyBookings/see_allmy_bookings
 import 'package:cruise_buddy/core/view_model/updateUserProfile/update_user_profile_bloc.dart';
 import 'package:cruise_buddy/core/view_model/viewMyPackage/view_my_package_bloc.dart';
 import 'package:cruise_buddy/firebase_options.dart';
-
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
