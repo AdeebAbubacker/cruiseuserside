@@ -1,4 +1,5 @@
 import 'package:cruise_buddy/core/constants/colors/app_colors.dart';
+import 'package:cruise_buddy/core/view_model/deleteAccount/delete_account_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
@@ -91,8 +92,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                           SizedBox(height: 10),
                           Padding(
                             padding: EdgeInsets.only(
-                              left: 10,
-                              right: 10,
+                              left: 15,
+                              right: 15,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,6 +160,10 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                                               _captchaErrorText =
                                                   'Incorrect Captcha';
                                             });
+                                            BlocProvider.of<DeleteAccountBloc>(
+                                                    context)
+                                                .add(DeleteAccountEvent
+                                                    .deleteAccount());
                                             print("Not Matched");
                                           }
                                         },

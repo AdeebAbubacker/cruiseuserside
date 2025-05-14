@@ -208,7 +208,7 @@ class AuthServices {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
         final deleteAccountModel = DeleteAccountResponse.fromJson(data);
-
+        print('Response 200: ${response.body}');
         return Right(deleteAccountModel);
       } else {
         print('API Error: ${response.statusCode}');
