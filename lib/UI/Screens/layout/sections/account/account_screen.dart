@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cruise_buddy/UI/Screens/Auth/login_screens.dart';
+import 'package:cruise_buddy/UI/Screens/misc/delete_account_screen.dart';
 import 'package:cruise_buddy/UI/Screens/misc/privacy_policy.dart';
 import 'package:cruise_buddy/UI/Screens/misc/terms_and_c_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
@@ -401,7 +402,28 @@ class _AccountScreenState extends State<AccountScreen> {
                       style: TextStyles.ubuntu15normal,
                     ),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: 5), SizedBox(height: 5),
+                  // const Divider(),
+                  ListTile(
+                    leading: SvgPicture.asset(
+                      'assets/delete_settings.svg',
+                      color: Colors.blue,
+                    ),
+                    title: Text(
+                      'Delete',
+                      style: TextStyles.ubuntu15normal,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return DeleteAccountScreen();
+                          },
+                        ),
+                      );
+                    },
+                  ),
                   // const Divider(),
                   ListTile(
                     leading: SvgPicture.asset(

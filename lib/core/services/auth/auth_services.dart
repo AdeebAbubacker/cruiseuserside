@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cruise_buddy/core/constants/functions/connection/connectivity_checker.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
+import 'package:cruise_buddy/core/model/delete_account_model/delete_account_model.dart';
 import 'package:cruise_buddy/core/model/login_model/login_model.dart';
 import 'package:cruise_buddy/core/model/validation/login_validation/login_validation.dart';
 import 'package:cruise_buddy/core/model/validation/register_validation/regsiter_validation.dart';
@@ -104,9 +105,9 @@ class AuthServices {
         final data = json.decode(response.body);
 
         final registerModel = RegsiterValidation.fromJson(data);
-      
+
         return left(registerModel);
-      }else {
+      } else {
         print('erorr ${response.body}');
         // Server responded with an error, return the error message
         return Left('Error: ${response.statusCode} - ${response.body}');
@@ -180,6 +181,43 @@ class AuthServices {
       print('Left bject ${e.toString()}');
       print('Left bject $e');
       return Left('0');
+    }
+  }
+
+  Future<Either<String, DeleteAccountResponse>> deleteccount() async {
+    try {
+      final hasInternet = await _connectivityChecker.hasInternetAccess();
+      if (!hasInternet) {
+        return const Left('0');
+      }
+
+      final token = await GetSharedPreferences.getAccessToken();
+      if (token == null) {
+        print('No access token found.');
+        return const Left('No access token found.');
+      }
+
+      final response = await http.post(
+        Uri.parse('https://cruisebuddy.in/api/v1/delete-account'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token', // ✅ Important header
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = json.decode(response.body);
+        final deleteAccountModel = DeleteAccountResponse.fromJson(data);
+
+        return Right(deleteAccountModel);
+      } else {
+        print('API Error: ${response.statusCode}');
+        print('Response: ${response.body}');
+        return const Left('Server error or unauthorized request');
+      }
+    } catch (e) {
+      print('Exception: $e');
+      return const Left('Unexpected error occurred');
     }
   }
 }
