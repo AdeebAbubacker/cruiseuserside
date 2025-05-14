@@ -71,3 +71,15 @@ windows/.packages
 
 # Allow assets
 !assets/
+
+# Platform-specific folders to ignore
+android/
+ios/
+macos/
+windows/
+linux/
+web/
+
+# Build and tool directories
+build/
+.dart_tool/
