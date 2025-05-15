@@ -9,7 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cruise_buddy/core/view_model/deleteAccount/delete_account_bloc.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/UI/Screens/Auth/login_screens.dart';
-import 'package:cruise_buddy/core/db/hive_db/boxes/package_details_box.dart';
 import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 
@@ -73,7 +72,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
           getuseruccess: (value) async {
             await RemoveSharedPreferences.removeAccessToken();
 
-            await packageDetailsBox.clear();
+      
             await userDetailsBox.clear();
 
             CustomToast.showFlushBar(

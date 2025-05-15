@@ -56,7 +56,7 @@ class DefaultFirebaseOptions {
     storageBucket: 'cruisebuddy-e3b41.firebasestorage.app',
     androidClientId: '261245076643-6fa94m9de0nmbe118f5b1j80vc7e6oe8.apps.googleusercontent.com',
     iosClientId: '261245076643-u3i3iacidsaorbo02nag82l9h7913u0u.apps.googleusercontent.com',
-    iosBundleId: 'com.example.cruiseBuddy',
+    iosBundleId: 'com.leburacruisebuddy.app',
   );
 
   static const FirebaseOptions web = FirebaseOptions(
@@ -77,7 +77,7 @@ class DefaultFirebaseOptions {
     storageBucket: 'pokemon-6a137.firebasestorage.app',
     androidClientId: '700263567498-3phtfhs977nkg22q0kpnufqmk52b54tl.apps.googleusercontent.com',
     iosClientId: '700263567498-uot5h96ocu72s2qovffn4lkrah65jr2c.apps.googleusercontent.com',
-    iosBundleId: 'com.example.cruiseBuddy',
+    iosBundleId: 'com.leburacruisebuddy.app',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
