@@ -6,6 +6,12 @@ import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cruise_buddy/core/view_model/deleteAccount/delete_account_bloc.dart';
+import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
+import 'package:cruise_buddy/UI/Screens/Auth/login_screens.dart';
+import 'package:cruise_buddy/core/db/hive_db/boxes/package_details_box.dart';
+import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
+import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 
 class DeleteAccountScreen extends StatefulWidget {
   const DeleteAccountScreen({
@@ -50,145 +56,200 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        forceMaterialTransparency: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
+    return BlocListener<DeleteAccountBloc, DeleteAccountState>(
+       listener: (context, state) async {
+        (state.map(
+          initial: (value) {
+            print('object');
           },
-          icon: Icon(
-            Icons.arrow_back_ios,
+          getuserFailure: (value) {
+            CustomToast.showFlushBar(
+              context: context,
+              status: false,
+              title: "Error",
+              content: "Something went wrong. Please try again.",
+            );
+          },
+          getuseruccess: (value) async {
+            await RemoveSharedPreferences.removeAccessToken();
+
+            await packageDetailsBox.clear();
+            await userDetailsBox.clear();
+
+            CustomToast.showFlushBar(
+              context: context,
+              status: true,
+              title: "Account Deleted",
+              content:
+                  "You’ve successfully deleted your account. Please log in again.",
+            );
+            Future.delayed(Duration(milliseconds: 600), () {
+              if (context.mounted) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  (Route<dynamic> route) => false,
+                );
+              }
+            });
+          },
+          loading: (value) {
+            CustomToast.showFlushBar(
+              context: context,
+              status: false,
+              title: "Please wait",
+              content: "Processing your request...",
+            );
+          },
+          noInternet: (value) {
+            CustomToast.showFlushBar(
+              context: context,
+              status: false,
+              title: "No Internet",
+              content: "Please check your internet connection and try again.",
+            );
+          },
+        ));
+      },
+      child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          appBar: AppBar(
+            forceMaterialTransparency: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(
+                Icons.arrow_back_ios,
+              ),
+            ),
+            title: Text(
+              "Delete Account",
+              style: GoogleFonts.ubuntu(),
+            ),
           ),
-        ),
-        title: Text(
-          "Delete Account",
-          style: GoogleFonts.ubuntu(),
-        ),
-      ),
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            captchaFocus.unfocus();
-          },
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              return SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: constraints.maxHeight,
-                  ),
-                  child: IntrinsicHeight(
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 20),
-                          SizedBox(height: 10),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: 15,
-                              right: 15,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: 10),
-                                Text(
-                                  "Are you sure you want to delete your account?",
-                                  style: GoogleFonts.ubuntu(
-                                    fontSize: 16,
-                                  ),
+          body: SafeArea(
+            child: GestureDetector(
+              onTap: () {
+                captchaFocus.unfocus();
+              },
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  return SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: IntrinsicHeight(
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 20),
+                              SizedBox(height: 10),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 15,
+                                  right: 15,
                                 ),
-                                SizedBox(height: 22),
-                                Text(
-                                  "Deleting your Cruise Buddy account will permanently remove all public and private information associated with your profile. You must cancel your subscription before deleting your account. To confirm the permanent deletion, please fill in the CAPTCHA below and click 'Delete Account'.",
-                                  style: GoogleFonts.ubuntu(
-                                    fontSize: 14,
-                                    color:
-                                        const Color.fromARGB(255, 61, 61, 61),
-                                  ),
-                                ),
-                                SizedBox(height: 22),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    CaptchaTextField(
-                                      textEditingController: _captchaController,
-                                      refresh: _generateCaptcha,
-                                      textstyle: TextStyle(),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Textfield(
-                                      focusNode: captchaFocus,
-                                      errorText: _captchaErrorText,
-                                      hintText: 'Enter Captcha Here',
-                                      textEditingController:
-                                          _userInputController,
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Center(
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              Colors.red, // Danger color
-                                          foregroundColor:
-                                              Colors.white, // Text color
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 40, vertical: 14),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                8), // Slightly rounded corners
-                                          ),
-                                          elevation: 3,
-                                        ),
-                                        onPressed: () async {
-                                          if (_userInputController.text ==
-                                              _captcha) {
-                                            print("Matched");
-                                            setState(() {
-                                              _captchaErrorText = null;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              _captchaErrorText =
-                                                  'Incorrect Captcha';
-                                            });
-                                            BlocProvider.of<DeleteAccountBloc>(
-                                                    context)
-                                                .add(DeleteAccountEvent
-                                                    .deleteAccount());
-                                            print("Not Matched");
-                                          }
-                                        },
-                                        child: Text(
-                                          'Delete Account',
-                                          style: GoogleFonts.ubuntu(),
-                                        ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      "Are you sure you want to delete your account?",
+                                      style: GoogleFonts.ubuntu(
+                                        fontSize: 16,
                                       ),
+                                    ),
+                                    SizedBox(height: 22),
+                                    Text(
+                                      "Deleting your Cruise Buddy account will permanently remove all public and private information associated with your profile. You must cancel your subscription before deleting your account. To confirm the permanent deletion, please fill in the CAPTCHA below and click 'Delete Account'.",
+                                      style: GoogleFonts.ubuntu(
+                                        fontSize: 14,
+                                        color:
+                                            const Color.fromARGB(255, 61, 61, 61),
+                                      ),
+                                    ),
+                                    SizedBox(height: 22),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        CaptchaTextField(
+                                          textEditingController: _captchaController,
+                                          refresh: _generateCaptcha,
+                                          textstyle: TextStyle(),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Textfield(
+                                          focusNode: captchaFocus,
+                                          errorText: _captchaErrorText,
+                                          hintText: 'Enter Captcha Here',
+                                          textEditingController:
+                                              _userInputController,
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Center(
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.red, // Danger color
+                                              foregroundColor:
+                                                  Colors.white, // Text color
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 40, vertical: 14),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    8), // Slightly rounded corners
+                                              ),
+                                              elevation: 3,
+                                            ),
+                                            onPressed: () async {
+                                              if (_userInputController.text ==
+                                                  _captcha) {
+                                                print("Matched");
+                                                setState(() {
+                                                  _captchaErrorText = null;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _captchaErrorText =
+                                                      'Incorrect Captcha';
+                                                });
+                                                BlocProvider.of<DeleteAccountBloc>(
+                                                        context)
+                                                    .add(DeleteAccountEvent
+                                                        .deleteAccount());
+                                                print("Not Matched");
+                                              }
+                                            },
+                                            child: Text(
+                                              'Delete Account',
+                                              style: GoogleFonts.ubuntu(),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(height: 50),
+                            ],
                           ),
-                          const SizedBox(height: 50),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              );
-            },
+                  );
+                },
+              ),
+            ),
           ),
         ),
-      ),
     );
   }
 }

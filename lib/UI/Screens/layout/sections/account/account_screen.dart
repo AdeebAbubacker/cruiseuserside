@@ -31,12 +31,15 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   bool isEditing = false;
-  TextEditingController nameController =
-      TextEditingController(text: 'Rohan Jacob');
-  TextEditingController emailController =
-      TextEditingController(text: 'rohanjacob123@gmail.com');
-  TextEditingController phoneController =
-      TextEditingController(text: '+91 9826 727 916');
+  TextEditingController nameController = TextEditingController(
+    text: 'Rohan Jacob',
+  );
+  TextEditingController emailController = TextEditingController(
+    text: 'rohanjacob123@gmail.com',
+  );
+  TextEditingController phoneController = TextEditingController(
+    text: '+91 9826 727 916',
+  );
   FocusNode nameFocusnode = FocusNode();
   FocusNode emailFocusnode = FocusNode();
   FocusNode phoneNoFocusnode = FocusNode();
@@ -96,10 +99,11 @@ class _AccountScreenState extends State<AccountScreen> {
       }
     } catch (e) {
       CustomToast.showFlushBar(
-          context: context,
-          status: true,
-          title: "Success",
-          content: 'An unexpected error occurred');
+        context: context,
+        status: true,
+        title: "Success",
+        content: 'An unexpected error occurred',
+      );
     }
   }
 
@@ -113,8 +117,8 @@ class _AccountScreenState extends State<AccountScreen> {
             showDialog(
               context: context,
               barrierDismissible: false,
-              builder: (context) =>
-                  const Center(child: CircularProgressIndicator()),
+              builder:
+                  (context) => const Center(child: CircularProgressIndicator()),
             );
           },
           updateuser: (value) async {
@@ -133,48 +137,51 @@ class _AccountScreenState extends State<AccountScreen> {
             }
             showDialog(
               context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Success'),
-                content: const Text('Profile updated successfully!'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('OK'),
+              builder:
+                  (context) => AlertDialog(
+                    title: const Text('Success'),
+                    content: const Text('Profile updated successfully!'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('OK'),
+                      ),
+                    ],
                   ),
-                ],
-              ),
             );
           },
           updateFailure: (error) {
             Navigator.of(context).pop(); // Close loading
             showDialog(
               context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Error'),
-                content: Text(error.error ?? 'Something went wrong!'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('OK'),
+              builder:
+                  (context) => AlertDialog(
+                    title: const Text('Error'),
+                    content: Text(error.error ?? 'Something went wrong!'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('OK'),
+                      ),
+                    ],
                   ),
-                ],
-              ),
             );
           },
           noInternet: (error) {
             Navigator.of(context).pop(); // Close loading
             showDialog(
               context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Error'),
-                content: Text('SNo Internet!'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('OK'),
+              builder:
+                  (context) => AlertDialog(
+                    title: const Text('Error'),
+                    content: Text('SNo Internet!'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('OK'),
+                      ),
+                    ],
                   ),
-                ],
-              ),
             );
           },
         );
@@ -210,7 +217,8 @@ class _AccountScreenState extends State<AccountScreen> {
                                 name: nameController.text.trim(),
                                 email: emailController.text.trim(),
                                 phone: phoneController.text.trim(),
-                                image: _pickedImage?.path ??
+                                image:
+                                    _pickedImage?.path ??
                                     '', // pass image path if selected
                               ),
                             );
@@ -232,16 +240,16 @@ class _AccountScreenState extends State<AccountScreen> {
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.transparent,
-                    backgroundImage: _pickedImage != null
-                        ? FileImage(File(_pickedImage!.path)) // Local image
-                        : imageUrl != null
+                    backgroundImage:
+                        _pickedImage != null
+                            ? FileImage(File(_pickedImage!.path)) // Local image
+                            : imageUrl != null
                             ? NetworkImage(imageUrl!) // Network image
                             : null, // Default if no image
-                    child: _pickedImage == null && imageUrl == null
-                        ? ClipOval(
-                            child: Icon(Icons.person),
-                          )
-                        : null,
+                    child:
+                        _pickedImage == null && imageUrl == null
+                            ? ClipOval(child: Icon(Icons.person))
+                            : null,
                   ),
                   Positioned(
                     bottom: 0,
@@ -262,11 +270,14 @@ class _AccountScreenState extends State<AccountScreen> {
                           shape: BoxShape.circle,
                         ),
                         padding: const EdgeInsets.all(4),
-                        child: isEditing
-                            ? SvgPicture.asset(
-                                'assets/image/profile/profile_pic_edit.svg')
-                            : SvgPicture.asset(
-                                'assets/image/profile/profile_pic_edit.svg'),
+                        child:
+                            isEditing
+                                ? SvgPicture.asset(
+                                  'assets/image/profile/profile_pic_edit.svg',
+                                )
+                                : SvgPicture.asset(
+                                  'assets/image/profile/profile_pic_edit.svg',
+                                ),
                       ),
                     ),
                   ),
@@ -298,20 +309,11 @@ class _AccountScreenState extends State<AccountScreen> {
                   },
                 ),
               ] else ...[
-                Text(
-                  nameController.text,
-                  style: TextStyles.ubuntu18w700,
-                ),
+                Text(nameController.text, style: TextStyles.ubuntu18w700),
                 const SizedBox(height: 5),
-                Text(
-                  emailController.text,
-                  style: TextStyles.ubuntu17,
-                ),
+                Text(emailController.text, style: TextStyles.ubuntu17),
                 const SizedBox(height: 5),
-                Text(
-                  phoneController.text,
-                  style: TextStyles.ubuntu17,
-                ),
+                Text(phoneController.text, style: TextStyles.ubuntu17),
               ],
               const SizedBox(height: 30),
               ListView(
@@ -337,9 +339,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     ), // or Icons.rule, Icons.article, Icons.gavel
                     title: Text(
                       'Get Support',
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 15,
-                      ),
+                      style: GoogleFonts.ubuntu(fontSize: 15),
                     ),
 
                     onTap: () {
@@ -353,8 +353,10 @@ class _AccountScreenState extends State<AccountScreen> {
                       'assets/icons/privacy_settings.svg',
                       color: Colors.blue,
                     ),
-                    title: Text('Privacy Policy',
-                        style: TextStyles.ubuntu15normal),
+                    title: Text(
+                      'Privacy Policy',
+                      style: TextStyles.ubuntu15normal,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -395,24 +397,21 @@ class _AccountScreenState extends State<AccountScreen> {
                       'assets/icons/app_version_settings.svg',
                       color: Colors.blue,
                     ),
-                    title:
-                        Text('App Version', style: TextStyles.ubuntu15normal),
-                    trailing: Text(
-                      "v1.0.29",
+                    title: Text(
+                      'App Version',
                       style: TextStyles.ubuntu15normal,
                     ),
+                    trailing: Text("v1.0.29", style: TextStyles.ubuntu15normal),
                   ),
-                  SizedBox(height: 5), SizedBox(height: 5),
+                  SizedBox(height: 5),
+                  SizedBox(height: 5),
                   // const Divider(),
                   ListTile(
                     leading: SvgPicture.asset(
                       'assets/delete_settings.svg',
                       color: Colors.blue,
                     ),
-                    title: Text(
-                      'Delete',
-                      style: TextStyles.ubuntu15normal,
-                    ),
+                    title: Text('Delete', style: TextStyles.ubuntu15normal),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -456,7 +455,8 @@ class _AccountScreenState extends State<AccountScreen> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LoginScreen()),
+                            builder: (context) => LoginScreen(),
+                          ),
                           (route) => false,
                         );
                       } catch (e) {
@@ -464,9 +464,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       }
                     },
                   ),
-                  SizedBox(
-                    height: 30,
-                  ),
+                  SizedBox(height: 30),
                 ],
               ),
             ],
@@ -477,18 +475,27 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   void handlePaymentErrorResponse(PaymentFailureResponse response) {
-    showAlertDialog(context, "Payment Failed",
-        "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()}");
+    showAlertDialog(
+      context,
+      "Payment Failed",
+      "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()}",
+    );
   }
 
   void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
     showAlertDialog(
-        context, "Payment Successful", "Payment ID: ${response.paymentId}");
+      context,
+      "Payment Successful",
+      "Payment ID: ${response.paymentId}",
+    );
   }
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {
     showAlertDialog(
-        context, "External Wallet Selected", "${response.walletName}");
+      context,
+      "External Wallet Selected",
+      "${response.walletName}",
+    );
   }
 
   void showAlertDialog(BuildContext context, String title, String message) {
@@ -497,10 +504,7 @@ class _AccountScreenState extends State<AccountScreen> {
       onPressed: () {},
     );
 
-    AlertDialog alert = AlertDialog(
-      title: Text(title),
-      content: Text(message),
-    );
+    AlertDialog alert = AlertDialog(title: Text(title), content: Text(message));
 
     showDialog(
       context: context,
@@ -516,10 +520,11 @@ class DottedBorderPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     double radius = size.width / 2;
 
-    final paint = Paint()
-      ..color = Color(0XFF1F8386)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
+    final paint =
+        Paint()
+          ..color = Color(0XFF1F8386)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2;
 
     double dashWidth = 30, dashSpace = 10;
     double circumference = 2 * 3.14159265359 * radius;
@@ -571,20 +576,15 @@ class BuildEditableField extends StatelessWidget {
             hintText: hinttext,
             hintStyle: TextStyles.ubuntuhintText,
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25))),
+              borderRadius: BorderRadius.all(Radius.circular(25)),
+            ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(25)),
-              borderSide: BorderSide(
-                color: Color(0xff555555),
-                width: 2.0,
-              ),
+              borderSide: BorderSide(color: Color(0xff555555), width: 2.0),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(25)),
-              borderSide: BorderSide(
-                color: Color(0xffE2E2E2),
-                width: 1.0,
-              ),
+              borderSide: BorderSide(color: Color(0xffE2E2E2), width: 1.0),
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 15),
           ),
@@ -641,8 +641,9 @@ class StyledPhoneNumberField extends StatelessWidget {
       final cleaned = fullPhoneNumber!.substring(1); // Remove '+'
 
       // Sort dial codes by length (desc) so longer ones like '971' are matched first
-      final sortedDialCodes = dialCodeToIso.keys.toList()
-        ..sort((a, b) => b.length.compareTo(a.length));
+      final sortedDialCodes =
+          dialCodeToIso.keys.toList()
+            ..sort((a, b) => b.length.compareTo(a.length));
 
       for (final code in sortedDialCodes) {
         if (cleaned.startsWith(code)) {
@@ -667,18 +668,23 @@ class StyledPhoneNumberField extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(horizontal: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
-              borderSide:
-                  const BorderSide(color: Color.fromARGB(255, 210, 176, 176)),
+              borderSide: const BorderSide(
+                color: Color.fromARGB(255, 210, 176, 176),
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
               borderSide: const BorderSide(
-                  color: Color.fromARGB(255, 108, 108, 108), width: 1.7),
+                color: Color.fromARGB(255, 108, 108, 108),
+                width: 1.7,
+              ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
-              borderSide:
-                  const BorderSide(color: Color(0xFFFFC1C1), width: 1.5),
+              borderSide: const BorderSide(
+                color: Color(0xFFFFC1C1),
+                width: 1.5,
+              ),
             ),
           ),
           onChanged: (phone) {
@@ -690,4 +696,5 @@ class StyledPhoneNumberField extends StatelessWidget {
     );
   }
 }
+
 //-----------
