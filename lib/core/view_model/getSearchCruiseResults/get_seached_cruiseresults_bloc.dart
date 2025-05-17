@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 
 import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
@@ -17,14 +19,17 @@ class GetSeachedCruiseresultsBloc
 
       try {
         final result = await userService.getSearchResultsList(
-          foodTitle: event.foodTitle,
-          isVeg: event.isVeg,
-          amenities: event.amenitiesName,
-          cruiseModelName: event.cruiseModelName,
-          cruiseType: event.cruiseType,
-          minAmount: event.minPrice,
-          maxAmount: event.maxPrice,
-          location: event.locationName,
+          amenities: event.amenities,
+          location: event.location,
+          startDate: event.startDate,
+          endDate: event.endDate,
+          closedOrOpened: event.closedOrOpened,
+          fullDayorDayCruise: event.fullDayorDayCruise,
+          maxAmount: event.maxAmount,
+          minAmount: event.minAmount,
+          noOfPassengers: event.noOfPassengers,
+          noOfRooms: event.noOfRooms,
+          premiumOrDeluxe: event.premiumOrDeluxe,
         );
 
         await result.fold((failure) async {

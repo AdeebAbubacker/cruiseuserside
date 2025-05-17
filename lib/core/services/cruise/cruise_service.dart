@@ -100,16 +100,18 @@ class CruiseService {
   Future<Either<String, FeaturedBoatsModel>> getSearchResultsList({
     String? location,
     String? amenities,
-    String? bookingType,
+    String? startDate,
+    String? endDate,
+    String? fullDayorDayCruise,
     String? premiumOrDeluxe,
     String? minAmount,
     String? maxAmount,
-    String? cruiseModelName,
-    String? cruiseType,
-    String? foodTitle,
-    bool? isVeg,
+    String? closedOrOpened,
+    String? noOfRooms,
+    String? noOfPassengers,
   }) async {
     try {
+      print("mystartdate ${startDate}");
       final hasInternet = await _connectivityChecker.hasInternetAccess();
       if (!hasInternet) return const Left('No internet');
 
@@ -121,17 +123,20 @@ class CruiseService {
       String urlString =
           '$url/package?include=cruise.location,cruise.cruiseType,cruise.ratings,cruise.cruisesImages,cruise.location,itineraries,amenities,food,packageImages,bookingTypes,unavailableDates';
 
-      // if (location?.isNotEmpty == true) {
-      //   urlString += '&filter[cruise.location.name]=$location';
-      // }
+      if (location?.isNotEmpty == true) {
+        urlString += '&filter[cruise.location.name]=$location';
+      }
+//day or full day
+      if (fullDayorDayCruise?.isNotEmpty == true) {
+        urlString += '&filter[bookingTypes.name]=$fullDayorDayCruise';
+      }
+      if (amenities?.isNotEmpty == true) {
+        urlString += '&filter[amenities.name]=$amenities';
+      }
 
-      // if (bookingType?.isNotEmpty == true) {
-      //   urlString += '&filter[bookingTypes.name]=$bookingType';
-      // }
-
-      // if (premiumOrDeluxe?.isNotEmpty == true) {
-      //   urlString += '&filter[name]=$premiumOrDeluxe';
-      // }
+      if (premiumOrDeluxe?.isNotEmpty == true) {
+        urlString += '&filter[name]=$premiumOrDeluxe';
+      }
 
       if (minAmount?.isNotEmpty == true) {
         urlString += '&filter[priceRange][min]=$minAmount';
@@ -140,26 +145,22 @@ class CruiseService {
       if (maxAmount?.isNotEmpty == true) {
         urlString += '&filter[priceRange][max]=$maxAmount';
       }
-
-      if (amenities?.isNotEmpty == true) {
-        urlString += '&filter[amenities]=$amenities';
+      if (startDate?.isNotEmpty == true) {
+        urlString += '&filter[dateRange][start]=$startDate';
+      }
+      if (endDate?.isNotEmpty == true) {
+        urlString += '&filter[dateRange][end]=$endDate';
       }
 
-      if (cruiseModelName?.isNotEmpty == true) {
-        urlString += '&filter[cruiseType.model_name]=$cruiseModelName';
+      if (closedOrOpened?.isNotEmpty == true) {
+        urlString += '&filter[cruiseType.type]=$closedOrOpened';
       }
-
-      if (cruiseType?.isNotEmpty == true) {
-        urlString += '&filter[cruiseType.type]=$cruiseType';
+      if (noOfRooms?.isNotEmpty == true) {
+        urlString += '&filter[cruise.rooms]=$noOfRooms';
       }
-
-      // if (foodTitle?.isNotEmpty == true) {
-      //   urlString += '&filter[food.title]=$foodTitle';
-      // }
-
-      // if (isVeg != null) {
-      //   urlString += '&filter[food.is_veg]=${isVeg.toString()}';
-      // }
+      if (noOfPassengers?.isNotEmpty == true) {
+        urlString += '&filter[cruise.max_capacity]=$noOfPassengers';
+      }
 
       final response = await http.get(
         Uri.parse(urlString),

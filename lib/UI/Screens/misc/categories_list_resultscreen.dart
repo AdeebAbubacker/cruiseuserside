@@ -57,15 +57,15 @@ class _CategoriesListResultscreenState
       _getUSerData();
       BlocProvider.of<GetSeachedCruiseresultsBloc>(context)
           .add(GetSeachedCruiseresultsEvent.SeachedCruise(
-        // foodTitle: 'et',
-        //   isVeg: true,
-        // amenitiesName: 'dolorum',
-        cruiseModelName: widget.modelName,
-        // cruiseType: 'closed',
-        // minPrice: '600',
-        // maxPrice: '1000',
-        //locationName: 'kochi',
-      ));
+              // foodTitle: 'et',
+              //   isVeg: true,
+              // amenitiesName: 'dolorum',
+              // cruiseModelName: widget.modelName,
+              // cruiseType: 'closed',
+              // minPrice: '600',
+              // maxPrice: '1000',
+              //locationName: 'kochi',
+              ));
     });
   }
 
@@ -199,15 +199,12 @@ class _CategoriesListResultscreenState
                                       context)
                                   .add(
                                 GetSeachedCruiseresultsEvent.SeachedCruise(
-                                  // filterCriteria: widget.category,
-                                  // location: widget.location,
-                                  // maxAmount: maxAmount, // Pass as string
-                                  // minAmount: minAmount, // Pass as string
-                                  cruiseModelName: widget.modelName,
-                                  maxPrice: maxAmount, // Pass as string
-                                  minPrice: minAmount, // Pass as string
-                                  cruiseType: selectedCruiseType?.toLowerCase(),
-                                  amenitiesName: amenitiesName,
+                                  location: widget.location,
+                                  maxAmount: maxAmount,
+                                  minAmount: minAmount,
+                                  amenities: amenitiesName,
+                                  closedOrOpened:
+                                      selectedCruiseType?.toLowerCase(),
                                 ),
                               );
                             },

@@ -192,6 +192,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   bool _isEditingBoatDetails = false;
   bool _isEditingPassengers = false;
   bool _isEditingDate = false;
+  String? _selectedPaymentType;
 
   int maxAdults = 1; // default fallback
   int maxRooms = 1;
@@ -201,6 +202,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   int pricePerDay = 0;
   int pricePerPerson = 0;
   final List unavaibledates = [];
+  BookingType? fullDayCruise;
   @override
   Widget build(BuildContext context) {
     print("sds ${widget.packageId}");
@@ -257,6 +259,12 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
           listener: (context, state) {
             state.mapOrNull(
               viewMyPacakge: (value) {
+                try {
+                  fullDayCruise = widget.datum.bookingTypes!
+                      .firstWhere((type) => type.name == 'full_day_cruise');
+                } catch (e) {
+                  fullDayCruise = null;
+                }
                 setState(() {
                   maxRooms = value.mybookingmodel.data?.cruise?.rooms ?? 1;
                   maxAdults =
@@ -791,8 +799,14 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       'Grand Total',
                       style: TextStyles.ubntu16,
                     ),
-                    _buildDetailRow('Charges for the trip', '₹${defaultPrice}'),
+                    _buildDetailRow(
+                      'Charges for the trip',
+                      '₹${bookingTypeId == "2" && fullDayCruise != null ? (int.parse(maxRooms.toString()) * double.parse(fullDayCruise!.pricePerBed.toString())).toStringAsFixed(2) : defaultPrice}',
+                    ),
+
                     _buildDetailRow('Price Per Person', '₹${pricePerPerson}'),
+                    _buildDetailRow('Price Per Bed',
+                        '₹${widget.datum.bookingTypes![1].pricePerBed.toString()}'),
                     _buildDetailRow(
                         'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
                     _buildDetailRow('Others', '₹${_others.toStringAsFixed(2)}'),
@@ -800,7 +814,148 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                         isTotal: true),
 
                     const SizedBox(height: 40),
+                    Row(
+                      children: [
+                        // SizedBox(
+                        //   height: 220,
+                        //   width: 140,
+                        //   child: GestureDetector(
+                        //     onTap: () {
+                        //       setState(() {});
+                        //     },
+                        //     child: Container(
+                        //       padding: EdgeInsets.all(16),
+                        //       decoration: BoxDecoration(
+                        //         color: Colors.blue.shade50,
+                        //         border: Border.all(
+                        //           color: Colors.blue,
+                        //         ),
+                        //         borderRadius: BorderRadius.circular(12),
+                        //       ),
+                        //       child: Column(
+                        //         children: [
+                        //           Icon(Icons.lock_clock, color: Colors.orange),
+                        //           SizedBox(height: 8),
+                        //           Text('Partial Payment',
+                        //               style: TextStyles.ubntu16),
+                        //           SizedBox(height: 4),
+                        //           Text('Pay ₹to lock your cruise'),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // SizedBox(width: 12),
+                        // SizedBox(
+                        //   height: 220,
+                        //   width: 140,
+                        //   child: GestureDetector(
+                        //     onTap: () {
+                        //       setState(() {});
+                        //     },
+                        //     child: Container(
+                        //       padding: EdgeInsets.all(16),
+                        //       decoration: BoxDecoration(
+                        //         color: Colors.green.shade50,
+                        //         border: Border.all(
+                        //           color: Colors.green,
+                        //         ),
+                        //         borderRadius: BorderRadius.circular(12),
+                        //       ),
+                        //       child: Column(
+                        //         children: [
+                        //           Icon(Icons.lock_open, color: Colors.green),
+                        //           SizedBox(height: 8),
+                        //           Text('Full Payment',
+                        //               style: TextStyles.ubntu16),
+                        //           SizedBox(height: 4),
+                        //           Text(
+                        //               'Pay ₹${totalPrice.toStringAsFixed(2)} and confirm now'),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
 
+                        SizedBox(
+                          height: 220,
+                          width: 140,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedPaymentType = 'partial';
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: _selectedPaymentType == 'partial'
+                                    ? Colors.blue.shade100
+                                    : Colors.blue.shade50,
+                                border: Border.all(
+                                  color: _selectedPaymentType == 'partial'
+                                      ? Colors.blue
+                                      : Colors.grey,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(Icons.lock_clock, color: Colors.orange),
+                                  SizedBox(height: 8),
+                                  Text('Partial Payment',
+                                      style: TextStyles.ubntu16),
+                                  SizedBox(height: 4),
+                                  Text(
+                                      'Pay ₹${_chargesForTheDay} to lock your cruise'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        SizedBox(
+                          height: 220,
+                          width: 140,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedPaymentType = 'full';
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: _selectedPaymentType == 'full'
+                                    ? Colors.green.shade100
+                                    : Colors.green.shade50,
+                                border: Border.all(
+                                  color: _selectedPaymentType == 'full'
+                                      ? Colors.green
+                                      : Colors.grey,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(Icons.lock_open, color: Colors.green),
+                                  SizedBox(height: 8),
+                                  Text('Full Payment',
+                                      style: TextStyles.ubntu16),
+                                  SizedBox(height: 4),
+                                  Text(
+                                      'Pay ₹${totalPrice.toStringAsFixed(2)} and confirm now'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 40),
                     BlocBuilder<BookMyCruiseBloc, BookMyCruiseState>(
                       builder: (context, state) {
                         return _isLoading
@@ -808,6 +963,16 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                             : FullWidthRectangleBlueButton(
                                 text: "Continue",
                                 onPressed: () {
+                                  if (_selectedPaymentType == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            'Please select either Partial or Full Payment.'),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                    return;
+                                  }
                                   String formattedDate =
                                       DateFormat('yyyy-MM-dd')
                                           .format(_selectedDate);
@@ -873,6 +1038,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       ),
     );
   }
+
 //--------------
   Widget _buildNumericInput(
       String label, int value, ValueChanged<int> onChanged,

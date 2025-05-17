@@ -28,9 +28,9 @@ class _BookingDateselectionState extends State<BookingDateselection> {
     );
 
     if (pickedDate != null) {
+      String formatted = DateFormat('yyyy-MM-dd').format(pickedDate);
       setState(() {
-        // Format date as day/month/year
-        _dateController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
+        _dateController.text = formatted;
       });
     }
   }

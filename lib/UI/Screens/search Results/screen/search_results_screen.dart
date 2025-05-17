@@ -26,7 +26,7 @@ class SearchResultsScreen extends StatefulWidget {
   final String? endDate;
   final String? maxAmount;
   final String? minAMount;
-  final String? typeOfCruise;
+  final String? fullDayOrDayCruise;
   final String? noOfPassengers;
   final String? noOfRooms;
   final String? premiumOrDeluxe;
@@ -36,7 +36,7 @@ class SearchResultsScreen extends StatefulWidget {
     this.location,
     this.startDate,
     this.endDate,
-    this.typeOfCruise,
+    this.fullDayOrDayCruise,
     this.noOfPassengers,
     this.noOfRooms,
     this.premiumOrDeluxe,
@@ -335,30 +335,27 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
       fetchFavorites();
       BlocProvider.of<GetSeachedCruiseresultsBloc>(context).add(
         GetSeachedCruiseresultsEvent.SeachedCruise(
-            // location:
-            //     widget.location?.isNotEmpty == true ? widget.location : null,
-            // filterCriteria: widget.filterCriteria?.isNotEmpty == true
-            //     ? widget.filterCriteria
-            //     : null,
-            // maxAmount:
-            //     widget.maxAmount?.isNotEmpty == true ? widget.maxAmount : null,
-            // minAmount:
-            //     widget.minAMount?.isNotEmpty == true ? widget.minAMount : null,
-            // startDate:
-            //     widget.startDate?.isNotEmpty == true ? widget.startDate : null,
-            // endDate: widget.endDate?.isNotEmpty == true ? widget.endDate : null,
-            // typeOfCruise: widget.typeOfCruise?.isNotEmpty == true
-            //     ? widget.typeOfCruise
-            //     : null,
-            // noOfPassengers: widget.noOfPassengers?.isNotEmpty == true
-            //     ? widget.noOfPassengers
-            //     : null,
-            // noOfRooms:
-            //     widget.noOfRooms?.isNotEmpty == true ? widget.noOfRooms : null,
-            // premiumOrDeluxe: widget.premiumOrDeluxe?.isNotEmpty == true
-            //     ? widget.premiumOrDeluxe
-            //     : null,
-            ),
+          location:
+              widget.location?.isNotEmpty == true ? widget.location : null,
+          maxAmount:
+              widget.maxAmount?.isNotEmpty == true ? widget.maxAmount : null,
+          minAmount:
+              widget.minAMount?.isNotEmpty == true ? widget.minAMount : null,
+          startDate:
+              widget.startDate?.isNotEmpty == true ? widget.startDate : null,
+          endDate: widget.endDate?.isNotEmpty == true ? widget.endDate : null,
+          noOfPassengers: widget.noOfPassengers?.isNotEmpty == true
+              ? widget.noOfPassengers
+              : null,
+          noOfRooms:
+              widget.noOfRooms?.isNotEmpty == true ? widget.noOfRooms : null,
+          premiumOrDeluxe: widget.premiumOrDeluxe?.isNotEmpty == true
+              ? widget.premiumOrDeluxe
+              : null,
+          fullDayorDayCruise: widget.fullDayOrDayCruise?.isNotEmpty == true
+              ? widget.fullDayOrDayCruise
+              : null,
+        ),
       );
     });
   }
@@ -550,18 +547,15 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                             .add(
                                           GetSeachedCruiseresultsEvent
                                               .SeachedCruise(
-                                            // filterCriteria: widget.category,
-                                            // location: widget.location,
-                                            // maxAmount: maxAmount, // Pass as string
-                                            // minAmount: minAmount, // Pass as string
-                                            // cruiseModelName: widget.modelName,
-                                            maxPrice:
+                                            location: widget.location,
+
+                                            maxAmount:
                                                 maxAmount, // Pass as string
-                                            minPrice:
+                                            minAmount:
                                                 minAmount, // Pass as string
-                                            cruiseType: selectedCruiseType
+                                            closedOrOpened: selectedCruiseType
                                                 ?.toLowerCase(),
-                                            amenitiesName: amenitiesName,
+                                            amenities: amenitiesName,
                                           ),
                                         );
                                       },
@@ -629,7 +623,9 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                                 child: SvgPicture.asset(
                                                   'assets/icons/cruise_background.svg',
                                                   color: const Color.fromARGB(
-                                                      255, 196, 238, 237),     fit: BoxFit.fill, // or BoxFit.cover
+                                                      255, 196, 238, 237),
+                                                  fit: BoxFit
+                                                      .fill, // or BoxFit.cover
                                                 ),
                                               ),
                                             ),
@@ -640,7 +636,9 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                                 child: SvgPicture.asset(
                                                   'assets/icons/cruise_background.svg',
                                                   color: const Color.fromARGB(
-                                                      255, 181, 235, 233),     fit: BoxFit.fill, // or BoxFit.cover
+                                                      255, 181, 235, 233),
+                                                  fit: BoxFit
+                                                      .fill, // or BoxFit.cover
                                                 ),
                                               ),
                                             ),
@@ -651,7 +649,9 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                                 child: SvgPicture.asset(
                                                   'assets/icons/cruise_background.svg',
                                                   color: const Color.fromARGB(
-                                                      255, 181, 235, 233),     fit: BoxFit.fill, // or BoxFit.cover
+                                                      255, 181, 235, 233),
+                                                  fit: BoxFit
+                                                      .fill, // or BoxFit.cover
                                                 ),
                                               ),
                                             ),

@@ -151,7 +151,7 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
   // State variables for form values
   String? startDate;
   String? endDate;
-  String? typeOfCruise;
+  String? fullDayOrDayCruise;
   String? noOfAdults = '0';
   String? noOfKids = '0';
   String? noOfRooms = '0';
@@ -159,7 +159,7 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
   String? minAmount;
   String? maxAmount;
   String _formatDate(DateTime date) {
-    return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
+    return "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
   }
 
   @override
@@ -190,7 +190,7 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                     SingleBookingDateselection(
                       onDateSelected: (date) {
                         setState(() {
-                          startDate = date;
+                          //  startDate = _formatDate(date);
                           endDate = null;
                         });
                       },
@@ -199,8 +199,10 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                     MultiplebookingDateselection(
                       onDateRangeSelected: (start, end) {
                         setState(() {
-                          startDate = start != null ? _formatDate(start) : null;
-                          endDate = end != null ? _formatDate(end) : null;
+                          startDate = _formatDate(start);
+                          endDate = _formatDate(end);
+                          print("start date ${startDate}");
+                          print("end date ${endDate}");
                         });
                       },
                     ),
@@ -211,7 +213,8 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                     onCruiseSelected: (cruise) {
                       setState(() {
                         selectedCruise = cruise;
-                        typeOfCruise = cruise;
+                        fullDayOrDayCruise = cruise;
+                        print("${fullDayOrDayCruise}");
                       });
                     },
                   ),
@@ -259,6 +262,7 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                     onBookingTypeSelected: (type) {
                       setState(() {
                         bookingType = type;
+                        print("booking type ${bookingType}");
                       });
                     },
                   ),
@@ -281,12 +285,16 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                                 location: widget.location,
                                 startDate: startDate,
                                 endDate: endDate,
-                                typeOfCruise: typeOfCruise,
-                                noOfPassengers: (int.parse(noOfAdults ?? '0') +
-                                        int.parse(noOfKids ?? '0'))
-                                    .toString(),
+                                fullDayOrDayCruise:
+                                    fullDayOrDayCruise == "Full Cruise"
+                                        ? "full_day_cruise"
+                                        : "day_cruise",
+                                noOfPassengers:
+                                    (int.parse(noOfAdults ?? '0')).toString(),
                                 noOfRooms: noOfRooms,
-                                premiumOrDeluxe: selectedCruise,
+                                premiumOrDeluxe: bookingType == "Premium"
+                                    ? "premium"
+                                    : "deluxe",
                                 minAMount: minAmount,
                                 maxAmount: maxAmount,
                               );

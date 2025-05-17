@@ -6,7 +6,10 @@ import 'package:flutter/services.dart';
 class SingleBookingDateselection extends StatefulWidget {
   final Function(String) onDateSelected; // Callback to pass the selected date
 
-  const SingleBookingDateselection({super.key, required this.onDateSelected});
+  const SingleBookingDateselection({
+    super.key,
+    required this.onDateSelected,
+  });
 
   @override
   State<SingleBookingDateselection> createState() =>
@@ -33,10 +36,10 @@ class _SingleBookingDateselectionState
 
     if (pickedDate != null) {
       setState(() {
-        _dateController.text = DateFormat('dd/MM/yyyy').format(pickedDate);
+        _dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
       });
       // Pass the selected date back to the parent widget via the callback
-      widget.onDateSelected(DateFormat('dd/MM/yyyy').format(pickedDate));
+      widget.onDateSelected(DateFormat('yyyy-MM-dd').format(pickedDate));
     }
   }
 
