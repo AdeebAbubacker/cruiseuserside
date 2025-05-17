@@ -190,7 +190,7 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                     SingleBookingDateselection(
                       onDateSelected: (date) {
                         setState(() {
-                          //  startDate = _formatDate(date);
+                           startDate = _formatDate(date);
                           endDate = null;
                         });
                       },

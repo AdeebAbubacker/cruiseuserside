@@ -4,11 +4,12 @@ import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:flutter/services.dart';
 
 class SingleBookingDateselection extends StatefulWidget {
-  final Function(String) onDateSelected; // Callback to pass the selected date
+  final Function(DateTime)?
+      onDateSelected; // Callback to pass the selected date
 
   const SingleBookingDateselection({
     super.key,
-    required this.onDateSelected,
+    this.onDateSelected,
   });
 
   @override
@@ -39,7 +40,7 @@ class _SingleBookingDateselectionState
         _dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
       });
       // Pass the selected date back to the parent widget via the callback
-      widget.onDateSelected(DateFormat('yyyy-MM-dd').format(pickedDate));
+      widget.onDateSelected?.call(pickedDate);
     }
   }
 
@@ -69,7 +70,7 @@ class _SingleBookingDateselectionState
                     setState(() {
                       _dateController.clear();
                     });
-                    widget.onDateSelected(""); // Clear the selected date
+                    // Clear the selected date
                   },
                 ),
               IconButton(
