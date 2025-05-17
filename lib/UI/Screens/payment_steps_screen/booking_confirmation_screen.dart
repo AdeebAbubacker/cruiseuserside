@@ -908,7 +908,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                       style: TextStyles.ubntu16),
                                   SizedBox(height: 4),
                                   Text(
-                                      'Pay ₹${_chargesForTheDay} to lock your cruise'),
+                                      'Pay ₹${widget.datum.bookingTypes?[0].minAmountToPay} to lock your cruise'),
                                 ],
                               ),
                             ),
@@ -1022,7 +1022,13 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                             ? _jainVegCount.toString()
                                             : null,
                                         customerNotet: addoncontroller.text,
-                                        totalAmount: totalPrice.toString(),
+                                        totalAmount:
+                                            _selectedPaymentType == 'partial'
+                                                ? _formatAmount(widget
+                                                    .datum
+                                                    .bookingTypes?[0]
+                                                    .minAmountToPay)
+                                                : totalPrice.toString(),
                                       ));
                                 },
                               );
@@ -1037,6 +1043,18 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
         ),
       ),
     );
+  }
+
+  String _formatAmount(String? amount) {
+    if (amount == null) return '0';
+    double value = double.tryParse(amount) ?? 0;
+    if (value == value.roundToDouble()) {
+      // It's an integer amount, no decimal part
+      return value.toInt().toString();
+    } else {
+      // Has decimals, keep them
+      return value.toString();
+    }
   }
 
 //--------------
