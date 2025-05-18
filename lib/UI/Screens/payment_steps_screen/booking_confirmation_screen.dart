@@ -375,20 +375,29 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildEditableSection(
-                      title: 'Boat Details',
-                      isEditing: _isEditingBoatDetails,
-                      onTap: () => setState(
-                          () => _isEditingBoatDetails = !_isEditingBoatDetails),
-                      editingWidgets: [
-                        _buildDetailRow('No of Rooms', maxRooms.toString()),
-                        // _buildNumericInput('Day', _day,
-                        //     (value) => setState(() => _day = value)),
-                      ],
-                      displayWidgets: [
-                        // _buildDetailRow('Type of Cruise', _selectedCruiseType),
-                        _buildDetailRow('No of Rooms', maxRooms.toString()),
-                        // _buildDetailRow('Day', _day.toString()),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Boat Details',
+                              style: TextStyles.ubntu16,
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Text(
+                              'No of Rooms',
+                              style: TextStyles.ubuntu14black55w400,
+                            ),
+                            const Spacer(),
+                            Text("${maxRooms.toString()}")
+                          ],
+                        ),
                       ],
                     ),
                     SizedBox(
@@ -1132,12 +1141,12 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
               style: TextStyles.ubntu16,
             ),
             const Spacer(),
-            // GestureDetector(
-            //   onTap: onTap,
-            //   child: isEditing
-            //       ? const Icon(Icons.check)
-            //       : SvgPicture.asset('assets/icons/Edit_icon.svg'),
-            // ),
+            GestureDetector(
+              onTap: onTap,
+              child: isEditing
+                  ? const Icon(Icons.check)
+                  : SvgPicture.asset('assets/icons/Edit_icon.svg'),
+            ),
           ],
         ),
         if (isEditing) ...editingWidgets else ...displayWidgets,
