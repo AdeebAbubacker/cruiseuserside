@@ -531,10 +531,14 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                         ),
                       ],
                       displayWidgets: [
-                        _buildDetailRowWithIcon('Adults', _numAdults.toString(),
-                            'assets/icons/adult.svg'),
-                        _buildDetailRowWithIcon('Kids', _numKids.toString(),
-                            'assets/icons/kid.svg'),
+                        BuildDetailRowwithIcon(
+                            label: 'Adults',
+                            value: _numAdults.toString(),
+                            iconPath: 'assets/icons/adult.svg'),
+                        BuildDetailRowwithIcon(
+                            label: 'Kids',
+                            value: _numKids.toString(),
+                            iconPath: 'assets/icons/kid.svg'),
                       ],
                     ),
 
@@ -711,12 +715,27 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       style: TextStyles.ubntu16,
                     ),
                     SizedBox(height: 20),
-                    _buildFoodCounter('Non-Veg', _nonVegCount,
-                        (value) => setState(() => _nonVegCount = value)),
-                    _buildFoodCounter('Veg', _vegCount,
-                        (value) => setState(() => _vegCount = value)),
-                    _buildFoodCounter('Jain Veg', _jainVegCount,
-                        (value) => setState(() => _jainVegCount = value)),
+                    FoodCounterStateless(
+                      label: 'Non-Veg',
+                      count: _nonVegCount,
+                      onChanged: (value) => setState(
+                        () => _nonVegCount = value,
+                      ),
+                    ),
+                    FoodCounterStateless(
+                      label: 'Veg',
+                      count: _vegCount,
+                      onChanged: (value) => setState(
+                        () => _vegCount = value,
+                      ),
+                    ),
+                    FoodCounterStateless(
+                      label: 'Jain Veg',
+                      count: _jainVegCount,
+                      onChanged: (value) => setState(
+                        () => _jainVegCount = value,
+                      ),
+                    ),
 
                     // Add ons
                     const SizedBox(height: 25),
@@ -766,8 +785,11 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                     _buildDetailRow(
                         'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
                     _buildDetailRow('Others', '₹${_others.toStringAsFixed(2)}'),
-                    _builTotalDetailRow('Total', '₹${totalPrice}',
-                        isTotal: true),
+
+                    BuilTotalDetailRow(
+                      label: 'Total',
+                      value: '₹${totalPrice}',
+                    ),
 
                     const SizedBox(height: 40),
                     Row(
@@ -993,24 +1015,6 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     );
   }
 
-  Widget _buildDetailRowWithIcon(String label, String value, String iconPath) {
-    return Row(
-      children: [
-        SvgPicture.asset(iconPath, height: 20),
-        const SizedBox(width: 8),
-        Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 8.0),
-          child: Text(label, style: TextStyles.ubuntu14black55w400),
-        ),
-        const Spacer(),
-        Text(
-          value,
-          style: TextStyles.ubntu14w400black,
-        ),
-      ],
-    );
-  }
-
 //-------------------
   Widget _buildEditableSection({
     List<UnavailableDate>? unavailable_date,
@@ -1044,8 +1048,79 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     );
   }
 
-  Widget _buildFoodCounter(
-      String label, int count, ValueChanged<int> onChanged) {
+  // Widget _buildFoodCounter(
+  //     String label, int count, ValueChanged<int> onChanged) {
+  //   return Row(
+  //     children: [
+  //       Text(
+  //         label,
+  //         style: TextStyles.ubuntu16black15w500,
+  //       ),
+  //       const Spacer(),
+  //       Padding(
+  //         padding: const EdgeInsets.only(top: 8, bottom: 8.0),
+  //         child: Container(
+  //           height: 45,
+  //           decoration: BoxDecoration(
+  //             border: Border.all(color: Colors.grey),
+  //             borderRadius: BorderRadius.circular(20),
+  //           ),
+  //           child: Row(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               IconButton(
+  //                 icon: const Icon(Icons.remove),
+  //                 onPressed: () => onChanged(count > 0 ? count - 1 : 0),
+  //               ),
+  //               Text('$count'),
+  //               IconButton(
+  //                 icon: const Icon(Icons.add),
+  //                 onPressed: () => onChanged(count + 1),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  Widget _buildDetailRow(String label, String value, {bool isTotal = false}) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 8.0),
+          child: Text(label, style: TextStyles.ubuntu14black55w400),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: isTotal
+              ? const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xff1F8386))
+              : TextStyles.ubntu14w400black,
+        ),
+      ],
+    );
+  }
+}
+
+class FoodCounterStateless extends StatelessWidget {
+  final String label;
+  final int count;
+  final ValueChanged<int> onChanged;
+
+  const FoodCounterStateless({
+    super.key,
+    required this.label,
+    required this.count,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
         Text(
@@ -1080,10 +1155,25 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       ],
     );
   }
+}
 
-  Widget _buildDetailRow(String label, String value, {bool isTotal = false}) {
+class BuildDetailRowwithIcon extends StatelessWidget {
+  final String label;
+  final String value;
+  final String iconPath;
+  const BuildDetailRowwithIcon({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.iconPath,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
+        SvgPicture.asset(iconPath, height: 20),
+        const SizedBox(width: 8),
         Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 8.0),
           child: Text(label, style: TextStyles.ubuntu14black55w400),
@@ -1091,19 +1181,24 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
         const Spacer(),
         Text(
           value,
-          style: isTotal
-              ? const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xff1F8386))
-              : TextStyles.ubntu14w400black,
+          style: TextStyles.ubntu14w400black,
         ),
       ],
     );
   }
+}
 
-  Widget _builTotalDetailRow(String label, String value,
-      {bool isTotal = false}) {
+class BuilTotalDetailRow extends StatelessWidget {
+  final String label;
+  final String value;
+  const BuilTotalDetailRow({
+    super.key,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
         Padding(
@@ -1119,5 +1214,3 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     );
   }
 }
-//---------------------git test------------------
-//----------------------
