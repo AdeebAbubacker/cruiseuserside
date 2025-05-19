@@ -9,6 +9,7 @@ import 'package:cruise_buddy/core/view_model/viewMyPackage/view_my_package_bloc.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -220,6 +221,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   int totalPrice = 0;
   int pricePerDay = 0;
   int pricePerPerson = 0;
+  int minAmountTopayforDay = 0;
+  int minAmountTopayforFullDay = 0;
   final List unavaibledates = [];
   BookingType? fullDayCruise;
   @override
@@ -291,23 +294,58 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
                   unavailableDates = value.mybookingmodel.unavailableDate ?? [];
                   defaultPrice = parsePrice(
-                    value.mybookingmodel?.data?.bookingTypes?[0].defaultPrice
-                        .toString(),
+                    value.mybookingmodel?.data?.bookingTypes
+                            ?.firstWhere(
+                              (type) => type.name == 'day_cruise',
+                            )
+                            ?.defaultPrice
+                            ?.toString() ??
+                        '0',
                   );
 
-                  pricePerDay = parsePrice(value
-                          .mybookingmodel?.data?.bookingTypes?[0].pricePerDay
-                          ?.toString() ??
-                      '');
-                  pricePerPerson = parsePrice(value
-                          .mybookingmodel?.data?.bookingTypes?[0].pricePerPerson
-                          ?.toString() ??
-                      '');
+                  pricePerDay = parsePrice(
+                    value.mybookingmodel?.data?.bookingTypes
+                            ?.firstWhere(
+                              (type) => type.name == 'day_cruise',
+                            )
+                            ?.pricePerDay
+                            ?.toString() ??
+                        '0',
+                  );
+
+                  pricePerPerson = parsePrice(
+                    value.mybookingmodel?.data?.bookingTypes
+                            ?.firstWhere(
+                              (type) => type.name == 'day_cruise',
+                            )
+                            ?.pricePerPerson
+                            ?.toString() ??
+                        '0',
+                  );
+
                   print(
                       "defaultprice is ${value.mybookingmodel.data?.bookingTypes?[0].defaultPrice}");
                   totalPrice = defaultPrice + pricePerPerson * 1;
                   maxRooms = value.mybookingmodel?.data?.cruise?.rooms ?? 1;
                   print('dey my roooms ${maxRooms}');
+                  minAmountTopayforDay = parsePrice(
+                    value.mybookingmodel?.data?.bookingTypes
+                            ?.firstWhere(
+                              (type) => type.name == 'day_cruise',
+                            )
+                            ?.minAmountToPay
+                            ?.toString() ??
+                        '0',
+                  );
+                  minAmountTopayforFullDay = parsePrice(
+                    value.mybookingmodel?.data?.bookingTypes
+                            ?.firstWhere(
+                              (type) => type.name == 'full_day_cruise',
+                            )
+                            ?.minAmountToPay
+                            ?.toString() ??
+                        '0',
+                  );
                 });
               },
             );
@@ -765,7 +803,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                       style: TextStyles.ubntu16),
                                   SizedBox(height: 4),
                                   Text(
-                                      'Pay ₹${widget.datum.bookingTypes?[0].minAmountToPay} to lock your cruise'),
+                                      'Pay ₹${bookingTypeId == '1' ? minAmountTopayforDay : minAmountTopayforFullDay} to lock your cruise',
+                                      style: GoogleFonts.ubuntu()),
                                 ],
                               ),
                             ),
@@ -803,7 +842,9 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                       style: TextStyles.ubntu16),
                                   SizedBox(height: 4),
                                   Text(
-                                      'Pay ₹${totalPrice.toStringAsFixed(2)} and confirm now'),
+                                    'Pay ₹${totalPrice.toStringAsFixed(2)} and confirm now',
+                                    style: GoogleFonts.ubuntu(),
+                                  ),
                                 ],
                               ),
                             ),
