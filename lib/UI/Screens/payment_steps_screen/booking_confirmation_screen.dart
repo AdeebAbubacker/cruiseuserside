@@ -35,6 +35,22 @@ class BookingconfirmationScreen extends StatefulWidget {
 }
 
 class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
+  // void _calculateTotalPrice() {
+  //   double basePrice = 0;
+
+  //   // If bookingType is '2' and a fullDayCruise is available, calculate price per room
+  //   if (bookingTypeId == "2" && fullDayCruise != null) {
+  //     double pricePerBed = double.parse(fullDayCruise!.pricePerBed.toString());
+  //     basePrice = maxRooms * pricePerBed;
+  //   } else {
+  //     // Use defaultPrice (or another logic) when bookingType is '1'
+  //     basePrice = defaultPrice.toDouble();
+  //   }
+
+  //   // Include any discounts/others (if needed)
+  //   totalPrice = (basePrice - _discounts + _others).toInt();
+  // }
+
   late Razorpay _razorpay;
   bool _isLoading = false;
   String bookingTypeId = "1";
@@ -67,6 +83,13 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       BlocProvider.of<ViewMyPackageBloc>(context)
           .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
       print("booking typeid ${bookingTypeId}");
+
+      setState(() {
+        // Once you have defaultPrice, pricePerPerson, etc...
+        // (Make sure these values are set before calling the price calculation)
+        totalPrice = defaultPrice + pricePerPerson;
+        //_calculateTotalPrice();
+      });
     });
   }
 
@@ -116,15 +139,11 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   void handlePaymentErrorResponse(PaymentFailureResponse response) {
     showAlertDialog(context, "Payment Failed",
         "Code: ${response.code}/nDescription: ${response.message}/nMetadata: ${response.error.toString()}");
-    BlocProvider.of<ViewMyPackageBloc>(context)
-        .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
   }
 
   void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
     showAlertDialog(
         context, "Payment Successful", "Payment ID: ${response.paymentId}");
-    BlocProvider.of<ViewMyPackageBloc>(context)
-        .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
   }
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {
@@ -424,12 +443,22 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                           print("Selected booking type: $selectedType");
                           setState(() {
                             bookingTypeId = selectedType.toString();
+                            if (selectedType == 2) {
+                              totalPrice = (maxRooms *
+                                      double.parse(widget
+                                          .datum.bookingTypes![1].pricePerBed
+                                          .toString()))
+                                  .toInt();
+                            }
+                            if (selectedType == 1) {
+                              totalPrice = (defaultPrice ?? 0) +
+                                  (_numAdults * (pricePerPerson ?? 1));
+                            }
                           });
-                          _onBookingTypeSelected(
-                              selectedType.toString()); // Set the selected type
+                          _onBookingTypeSelected(selectedType.toString());
                         },
-                        initialType: int.tryParse(bookingTypeId.toString()) ??
-                            1, // Pass the initial value (if any)
+                        initialType:
+                            int.tryParse(bookingTypeId.toString()) ?? 1,
                       ),
                     SizedBox(
                       height: 40,
@@ -447,8 +476,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                           (value) {
                             setState(() {
                               _numAdults = value;
-                              totalPrice = (defaultPrice ?? 0) +
-                                  (_numAdults * (pricePerPerson ?? 1));
+                              if (bookingTypeId == '1') {
+                                totalPrice = (defaultPrice ?? 0) +
+                                    (_numAdults * (pricePerPerson ?? 1));
+                              }
                             });
                           },
                           max: maxAdults,
@@ -469,139 +500,6 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       ],
                     ),
 
-                    // Date
-                    // Date section
-                    // _buildEditableSection(
-                    //   unavailable_date: unavailableDates,
-                    //   title: 'Date',
-                    //   isEditing: _isEditingDate,
-                    //   onTap: () =>
-                    //       setState(() => _isEditingDate = !_isEditingDate),
-                    //   editingWidgets: [
-                    //     GestureDetector(
-                    //       onTap: () async {
-                    //         await showDialog(
-                    //           context: context,
-                    //           builder: (context) {
-                    //             return AlertDialog(
-                    //               contentPadding: EdgeInsets.all(12),
-                    //               content: Container(
-                    //                 width:
-                    //                     MediaQuery.of(context).size.width * 0.9,
-                    //                 height: 460,
-                    //                 child: TableCalendar(
-                    //                   firstDay: DateTime(2000),
-                    //                   lastDay: DateTime(2101),
-                    //                   focusedDay: _selectedDate,
-                    //                   selectedDayPredicate: (day) =>
-                    //                       isSameDay(_selectedDate, day),
-                    //                   onDaySelected: (selectedDay, focusedDay) {
-                    //                     bool isUnavailable = unavailableDates
-                    //                             ?.any((range) {
-                    //                           if (range.startDate == null ||
-                    //                               range.endDate == null)
-                    //                             return false;
-
-                    //                           return selectedDay.isAfter(
-                    //                                   range.startDate!.subtract(
-                    //                                       Duration(days: 1))) &&
-                    //                               selectedDay.isBefore(range
-                    //                                   .endDate!
-                    //                                   .add(Duration(days: 1)));
-                    //                         }) ??
-                    //                         false; // If unavailableDates is null, return false
-
-                    //                     if (isUnavailable) {
-                    //                       CustomToast.showFlushBar(
-                    //                         context: context,
-                    //                         status: false,
-                    //                         title: "Oops",
-                    //                         content:
-                    //                             "This date is not available.",
-                    //                       );
-                    //                       return;
-                    //                     }
-
-                    //                     setState(() {
-                    //                       _selectedDate = selectedDay;
-                    //                     });
-                    //                     Navigator.pop(context);
-                    //                   },
-                    //                   calendarBuilders: CalendarBuilders(
-                    //                     defaultBuilder:
-                    //                         (context, day, focusedDay) {
-                    //                       bool isUnavailable = unavailableDates
-                    //                               ?.any((range) {
-                    //                             if (range.startDate == null ||
-                    //                                 range.endDate == null)
-                    //                               return false;
-                    //                             return day.isAfter(range
-                    //                                     .startDate!
-                    //                                     .subtract(Duration(
-                    //                                         days: 1))) &&
-                    //                                 day.isBefore(range.endDate!
-                    //                                     .add(
-                    //                                         Duration(days: 1)));
-                    //                           }) ??
-                    //                           false; // If unavailableDates is null, return false
-
-                    //                       if (isUnavailable) {
-                    //                         return Container(
-                    //                           alignment: Alignment.center,
-                    //                           decoration: BoxDecoration(
-                    //                             color: Colors.red,
-                    //                             shape: BoxShape.circle,
-                    //                           ),
-                    //                           child: Text(
-                    //                             '${day.day}',
-                    //                             style: TextStyle(
-                    //                                 color: Colors.white),
-                    //                           ),
-                    //                         );
-                    //                       }
-                    //                       return null;
-                    //                     },
-                    //                   ),
-                    //                   headerStyle: HeaderStyle(
-                    //                     formatButtonVisible: true,
-                    //                     leftChevronVisible: true,
-                    //                     rightChevronVisible: true,
-                    //                     titleTextStyle: TextStyle(
-                    //                       fontSize: 18,
-                    //                       fontWeight: FontWeight.bold,
-                    //                     ),
-                    //                     formatButtonShowsNext: false,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //             );
-                    //           },
-                    //         );
-                    //       },
-                    //       child: Container(
-                    //         height: 40,
-                    //         width: MediaQuery.of(context).size.width * 0.8,
-                    //         decoration: BoxDecoration(
-                    //           borderRadius: BorderRadius.circular(36),
-                    //           border: Border.all(width: 1),
-                    //         ),
-                    //         child: Center(
-                    //           child: Text(
-                    //             DateFormat('dd/MM/yyyy').format(_selectedDate),
-                    //             style: TextStyle(
-                    //                 fontSize: 16, fontWeight: FontWeight.w500),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    //   displayWidgets: [
-                    //     _buildDetailRow(
-                    //       'Date',
-                    //       DateFormat('dd/MM/yyyy').format(_selectedDate),
-                    //     ),
-                    //   ],
-                    // ),
                     _buildEditableSection(
                       unavailable_date: unavailableDates,
                       title: 'Date',
@@ -813,9 +711,20 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       '₹${bookingTypeId == "2" && fullDayCruise != null ? (int.parse(maxRooms.toString()) * double.parse(fullDayCruise!.pricePerBed.toString())).toStringAsFixed(2) : defaultPrice}',
                     ),
 
-                    _buildDetailRow('Price Per Person', '₹${pricePerPerson}'),
-                    _buildDetailRow('Price Per Bed',
-                        '₹${widget.datum.bookingTypes![1].pricePerBed.toString()}'),
+                    Visibility(
+                        visible: bookingTypeId == '1',
+                        child: _buildDetailRow(
+                            'Price Per Person', '₹${pricePerPerson}')),
+                    Visibility(
+                      visible: bookingTypeId == '2',
+                      child: _buildDetailRow('Price Per Room',
+                          '₹${widget.datum.bookingTypes![1].pricePerBed.toString()}'),
+                    ),
+                    Visibility(
+                      visible: bookingTypeId == '2',
+                      child: _buildDetailRow(
+                          'No of Rooms', '${maxRooms.toString()}'),
+                    ),
                     _buildDetailRow(
                         'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
                     _buildDetailRow('Others', '₹${_others.toStringAsFixed(2)}'),
@@ -825,67 +734,6 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                     const SizedBox(height: 40),
                     Row(
                       children: [
-                        // SizedBox(
-                        //   height: 220,
-                        //   width: 140,
-                        //   child: GestureDetector(
-                        //     onTap: () {
-                        //       setState(() {});
-                        //     },
-                        //     child: Container(
-                        //       padding: EdgeInsets.all(16),
-                        //       decoration: BoxDecoration(
-                        //         color: Colors.blue.shade50,
-                        //         border: Border.all(
-                        //           color: Colors.blue,
-                        //         ),
-                        //         borderRadius: BorderRadius.circular(12),
-                        //       ),
-                        //       child: Column(
-                        //         children: [
-                        //           Icon(Icons.lock_clock, color: Colors.orange),
-                        //           SizedBox(height: 8),
-                        //           Text('Partial Payment',
-                        //               style: TextStyles.ubntu16),
-                        //           SizedBox(height: 4),
-                        //           Text('Pay ₹to lock your cruise'),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        // SizedBox(width: 12),
-                        // SizedBox(
-                        //   height: 220,
-                        //   width: 140,
-                        //   child: GestureDetector(
-                        //     onTap: () {
-                        //       setState(() {});
-                        //     },
-                        //     child: Container(
-                        //       padding: EdgeInsets.all(16),
-                        //       decoration: BoxDecoration(
-                        //         color: Colors.green.shade50,
-                        //         border: Border.all(
-                        //           color: Colors.green,
-                        //         ),
-                        //         borderRadius: BorderRadius.circular(12),
-                        //       ),
-                        //       child: Column(
-                        //         children: [
-                        //           Icon(Icons.lock_open, color: Colors.green),
-                        //           SizedBox(height: 8),
-                        //           Text('Full Payment',
-                        //               style: TextStyles.ubntu16),
-                        //           SizedBox(height: 4),
-                        //           Text(
-                        //               'Pay ₹${totalPrice.toStringAsFixed(2)} and confirm now'),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-
                         SizedBox(
                           height: 220,
                           width: 140,
