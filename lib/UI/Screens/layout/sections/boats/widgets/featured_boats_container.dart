@@ -520,7 +520,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                                           130,
                                                                       color: Colors
                                                                               .grey[
-                                                                          300], 
+                                                                          300],
                                                                       child: const Center(
                                                                           child:
                                                                               CircularProgressIndicator()),
@@ -848,7 +848,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                                 .ubuntu18bluew700,
                                                           ),
                                                           Text(
-                                                            "Price per night",
+                                                            "Price per day",
                                                             style: TextStyles
                                                                 .ubuntu6grey555,
                                                           ),
