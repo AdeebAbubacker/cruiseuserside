@@ -616,45 +616,6 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                         width: double.infinity,
                                         child: Stack(
                                           children: [
-                                            Positioned(
-                                              bottom: -40,
-                                              child: SizedBox(
-                                                width: double.infinity,
-                                                child: SvgPicture.asset(
-                                                  'assets/icons/cruise_background.svg',
-                                                  color: const Color.fromARGB(
-                                                      255, 196, 238, 237),
-                                                  fit: BoxFit
-                                                      .fill, // or BoxFit.cover
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 140,
-                                              child: SizedBox(
-                                                width: double.infinity,
-                                                child: SvgPicture.asset(
-                                                  'assets/icons/cruise_background.svg',
-                                                  color: const Color.fromARGB(
-                                                      255, 181, 235, 233),
-                                                  fit: BoxFit
-                                                      .fill, // or BoxFit.cover
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 150,
-                                              child: SizedBox(
-                                                width: double.infinity,
-                                                child: SvgPicture.asset(
-                                                  'assets/icons/cruise_background.svg',
-                                                  color: const Color.fromARGB(
-                                                      255, 181, 235, 233),
-                                                  fit: BoxFit
-                                                      .fill, // or BoxFit.cover
-                                                ),
-                                              ),
-                                            ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),

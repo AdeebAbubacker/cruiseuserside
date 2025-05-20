@@ -151,11 +151,11 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
   // State variables for form values
   String? startDate;
   String? endDate;
-  String? fullDayOrDayCruise;
+  String fullDayOrDayCruise = 'Day Cruise';
   String? noOfAdults = '0';
   String? noOfKids = '0';
   String? noOfRooms = '0';
-  String? bookingType;
+  String bookingType = 'Premium';
   String? minAmount;
   String? maxAmount;
   String _formatDate(DateTime date) {
@@ -190,7 +190,7 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                     SingleBookingDateselection(
                       onDateSelected: (date) {
                         setState(() {
-                           startDate = _formatDate(date);
+                          startDate = _formatDate(date);
                           endDate = null;
                         });
                       },
@@ -277,6 +277,16 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                         ),
                       ),
                       onPressed: () {
+                        print("---------------");
+                        print("bookingType--------------- ${bookingType}");
+                        print("location--------------- ${widget.location}");
+                        print("startDate--------------- ${startDate}");
+                        print("endDate--------------- ${endDate}");
+                        print(
+                            "fullDayOrDayCruise--------------- ${fullDayOrDayCruise}");
+                        print("noOfRooms--------------- ${noOfRooms}");
+                        print("bookingType--------------- ${bookingType}");
+
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {
