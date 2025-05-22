@@ -223,6 +223,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   int pricePerPerson = 0;
   int minAmountTopayforDay = 0;
   int minAmountTopayforFullDay = 0;
+  int defaultPersons = 0;
   final List unavaibledates = [];
   BookingType? fullDayCruise;
   @override
@@ -288,6 +289,12 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                   fullDayCruise = null;
                 }
                 setState(() {
+                  defaultPersons = value.mybookingmodel?.data?.bookingTypes
+                          ?.firstWhere(
+                            (type) => type.name == 'day_cruise',
+                          )
+                          ?.defaultPersons ??
+                      0;
                   maxRooms = value.mybookingmodel.data?.cruise?.rooms ?? 1;
                   maxAdults =
                       value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
@@ -325,7 +332,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
                   print(
                       "defaultprice is ${value.mybookingmodel.data?.bookingTypes?[0].defaultPrice}");
-                  totalPrice = defaultPrice + pricePerPerson * 1;
+                  totalPrice = defaultPrice;
                   maxRooms = value.mybookingmodel?.data?.cruise?.rooms ?? 1;
                   print('dey my roooms ${maxRooms}');
                   minAmountTopayforDay = parsePrice(
@@ -513,10 +520,19 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                           _numAdults,
                           (value) {
                             setState(() {
+                              defaultPersons;
                               _numAdults = value;
                               if (bookingTypeId == '1') {
-                                totalPrice = (defaultPrice ?? 0) +
-                                    (_numAdults * (pricePerPerson ?? 1));
+                                if (_numAdults > defaultPersons) {
+                                  final extraAdults =
+                                      _numAdults - defaultPersons;
+                                  totalPrice = (defaultPrice ?? 0) +
+                                      (extraAdults * (pricePerPerson ?? 1));
+                                } else {
+                                  totalPrice = defaultPrice ?? 0;
+                                }
+                                // totalPrice = (defaultPrice ?? 0) +
+                                //     (_numAdults * (pricePerPerson ?? 1));
                               }
                             });
                           },
@@ -763,11 +779,23 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       'Grand Total',
                       style: TextStyles.ubntu16,
                     ),
+
+                    // Show note for day cruise (bookingTypeId == '1')
+                    if (bookingTypeId == '1')
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                            '(Note: Extra charges apply if more than $defaultPersons adults are added)',
+                            style: GoogleFonts.ubuntu(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.red,
+                            )),
+                      ),
                     _buildDetailRow(
                       'Charges for the trip',
                       '₹${bookingTypeId == "2" && fullDayCruise != null ? (int.parse(maxRooms.toString()) * double.parse(fullDayCruise!.pricePerBed.toString())).toStringAsFixed(2) : defaultPrice}',
                     ),
-
                     Visibility(
                         visible: bookingTypeId == '1',
                         child: _buildDetailRow(

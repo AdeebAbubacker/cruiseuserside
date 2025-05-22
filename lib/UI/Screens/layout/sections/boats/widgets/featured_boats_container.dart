@@ -843,14 +843,9 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                       Column(
                                                         children: [
                                                           Text(
-                                                            "₹${value.featuredBoats.data?[index].bookingTypes?[0].pricePerDay}",
+                                                            "₹${value.featuredBoats.data?[index].bookingTypes?[0].minAmountToPay}",
                                                             style: TextStyles
                                                                 .ubuntu18bluew700,
-                                                          ),
-                                                          Text(
-                                                            "Price per day",
-                                                            style: TextStyles
-                                                                .ubuntu6grey555,
                                                           ),
                                                         ],
                                                       ),

@@ -224,7 +224,6 @@ class _CategoriesListResultscreenState
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text("ssss"),
                 SizedBox(
                   height: availableHeight,
                   child: StreamBuilder<FavoritesListModel>(
