@@ -407,6 +407,15 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                       value.featuredBoats.data!.length,
                                       (i) => false);
                                 }
+                                final bookingTypes = value.featuredBoats
+                                        .data?[index].bookingTypes ??
+                                    [];
+                                final dayCruiseDefaultPrice =
+                                    bookingTypes.firstWhere(
+                                  (type) => type.name == 'day_cruise',
+                                  orElse: () =>
+                                      BookingType(), // <- Provide a default BookingType instance
+                                );
 
                                 return Padding(
                                   padding: EdgeInsets.only(
@@ -843,7 +852,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                       Column(
                                                         children: [
                                                           Text(
-                                                            "₹${value.featuredBoats.data?[index].bookingTypes?[0].minAmountToPay}",
+                                                            "₹${dayCruiseDefaultPrice?.defaultPrice ?? 'N/A'}",
                                                             style: TextStyles
                                                                 .ubuntu18bluew700,
                                                           ),

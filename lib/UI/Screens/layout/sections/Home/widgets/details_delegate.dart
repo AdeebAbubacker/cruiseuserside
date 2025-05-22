@@ -299,9 +299,16 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                                     fullDayOrDayCruise == "Full Cruise"
                                         ? "full_day_cruise"
                                         : "day_cruise",
-                                noOfPassengers:
-                                    (int.parse(noOfAdults ?? '0')).toString(),
-                                noOfRooms: noOfRooms,
+                                noOfPassengers: (noOfAdults == null ||
+                                        noOfAdults?.trim() == '' ||
+                                        noOfAdults == '0')
+                                    ? null
+                                    : int.parse(noOfAdults.toString())
+                                        .toString(),
+                                noOfRooms:
+                                    (noOfRooms == '0' || noOfRooms == null)
+                                        ? null
+                                        : noOfRooms,
                                 premiumOrDeluxe: bookingType == "Premium"
                                     ? "premium"
                                     : "deluxe",
