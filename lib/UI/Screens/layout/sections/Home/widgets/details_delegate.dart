@@ -303,8 +303,7 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                                         noOfAdults?.trim() == '' ||
                                         noOfAdults == '0')
                                     ? null
-                                    : int.parse(noOfAdults.toString())
-                                        .toString(),
+                                    : '>=${int.parse(noOfAdults.toString()).toString()}',
                                 noOfRooms:
                                     (noOfRooms == '0' || noOfRooms == null)
                                         ? null

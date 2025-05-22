@@ -486,6 +486,17 @@ class _CategoriesListResultscreenState
                                       itemCount: value
                                           .packagesearchresults.data?.length,
                                       itemBuilder: (context, index) {
+                                        final dayCruiseDefaultPrice = (value
+                                                    .packagesearchresults
+                                                    .data?[index]
+                                                    .bookingTypes ??
+                                                [])
+                                            .firstWhere(
+                                          (type) => type.name == 'day_cruise',
+                                          orElse: () =>
+                                              BookingType(), // Only if BookingType() is valid
+                                        );
+
                                         final packageId =
                                             '${value.packagesearchresults.data?[index].id}';
 
@@ -495,6 +506,7 @@ class _CategoriesListResultscreenState
                                         final favouriteId = packageId != null
                                             ? favoritePackageMap[packageId]
                                             : null;
+
                                         return GestureDetector(
                                           onTap: () {
                                             Navigator.push(
@@ -847,7 +859,7 @@ class _CategoriesListResultscreenState
                                                         Row(
                                                           children: [
                                                             Text(
-                                                              "₹${('${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}' == 'null') ? "1000" : '${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}'}",
+                                                              "₹${dayCruiseDefaultPrice.defaultPrice ?? "N/A"}",
                                                               style: TextStyles
                                                                   .ubuntu18bluew700,
                                                             ),

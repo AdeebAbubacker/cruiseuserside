@@ -669,6 +669,16 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                           final favouriteId = isFavorite
                                               ? favoritePackageMap[packageId]
                                               : null;
+                                          final dayCruiseDefaultPrice =
+                                              (package?.bookingTypes ?? [])
+                                                  .firstWhere(
+                                                    (type) =>
+                                                        type.name ==
+                                                        'day_cruise',
+                                                    orElse: () =>
+                                                        BookingType(), // Make sure BookingType has a default constructor
+                                                  )
+                                                  .defaultPrice;
 
                                           return Padding(
                                             padding: const EdgeInsets.only(
@@ -692,8 +702,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                                   "N/A",
                                               imageUrl:
                                                   '${value.packagesearchresults.data?[index].cruise?.images?[0].cruiseImg}',
-                                              price:
-                                                  '${value.packagesearchresults.data?[index].bookingTypes?[0].pricePerDay}',
+                                              price: '${dayCruiseDefaultPrice}',
                                               isFavorite: isFavorite,
                                               favouriteId: favouriteId,
                                               loadingFavorites:
