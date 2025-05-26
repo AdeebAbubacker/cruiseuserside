@@ -45,5 +45,19 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.slbslms.app</string>
+			</array>
+		</dict>
+	</array>
+
+	<key>NSUserAuthenticationUsageDescription</key>
+	<string>We use your Apple ID to sign you in to the app.</string>
 </dict>
 </plist>

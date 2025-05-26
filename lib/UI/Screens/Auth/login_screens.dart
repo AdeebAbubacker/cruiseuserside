@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cruise_buddy/UI/Widgets/Button/full_width_bluebutton.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
@@ -14,6 +16,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -84,43 +87,41 @@ class _LoginScreenState extends State<LoginScreen> {
       print("Google Sign-In Error: $e");
     }
   }
-  // Future<void> signInWithGoogle() async {
-  //   try {
-  //     final GoogleSignIn googleSignIn = GoogleSignIn(); // Reuse instance
-  //     final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-  //     if (googleUser == null) return; // User canceled sign-in
+  Future<void> signInWithApple() async {
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName
+        ],
+      );
 
-  //     // Get authentication tokens
-  //     final GoogleSignInAuthentication googleAuth =
-  //         await googleUser.authentication;
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
 
-  //     // Only proceed if tokens are available
-  //     if (googleAuth.accessToken == null || googleAuth.idToken == null) {
-  //       throw Exception("Missing Google authentication tokens");
-  //     }
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+      final user = userCredential.user;
 
-  //     // Firebase authentication
-  //     final OAuthCredential credential = GoogleAuthProvider.credential(
-  //       accessToken: googleAuth.accessToken,
-  //       idToken: googleAuth.idToken,
-  //     );
-
-  //     final UserCredential userCredential =
-  //         await FirebaseAuth.instance.signInWithCredential(credential);
-  //     final User? user = userCredential.user;
-
-  //     if (user != null) {
-  //       setState(() {
-  //         userEmail = user.email;
-  //       });
-
-  //       print("Google Sign-In Success: ${user.email}");
-  //     }
-  //   } catch (e) {
-  //     print("Google Sign-In Error: $e");
-  //   }
-  // }
+      if (user != null) {
+        BlocProvider.of<PostGoogleBloc>(context).add(
+          PostGoogleEvent.added(
+              UId: user.uid, name: user.displayName ?? user.email ?? ""),
+        );
+      }
+    } catch (e) {
+      print("Apple Sign-In Error: $e");
+      CustomToast.showFlushBar(
+        context: context,
+        status: false,
+        title: "Error",
+        content: "Apple Sign-In failed",
+      );
+    }
+  }
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -365,26 +366,28 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyles.ubuntutextfieldText,
                     obscureText: isTextVisible,
                     decoration: InputDecoration(
-                        hintText: "Enter your password",
-                        hintStyle: TextStyles.ubuntuhintText,
-                        errorText: passwordErrorText,
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: SvgPicture.asset(
-                            'assets/image/auth_img/icon_password-outline.svg',
-                          ),
+                      hintText: "Enter your password",
+                      hintStyle: TextStyles.ubuntuhintText,
+                      errorText: passwordErrorText,
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: SvgPicture.asset(
+                          'assets/image/auth_img/icon_password-outline.svg',
                         ),
-                        suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isTextVisible = !isTextVisible;
-                              });
-                            },
-                            child: Icon(isTextVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32))),
+                      ),
+                      suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isTextVisible = !isTextVisible;
+                            });
+                          },
+                          child: Icon(isTextVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                    ),
                     controller: passwordController,
                     focusNode: passwordFocusNode,
                   ),
@@ -454,7 +457,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       return loginState.maybeMap(
                         orElse: () {
                           return GestureDetector(
-                            onTap: signInWithGoogle,
+                            onTap: Platform.isIOS
+                                ? signInWithApple
+                                : signInWithGoogle,
                             child: Center(
                               child: Container(
                                 decoration: BoxDecoration(
@@ -465,9 +470,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SvgPicture.asset(
-                                        'assets/icons/Google.svg')),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Platform.isIOS
+                                      ? Icon(Icons.apple)
+                                      : SvgPicture.asset(
+                                          'assets/icons/Google.svg'),
+                                ),
                               ),
                             ),
                           );
@@ -478,7 +486,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               return postGoogleState.map(
                                 initial: (_) {
                                   return GestureDetector(
-                                    onTap: signInWithGoogle,
+                                    onTap: Platform.isIOS
+                                        ? signInWithApple
+                                        : signInWithGoogle,
                                     child: Center(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -490,9 +500,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                               BorderRadius.circular(30),
                                         ),
                                         child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: SvgPicture.asset(
-                                                'assets/icons/Google.svg')),
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Platform.isIOS
+                                              ? Icon(Icons.apple)
+                                              : SvgPicture.asset(
+                                                  'assets/icons/Google.svg'),
+                                        ),
                                       ),
                                     ),
                                   );
@@ -504,7 +517,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 addedSuccess: (_) {
                                   return GestureDetector(
-                                    onTap: signInWithGoogle,
+                                    onTap: Platform.isIOS
+                                        ? signInWithApple
+                                        : signInWithGoogle,
                                     child: Center(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -516,16 +531,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                               BorderRadius.circular(30),
                                         ),
                                         child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: SvgPicture.asset(
-                                                'assets/icons/Google.svg')),
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Platform.isIOS
+                                              ? Icon(Icons.apple)
+                                              : SvgPicture.asset(
+                                                  'assets/icons/Google.svg'),
+                                        ),
                                       ),
                                     ),
                                   );
                                 },
                                 addedFailure: (_) {
                                   return GestureDetector(
-                                    onTap: signInWithGoogle,
+                                    onTap: Platform.isIOS
+                                        ? signInWithApple
+                                        : signInWithGoogle,
                                     child: Center(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -537,16 +557,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                               BorderRadius.circular(30),
                                         ),
                                         child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: SvgPicture.asset(
-                                                'assets/icons/Google.svg')),
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Platform.isIOS
+                                              ? Icon(Icons.apple)
+                                              : SvgPicture.asset(
+                                                  'assets/icons/Google.svg'),
+                                        ),
                                       ),
                                     ),
                                   );
                                 },
                                 noInternet: (_) {
                                   return GestureDetector(
-                                    onTap: signInWithGoogle,
+                                    onTap: Platform.isIOS
+                                        ? signInWithApple
+                                        : signInWithGoogle,
                                     child: Center(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -558,9 +583,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                               BorderRadius.circular(30),
                                         ),
                                         child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: SvgPicture.asset(
-                                                'assets/icons/Google.svg')),
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Platform.isIOS
+                                              ? Icon(Icons.apple)
+                                              : SvgPicture.asset(
+                                                  'assets/icons/Google.svg'),
+                                        ),
                                       ),
                                     ),
                                   );
@@ -576,7 +604,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         loginSuccess: (_) {
                           return GestureDetector(
-                            onTap: signInWithGoogle,
+                            onTap: Platform.isIOS
+                                ? signInWithApple
+                                : signInWithGoogle,
                             child: Center(
                               child: Container(
                                 decoration: BoxDecoration(
@@ -587,16 +617,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SvgPicture.asset(
-                                        'assets/icons/Google.svg')),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Platform.isIOS
+                                      ? Icon(Icons.apple)
+                                      : SvgPicture.asset(
+                                          'assets/icons/Google.svg'),
+                                ),
                               ),
                             ),
                           );
                         },
                         loginFailure: (_) {
                           return GestureDetector(
-                            onTap: signInWithGoogle,
+                            onTap: Platform.isIOS
+                                ? signInWithApple
+                                : signInWithGoogle,
                             child: Center(
                               child: Container(
                                 decoration: BoxDecoration(
@@ -607,16 +642,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SvgPicture.asset(
-                                        'assets/icons/Google.svg')),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Platform.isIOS
+                                      ? Icon(Icons.apple)
+                                      : SvgPicture.asset(
+                                          'assets/icons/Google.svg'),
+                                ),
                               ),
                             ),
                           );
                         },
                         noInternet: (_) {
                           return GestureDetector(
-                            onTap: signInWithGoogle,
+                            onTap: Platform.isIOS
+                                ? signInWithApple
+                                : signInWithGoogle,
                             child: Center(
                               child: Container(
                                 decoration: BoxDecoration(
@@ -627,9 +667,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SvgPicture.asset(
-                                        'assets/icons/Google.svg')),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Platform.isIOS
+                                      ? Icon(Icons.apple)
+                                      : SvgPicture.asset(
+                                          'assets/icons/Google.svg'),
+                                ),
                               ),
                             ),
                           );
