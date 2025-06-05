@@ -39,10 +39,10 @@ class BookingService {
       }
 
       final token = await GetSharedPreferences.getAccessToken();
-      if (token == null) {
-        print('No access token found.');
-        return const Left('No access token found.');
-      }
+      //if (token == null) {
+      //       print('No access token found.');
+      //       return const Left('No access token found.');
+      //    }
 
       // Add headers
       final Map<String, String> headers = {
@@ -109,10 +109,10 @@ class BookingService {
 
       final token = await GetSharedPreferences.getAccessToken();
 
-      if (token == null) {
-        print('No access token found.');
-        return const Left('No access token found.');
-      }
+      //if (token == null) {
+      //       print('No access token found.');
+      //       return const Left('No access token found.');
+      //    }
 
       // Add headers
       _headers['Authorization'] = 'Bearer $token';

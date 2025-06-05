@@ -30,10 +30,10 @@ class CruiseService {
       // Retrieve the Bearer token from shared preferences
       final token = await GetSharedPreferences.getAccessToken();
 
-      if (token == null) {
-        print('No access token found.');
-        return const Left('No access token found.');
-      }
+      //if (token == null) {
+      //       print('No access token found.');
+      //       return const Left('No access token found.');
+      //    }
 
       // Add the Authorization Bearer token to the headers dynamically
       _headers['Authorization'] = 'Bearer $token';
@@ -69,10 +69,10 @@ class CruiseService {
 
       final token = await GetSharedPreferences.getAccessToken();
 
-      if (token == null) {
-        print('No access token found.');
-        return const Left('No access token found.');
-      }
+      //if (token == null) {
+      //       print('No access token found.');
+      //       return const Left('No access token found.');
+      //    }
 
       _headers['Authorization'] = 'Bearer $token';
 
@@ -193,10 +193,10 @@ class CruiseService {
 
       final token = await GetSharedPreferences.getAccessToken();
 
-      if (token == null) {
-        print('No access token found.');
-        return const Left('No access token found.');
-      }
+      //if (token == null) {
+      //       print('No access token found.');
+      //       return const Left('No access token found.');
+      //    }
 
       _headers['Authorization'] = 'Bearer $token';
 

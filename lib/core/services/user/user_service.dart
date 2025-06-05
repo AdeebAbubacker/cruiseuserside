@@ -29,10 +29,10 @@ class UserService {
       // Retrieve the Bearer token from shared preferences
       final token = await GetSharedPreferences.getAccessToken();
 
-      if (token == null) {
-        print('No access token found.');
-        return const Left('No access token found.');
-      }
+      //if (token == null) {
+      //       print('No access token found.');
+      //       return const Left('No access token found.');
+      //    }
 
       // Add the Authorization Bearer token to the headers dynamically
       _headers['Authorization'] = 'Bearer $token';
@@ -71,10 +71,10 @@ class UserService {
       }
 
       final token = await GetSharedPreferences.getAccessToken();
-      if (token == null) {
-        print('No access token found.');
-        return const Left('No access token found.');
-      }
+      //if (token == null) {
+      //       print('No access token found.');
+      //       return const Left('No access token found.');
+      //    }
 
       final uri = Uri.parse('$url/update-user');
 

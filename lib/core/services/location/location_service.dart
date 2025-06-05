@@ -31,10 +31,10 @@ class LocationService {
       }
 
       final token = await GetSharedPreferences.getAccessToken();
-      if (token == null) {
-        print('No access token found.');
-        return const Left('No access token found.');
-      }
+      //if (token == null) {
+      //       print('No access token found.');
+      //       return const Left('No access token found.');
+      //    }
 
       _headers['Authorization'] = 'Bearer $token';
       _headers['CRUISE_AUTH_KEY'] = '29B37-89DFC5E37A525891-FE788E23';

@@ -8,6 +8,7 @@ import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
 import 'package:cruise_buddy/UI/Screens/layout/main_layout/main_layout.dart';
 import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:flutter/material.dart';
+import 'package:cruise_buddy/UI/Screens/guest/guest_ui.dart';
 
 class AppRoutes {
   static navigateToOnboardingOne(BuildContext context) {
@@ -21,6 +22,13 @@ class AppRoutes {
     return Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const OnboardingScreenTwo()),
+    );
+  }
+
+  static navigateToGuestUi(BuildContext context) {
+    return Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const GuestUi()),
     );
   }
 

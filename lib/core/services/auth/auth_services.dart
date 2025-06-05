@@ -192,10 +192,10 @@ class AuthServices {
       }
 
       final token = await GetSharedPreferences.getAccessToken();
-      if (token == null) {
-        print('No access token found.');
-        return const Left('No access token found.');
-      }
+      //if (token == null) {
+      //       print('No access token found.');
+      //       return const Left('No access token found.');
+      //    }
 
       final response = await http.post(
         Uri.parse('https://cruisebuddy.in/api/v1/delete-account'),

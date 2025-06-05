@@ -704,7 +704,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 40)
+                  const SizedBox(height: 40),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children:[ TextButton(
+                        onPressed: () {
+                          AppRoutes.navigateToGuestUi(context);
+                        },
+                        child: Text(
+                          "Loin As guest",
+                          style: TextStyles.ubuntu12blue23w700,
+                        ),
+                      ),]),
+                  
                 ],
               ),
             ),

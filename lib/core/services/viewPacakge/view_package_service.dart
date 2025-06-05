@@ -5,7 +5,6 @@ import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/model/booking_response_model/booking_response_model.dart';
 import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:cruise_buddy/core/model/my_bookings_model/my_bookings_model.dart';
-
 import 'package:cruise_buddy/core/model/posted_favouritem_item_model/posted_favouritem_item_model.dart';
 import 'package:cruise_buddy/core/model/viewmy_package_model/viewmy_package_model.dart';
 import 'package:dartz/dartz.dart';
@@ -35,10 +34,10 @@ class ViewPackageService {
       // Get access token
       final token = await GetSharedPreferences.getAccessToken();
 
-      if (token == null) {
-        print('No access token found.');
-        return const Left('No access token found.');
-      }
+      //if (token == null) {
+      //       print('No access token found.');
+      //       return const Left('No access token found.');
+      //    }
 
       // Add the Authorization header dynamically
       _headers['Authorization'] = 'Bearer $token';
