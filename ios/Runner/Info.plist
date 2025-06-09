@@ -46,6 +46,24 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>CFBundleURLTypes</key>
+    <array>
+    <dict>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>com.googleusercontent.apps.261245076643-0m93hj1k08kvum8ipune92l0coo29g67</string>
+      </array>
+    </dict>
+    </array>
+
+  <!-- ✅ Required to launch Google Sign-In -->
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+    <string>google</string>
+    <string>com.googleusercontent.apps.261245076643-0m93hj1k08kvum8ipune92l0coo29g67</string>
+    </array>
+	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>

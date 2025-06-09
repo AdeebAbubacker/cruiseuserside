@@ -17,7 +17,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:in_app_update/in_app_update.dart';
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -46,21 +45,29 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {}
   }
 
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   String? userEmail;
 
   // Google Sign-In Function
   Future<void> signInWithGoogle() async {
     try {
-      GoogleSignIn googleSignIn = GoogleSignIn();
-      if (await googleSignIn.isSignedIn()) {
-        await googleSignIn.signOut();
-        print("Signed out");
+      if (await _googleSignIn.isSignedIn()) {
+        await _googleSignIn.signOut();
       }
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return; // User canceled sign-in
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        // User cancelled the login
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Google Sign-In cancelled")),
+        );
+        return;
+      }
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
+
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -68,27 +75,33 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
+
       final User? user = userCredential.user;
 
-      if (user != null) {
+      if (user != null && mounted) {
         setState(() {
           userEmail = user.email;
-        }); // Dispatch event to PostGoogleBloc after successful Google Sign-In
-        print("mobeeeeeeeeeeeeeeeeeeee ${userEmail}");
-        print("mobeeeeeeeeeeeeeeeeeeee ${user.phoneNumber}");
+        });
+
+        // Dispatch event to Bloc after successful sign-in
         BlocProvider.of<PostGoogleBloc>(context).add(
           PostGoogleEvent.added(
             UId: user.uid,
-            name: user.displayName.toString(),
+            name: user.displayName ?? '',
           ),
         );
+
+        debugPrint("User email: ${user.email}");
+        debugPrint("User phone: ${user.phoneNumber}");
       }
     } catch (e) {
-      print("Google Sign-In Error: $e");
+      debugPrint("Google Sign-In Error: $e");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Sign-in failed: $e")),
+      );
     }
   }
-
-
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -437,7 +450,28 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: SvgPicture.asset(
-                                          'assets/icons/Google.svg'),
+                                      'assets/icons/Google.svg'),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        loginSuccess: (_) {
+                          return GestureDetector(
+                            onTap: signInWithGoogle,
+                            child: Center(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: const Color.fromARGB(
+                                        255, 201, 201, 201),
+                                  ),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SvgPicture.asset(
+                                      'assets/icons/Google.svg'),
                                 ),
                               ),
                             ),
@@ -463,7 +497,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: SvgPicture.asset(
-                                                  'assets/icons/Google.svg'),
+                                              'assets/icons/Google.svg'),
                                         ),
                                       ),
                                     ),
@@ -489,8 +523,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child:SvgPicture.asset(
-                                                  'assets/icons/Google.svg'),
+                                          child: SvgPicture.asset(
+                                              'assets/icons/Google.svg'),
                                         ),
                                       ),
                                     ),
@@ -511,8 +545,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child:SvgPicture.asset(
-                                                  'assets/icons/Google.svg'),
+                                          child: SvgPicture.asset(
+                                              'assets/icons/Google.svg'),
                                         ),
                                       ),
                                     ),
@@ -520,7 +554,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 noInternet: (_) {
                                   return GestureDetector(
-                                    onTap:signInWithGoogle,
+                                    onTap: signInWithGoogle,
                                     child: Center(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -533,8 +567,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child:  SvgPicture.asset(
-                                                  'assets/icons/Google.svg'),
+                                          child: SvgPicture.asset(
+                                              'assets/icons/Google.svg'),
                                         ),
                                       ),
                                     ),
@@ -547,27 +581,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         loading: (_) {
                           return const Center(
                             child: CircularProgressIndicator(),
-                          );
-                        },
-                        loginSuccess: (_) {
-                          return GestureDetector(
-                            onTap: signInWithGoogle,
-                            child: Center(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: const Color.fromARGB(
-                                        255, 201, 201, 201),
-                                  ),
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: SvgPicture.asset(
-                                          'assets/icons/Google.svg'),
-                                ),
-                              ),
-                            ),
                           );
                         },
                         loginFailure: (_) {
@@ -585,7 +598,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: SvgPicture.asset(
-                                          'assets/icons/Google.svg'),
+                                      'assets/icons/Google.svg'),
                                 ),
                               ),
                             ),
@@ -606,7 +619,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: SvgPicture.asset(
-                                          'assets/icons/Google.svg'),
+                                      'assets/icons/Google.svg'),
                                 ),
                               ),
                             ),
@@ -640,18 +653,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   const SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children:[ TextButton(
-                        onPressed: () {
-                          AppRoutes.navigateToGuestUi(context);
-                        },
-                        child: Text(
-                          "Loin As guest",
-                          style: TextStyles.ubuntu12blue23w700,
-                        ),
-                      ),]),
-                  
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    TextButton(
+                      onPressed: () {
+                        AppRoutes.navigateToGuestUi(context);
+                      },
+                      child: Text(
+                        "Loin As guest",
+                        style: TextStyles.ubuntu12blue23w700,
+                      ),
+                    ),
+                  ]),
                 ],
               ),
             ),
