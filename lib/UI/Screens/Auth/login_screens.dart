@@ -28,22 +28,24 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      checkForUpdate();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   checkForUpdate();
+    // });
   }
 
+//------
+//------
   String? emailErrorText;
   String? passwordErrorText;
-  Future<void> checkForUpdate() async {
-    try {
-      final updateInfo = await InAppUpdate.checkForUpdate();
+  // Future<void> checkForUpdate() async {
+  //   try {
+  //     final updateInfo = await InAppUpdate.checkForUpdate();
 
-      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-        InAppUpdate.performImmediateUpdate().catchError((e) {});
-      }
-    } catch (e) {}
-  }
+  //     if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+  //       InAppUpdate.performImmediateUpdate().catchError((e) {});
+  //     }
+  //   } catch (e) {}
+  // }
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   String? userEmail;
