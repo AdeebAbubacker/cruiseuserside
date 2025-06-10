@@ -140,7 +140,7 @@ class MainLayoutState extends State<MainLayout> {
           child: _screens[_selectedIndex],
         ),
         bottomNavigationBar: SizedBox(
-          height: 82.0,
+          height: 95.0,
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             items: <BottomNavigationBarItem>[
@@ -168,8 +168,8 @@ class MainLayoutState extends State<MainLayout> {
               ),
               BottomNavigationBarItem(
                 icon: SizedBox(
-                  width: 24.0,
-                  height: 24.0,
+                  width: 20.0,
+                  height: 20.0,
                   child: _selectedIndex == 1
                       ? SvgPicture.asset(
                           'assets/bottomNav/boats.svg',
@@ -190,8 +190,8 @@ class MainLayoutState extends State<MainLayout> {
               ),
               BottomNavigationBarItem(
                 icon: SizedBox(
-                  width: 24.0,
-                  height: 24.0,
+                  width: 20.0,
+                  height: 20.0,
                   child: _selectedIndex == 2
                       ? SvgPicture.asset(
                           'assets/bottomNav/favourites.svg',
@@ -212,8 +212,8 @@ class MainLayoutState extends State<MainLayout> {
               ),
               BottomNavigationBarItem(
                 icon: SizedBox(
-                  width: 24.0,
-                  height: 24.0,
+                  width: 20.0,
+                  height: 20.0,
                   child: _selectedIndex == 3
                       ? SvgPicture.asset(
                           'assets/bottomNav/profile.svg',

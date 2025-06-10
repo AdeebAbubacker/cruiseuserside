@@ -45,26 +45,18 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CFBundleURLTypes</key>
-    <array>
-    <dict>
-      <key>CFBundleTypeRole</key>
-      <string>Editor</string>
-      <key>CFBundleURLSchemes</key>
-      <array>
-        <string>com.googleusercontent.apps.261245076643-0m93hj1k08kvum8ipune92l0coo29g67</string>
-      </array>
-    </dict>
-    </array>
 
-  <!-- ✅ Required to launch Google Sign-In -->
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-    <string>google</string>
-    <string>com.googleusercontent.apps.261245076643-0m93hj1k08kvum8ipune92l0coo29g67</string>
-    </array>
+	<!-- Google Sign-In URL scheme -->
 	<key>CFBundleURLTypes</key>
 	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.261245076643-0m93hj1k08kvum8ipune92l0coo29g67</string>
+			</array>
+		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -75,6 +67,18 @@
 		</dict>
 	</array>
 
+	<!-- Required for Google Sign-In -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>google</string>
+		<string>com.googleusercontent.apps.261245076643-0m93hj1k08kvum8ipune92l0coo29g67</string>
+	</array>
+
+	<!-- 🔐 GIDClientID added for Google Sign-In -->
+	<key>GIDClientID</key>
+	<string>261245076643-0m93hj1k08kvum8ipune92l0coo29g67.apps.googleusercontent.com</string>
+
+	<!-- Optional: Describe why you're requesting authentication -->
 	<key>NSUserAuthenticationUsageDescription</key>
 	<string>We use your Apple ID to sign you in to the app.</string>
 </dict>
