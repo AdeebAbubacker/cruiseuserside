@@ -62,7 +62,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.slbslms.app</string>
+				<string>com.leburacruisebuddy.app</string>
 			</array>
 		</dict>
 	</array>

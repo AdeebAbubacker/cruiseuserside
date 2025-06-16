@@ -161,28 +161,39 @@ class _GuestExploreDestintionWidgetState
                 childAspectRatio: widget.itemWidth / widget.itemHeight,
               ),
               itemBuilder: (context, index) {
-                return Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        '${value.locationmodel.data?[index].thumbnail}',
-                        fit: BoxFit.cover,
-                        width: widget.itemWidth,
-                        height: widget.itemHeight,
+                return GestureDetector(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Please login to view more details"),
+                        behavior: SnackBarBehavior.floating,
+                        duration: Duration(seconds: 2),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      left: 0,
-                      right: 0,
-                      child: Text(
-                        "${value.locationmodel.data?[index].name}",
-                        style: TextStyles.ubuntu16whiteE2w2500,
-                        textAlign: TextAlign.center,
+                    );
+                  },
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          '${value.locationmodel.data?[index].thumbnail}',
+                          fit: BoxFit.cover,
+                          width: widget.itemWidth,
+                          height: widget.itemHeight,
+                        ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        bottom: 10,
+                        left: 0,
+                        right: 0,
+                        child: Text(
+                          "${value.locationmodel.data?[index].name}",
+                          style: TextStyles.ubuntu16whiteE2w2500,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             );
