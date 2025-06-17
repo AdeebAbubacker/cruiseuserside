@@ -61,12 +61,6 @@ class CruiseService {
 
   Future<Either<String, FeaturedBoatsModel>> getFeaturedBoats() async {
     try {
-      final hasInternet = await _connectivityChecker.hasInternetAccess();
-      if (!hasInternet) {
-        print("No internet");
-        return const Left('No internet');
-      }
-
       final token = await GetSharedPreferences.getAccessToken();
 
       //if (token == null) {
@@ -116,7 +110,6 @@ class CruiseService {
       if (!hasInternet) return const Left('No internet');
 
       final token = await GetSharedPreferences.getAccessToken();
-      if (token == null) return const Left('No access token found.');
 
       _headers['Authorization'] = 'Bearer $token';
 

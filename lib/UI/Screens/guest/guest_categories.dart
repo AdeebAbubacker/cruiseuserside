@@ -1,3 +1,4 @@
+import 'package:cruise_buddy/UI/Screens/guest/guest_categories_list_result_screen.dart';
 import 'package:cruise_buddy/UI/Screens/misc/categories_list_resultscreen.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/view_model/getCruiseTypes/get_cruise_types_bloc.dart';
@@ -203,11 +204,15 @@ class _GuestCategoriesSectionState extends State<GuestCategoriesSection> {
                   final imageUrl = openCruiseTypes?[index].image;
                   return GestureDetector(
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please login to view more details"),
-                          behavior: SnackBarBehavior.floating,
-                          duration: Duration(seconds: 2),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GuestCategoriesListResultScreen(
+                            modelName: mapCruiseModelName(
+                              openCruiseTypes?[index].modelName,
+                            ),
+                            location: '',
+                          ),
                         ),
                       );
                     },
@@ -219,50 +224,53 @@ class _GuestCategoriesSectionState extends State<GuestCategoriesSection> {
                             ? 20
                             : 0,
                       ),
-                      child: Container(
-                        color: const Color.fromARGB(0, 0, 0, 0),
-                        width: 200,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: (imageUrl != null && imageUrl.isNotEmpty)
-                                    ? Image.network(
-                                        imageUrl,
-                                        width: 200,
-                                        height: 110,
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return Container(
-                                            width: 200,
-                                            height: 110,
-                                            color: Colors.grey[300],
-                                            alignment: Alignment.center,
-                                            child: Icon(
-                                                Icons.image_not_supported,
-                                                color: Colors.grey[700]),
-                                          );
-                                        },
-                                      )
-                                    : Container(
-                                        width: 200,
-                                        height: 110,
-                                        color: Colors.grey[300],
-                                        alignment: Alignment.center,
-                                        child: Icon(Icons.image_not_supported,
-                                            color: Colors.grey[700]),
-                                      )),
-                            SizedBox(height: 10),
-                            Text(
-                              "${openCruiseTypes?[index].modelName}",
-                              style: TextStyles.ubuntu16blue86w500,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
+                      child: GestureDetector(
+                        child: Container(
+                          color: const Color.fromARGB(0, 0, 0, 0),
+                          width: 200,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: (imageUrl != null &&
+                                          imageUrl.isNotEmpty)
+                                      ? Image.network(
+                                          imageUrl,
+                                          width: 200,
+                                          height: 110,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Container(
+                                              width: 200,
+                                              height: 110,
+                                              color: Colors.grey[300],
+                                              alignment: Alignment.center,
+                                              child: Icon(
+                                                  Icons.image_not_supported,
+                                                  color: Colors.grey[700]),
+                                            );
+                                          },
+                                        )
+                                      : Container(
+                                          width: 200,
+                                          height: 110,
+                                          color: Colors.grey[300],
+                                          alignment: Alignment.center,
+                                          child: Icon(Icons.image_not_supported,
+                                              color: Colors.grey[700]),
+                                        )),
+                              SizedBox(height: 10),
+                              Text(
+                                "${openCruiseTypes?[index].modelName}",
+                                style: TextStyles.ubuntu16blue86w500,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

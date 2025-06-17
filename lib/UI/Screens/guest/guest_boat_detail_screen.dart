@@ -18,17 +18,17 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
-class BoatDetailScreen extends StatefulWidget {
+class GuestBoatDetailScreen extends StatefulWidget {
   final String packageId;
   final DatumTest datum;
-  const BoatDetailScreen(
+  const GuestBoatDetailScreen(
       {super.key, required this.packageId, required this.datum});
 
   @override
-  State<BoatDetailScreen> createState() => _BoatDetailScreenState();
+  State<GuestBoatDetailScreen> createState() => _GuestBoatDetailScreenState();
 }
 
-class _BoatDetailScreenState extends State<BoatDetailScreen> {
+class _GuestBoatDetailScreenState extends State<GuestBoatDetailScreen> {
   String selectedBookingType = "Day Cruise"; // Default booking type
 
   // Method to handle booking type selection
@@ -469,15 +469,13 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   ),
                   FullWidthRectangleBlueButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BookingconfirmationScreen(
-                                    name: name,
-                                    email: email,
-                                    packageId: widget.packageId,
-                                    datum: widget.datum,
-                                  )));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Please login to view more details"),
+                          behavior: SnackBarBehavior.floating,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
                     },
                     text: 'Book Now',
                   ),

@@ -1,3 +1,4 @@
+import 'package:cruise_buddy/UI/Screens/guest/guest_location_based_screen.dart';
 import 'package:cruise_buddy/UI/Screens/misc/locations_based_cruise.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/view_model/getLocationDetails/get_location_details_bloc.dart';
@@ -163,13 +164,17 @@ class _GuestExploreDestintionWidgetState
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Please login to view more details"),
-                        behavior: SnackBarBehavior.floating,
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) {
+                        return GuestLocationBasedScreen(
+                          location:
+                              value.locationmodel.data![index].name.toString(),
+                          pacakgeId:
+                              value.locationmodel.data?[index].id.toString() ??
+                                  "51",
+                        );
+                      },
+                    ));
                   },
                   child: Stack(
                     children: [
