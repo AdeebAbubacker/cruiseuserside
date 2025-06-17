@@ -50,12 +50,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyC6YUfin8PFCViLvD-S2AjuEkqRF6oTFqA',
-    appId: '1:261245076643:ios:88843e8c991e8ede14ab16',
+    appId: '1:261245076643:ios:8a7c59e18c4c140014ab16',
     messagingSenderId: '261245076643',
     projectId: 'cruisebuddy-e3b41',
     storageBucket: 'cruisebuddy-e3b41.firebasestorage.app',
     androidClientId: '261245076643-6fa94m9de0nmbe118f5b1j80vc7e6oe8.apps.googleusercontent.com',
-    iosClientId: '261245076643-u3i3iacidsaorbo02nag82l9h7913u0u.apps.googleusercontent.com',
+    iosClientId: '261245076643-nuthcjtoakesvb9fdhoj0ogqvn519746.apps.googleusercontent.com',
     iosBundleId: 'com.leburacruisebuddy.app',
   );
 
