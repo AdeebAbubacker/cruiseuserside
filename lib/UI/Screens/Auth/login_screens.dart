@@ -120,25 +120,35 @@ class _LoginScreenState extends State<LoginScreen> {
         accessToken: appleCredential.authorizationCode,
       );
 
-      final UserCredential userCredential =
+      final userCredential =
           await FirebaseAuth.instance.signInWithCredential(oauthCredential);
 
-      final User? user = userCredential.user;
+      final user = userCredential.user;
+
+      // Extract name and email from Apple credential or Firebase user
+      final email = appleCredential.email ?? user?.email ?? "Unknown";
+      final fullName = [appleCredential.givenName, appleCredential.familyName]
+          .where((name) => name != null && name.isNotEmpty)
+          .join(" ")
+          .trim();
+
+      final displayName =
+          fullName.isNotEmpty ? fullName : user?.displayName ?? "User";
 
       if (user != null && mounted) {
         setState(() {
-          userEmail = user.email;
+          userEmail = email;
         });
 
         BlocProvider.of<PostGoogleBloc>(context).add(
           PostGoogleEvent.added(
             UId: user.uid,
-            name: user.displayName ?? '',
+            name: displayName,
           ),
         );
 
-        debugPrint("Apple Sign-In user email: ${user.email}");
-        debugPrint("Apple Sign-In user name: ${user.displayName}");
+        debugPrint("Apple Sign-In user email: $email");
+        debugPrint("Apple Sign-In user name: $displayName");
       }
     } catch (e) {
       debugPrint("Apple Sign-In Error: $e");
