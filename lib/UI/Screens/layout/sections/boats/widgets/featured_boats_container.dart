@@ -148,7 +148,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
   Future<void> fetchFavorites() async {
     final token = await GetSharedPreferences.getAccessToken();
     final response = await http.get(
-      Uri.parse('${BaseUrl.dev}/favorite?include=package.cruise'),
+      Uri.parse('${BaseUrl.prod}/favorite?include=package.cruise'),
       headers: {
         'Accept': 'application/json',
         'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',

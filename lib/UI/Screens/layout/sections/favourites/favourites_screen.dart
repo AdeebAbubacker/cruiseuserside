@@ -73,7 +73,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
     final token = await GetSharedPreferences.getAccessToken();
     final response = await http.get(
       Uri.parse(
-          '${BaseUrl.dev}/favorite?include=user,package.cruise,package.cruise.cruiseType,package.cruise.ratings,package.itineraries,package.amenities,package.food,package.packageImages,package.bookingTypes,package.cruise.cruisesImages,'),
+          '${BaseUrl.prod}/favorite?include=user,package.cruise,package.cruise.cruiseType,package.cruise.ratings,package.itineraries,package.amenities,package.food,package.packageImages,package.bookingTypes,package.cruise.cruisesImages,'),
       headers: {
         'Accept': 'application/json',
         'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',

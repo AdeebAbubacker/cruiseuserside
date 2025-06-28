@@ -381,6 +381,8 @@ mixin _$UpdateUserProfileState {
     required TResult Function() loading,
     required TResult Function(UserUpdateSuccesModel updateuser) updateuser,
     required TResult Function(String error) updateFailure,
+    required TResult Function(ProfileUpdateValidation profileUpdateValidation)
+        loginvaldationFailure,
     required TResult Function() noInternet,
   }) =>
       throw _privateConstructorUsedError;
@@ -390,6 +392,8 @@ mixin _$UpdateUserProfileState {
     TResult? Function()? loading,
     TResult? Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult? Function(String error)? updateFailure,
+    TResult? Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult? Function()? noInternet,
   }) =>
       throw _privateConstructorUsedError;
@@ -399,6 +403,8 @@ mixin _$UpdateUserProfileState {
     TResult Function()? loading,
     TResult Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult Function(String error)? updateFailure,
+    TResult Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) =>
@@ -409,6 +415,8 @@ mixin _$UpdateUserProfileState {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Updateuser value) updateuser,
     required TResult Function(_RemoveItemFailure value) updateFailure,
+    required TResult Function(_UpdateUserprofileValidation value)
+        loginvaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) =>
       throw _privateConstructorUsedError;
@@ -418,6 +426,8 @@ mixin _$UpdateUserProfileState {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Updateuser value)? updateuser,
     TResult? Function(_RemoveItemFailure value)? updateFailure,
+    TResult? Function(_UpdateUserprofileValidation value)?
+        loginvaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) =>
       throw _privateConstructorUsedError;
@@ -427,6 +437,7 @@ mixin _$UpdateUserProfileState {
     TResult Function(_Loading value)? loading,
     TResult Function(_Updateuser value)? updateuser,
     TResult Function(_RemoveItemFailure value)? updateFailure,
+    TResult Function(_UpdateUserprofileValidation value)? loginvaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) =>
@@ -500,6 +511,8 @@ class _$InitialImpl implements _Initial {
     required TResult Function() loading,
     required TResult Function(UserUpdateSuccesModel updateuser) updateuser,
     required TResult Function(String error) updateFailure,
+    required TResult Function(ProfileUpdateValidation profileUpdateValidation)
+        loginvaldationFailure,
     required TResult Function() noInternet,
   }) {
     return initial();
@@ -512,6 +525,8 @@ class _$InitialImpl implements _Initial {
     TResult? Function()? loading,
     TResult? Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult? Function(String error)? updateFailure,
+    TResult? Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult? Function()? noInternet,
   }) {
     return initial?.call();
@@ -524,6 +539,8 @@ class _$InitialImpl implements _Initial {
     TResult Function()? loading,
     TResult Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult Function(String error)? updateFailure,
+    TResult Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) {
@@ -540,6 +557,8 @@ class _$InitialImpl implements _Initial {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Updateuser value) updateuser,
     required TResult Function(_RemoveItemFailure value) updateFailure,
+    required TResult Function(_UpdateUserprofileValidation value)
+        loginvaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
     return initial(this);
@@ -552,6 +571,8 @@ class _$InitialImpl implements _Initial {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Updateuser value)? updateuser,
     TResult? Function(_RemoveItemFailure value)? updateFailure,
+    TResult? Function(_UpdateUserprofileValidation value)?
+        loginvaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
     return initial?.call(this);
@@ -564,6 +585,7 @@ class _$InitialImpl implements _Initial {
     TResult Function(_Loading value)? loading,
     TResult Function(_Updateuser value)? updateuser,
     TResult Function(_RemoveItemFailure value)? updateFailure,
+    TResult Function(_UpdateUserprofileValidation value)? loginvaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) {
@@ -623,6 +645,8 @@ class _$LoadingImpl implements _Loading {
     required TResult Function() loading,
     required TResult Function(UserUpdateSuccesModel updateuser) updateuser,
     required TResult Function(String error) updateFailure,
+    required TResult Function(ProfileUpdateValidation profileUpdateValidation)
+        loginvaldationFailure,
     required TResult Function() noInternet,
   }) {
     return loading();
@@ -635,6 +659,8 @@ class _$LoadingImpl implements _Loading {
     TResult? Function()? loading,
     TResult? Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult? Function(String error)? updateFailure,
+    TResult? Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult? Function()? noInternet,
   }) {
     return loading?.call();
@@ -647,6 +673,8 @@ class _$LoadingImpl implements _Loading {
     TResult Function()? loading,
     TResult Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult Function(String error)? updateFailure,
+    TResult Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) {
@@ -663,6 +691,8 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Updateuser value) updateuser,
     required TResult Function(_RemoveItemFailure value) updateFailure,
+    required TResult Function(_UpdateUserprofileValidation value)
+        loginvaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
     return loading(this);
@@ -675,6 +705,8 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Updateuser value)? updateuser,
     TResult? Function(_RemoveItemFailure value)? updateFailure,
+    TResult? Function(_UpdateUserprofileValidation value)?
+        loginvaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
     return loading?.call(this);
@@ -687,6 +719,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function(_Loading value)? loading,
     TResult Function(_Updateuser value)? updateuser,
     TResult Function(_RemoveItemFailure value)? updateFailure,
+    TResult Function(_UpdateUserprofileValidation value)? loginvaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) {
@@ -774,6 +807,8 @@ class _$UpdateuserImpl implements _Updateuser {
     required TResult Function() loading,
     required TResult Function(UserUpdateSuccesModel updateuser) updateuser,
     required TResult Function(String error) updateFailure,
+    required TResult Function(ProfileUpdateValidation profileUpdateValidation)
+        loginvaldationFailure,
     required TResult Function() noInternet,
   }) {
     return updateuser(this.updateuser);
@@ -786,6 +821,8 @@ class _$UpdateuserImpl implements _Updateuser {
     TResult? Function()? loading,
     TResult? Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult? Function(String error)? updateFailure,
+    TResult? Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult? Function()? noInternet,
   }) {
     return updateuser?.call(this.updateuser);
@@ -798,6 +835,8 @@ class _$UpdateuserImpl implements _Updateuser {
     TResult Function()? loading,
     TResult Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult Function(String error)? updateFailure,
+    TResult Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) {
@@ -814,6 +853,8 @@ class _$UpdateuserImpl implements _Updateuser {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Updateuser value) updateuser,
     required TResult Function(_RemoveItemFailure value) updateFailure,
+    required TResult Function(_UpdateUserprofileValidation value)
+        loginvaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
     return updateuser(this);
@@ -826,6 +867,8 @@ class _$UpdateuserImpl implements _Updateuser {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Updateuser value)? updateuser,
     TResult? Function(_RemoveItemFailure value)? updateFailure,
+    TResult? Function(_UpdateUserprofileValidation value)?
+        loginvaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
     return updateuser?.call(this);
@@ -838,6 +881,7 @@ class _$UpdateuserImpl implements _Updateuser {
     TResult Function(_Loading value)? loading,
     TResult Function(_Updateuser value)? updateuser,
     TResult Function(_RemoveItemFailure value)? updateFailure,
+    TResult Function(_UpdateUserprofileValidation value)? loginvaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) {
@@ -934,6 +978,8 @@ class _$RemoveItemFailureImpl implements _RemoveItemFailure {
     required TResult Function() loading,
     required TResult Function(UserUpdateSuccesModel updateuser) updateuser,
     required TResult Function(String error) updateFailure,
+    required TResult Function(ProfileUpdateValidation profileUpdateValidation)
+        loginvaldationFailure,
     required TResult Function() noInternet,
   }) {
     return updateFailure(error);
@@ -946,6 +992,8 @@ class _$RemoveItemFailureImpl implements _RemoveItemFailure {
     TResult? Function()? loading,
     TResult? Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult? Function(String error)? updateFailure,
+    TResult? Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult? Function()? noInternet,
   }) {
     return updateFailure?.call(error);
@@ -958,6 +1006,8 @@ class _$RemoveItemFailureImpl implements _RemoveItemFailure {
     TResult Function()? loading,
     TResult Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult Function(String error)? updateFailure,
+    TResult Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) {
@@ -974,6 +1024,8 @@ class _$RemoveItemFailureImpl implements _RemoveItemFailure {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Updateuser value) updateuser,
     required TResult Function(_RemoveItemFailure value) updateFailure,
+    required TResult Function(_UpdateUserprofileValidation value)
+        loginvaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
     return updateFailure(this);
@@ -986,6 +1038,8 @@ class _$RemoveItemFailureImpl implements _RemoveItemFailure {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Updateuser value)? updateuser,
     TResult? Function(_RemoveItemFailure value)? updateFailure,
+    TResult? Function(_UpdateUserprofileValidation value)?
+        loginvaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
     return updateFailure?.call(this);
@@ -998,6 +1052,7 @@ class _$RemoveItemFailureImpl implements _RemoveItemFailure {
     TResult Function(_Loading value)? loading,
     TResult Function(_Updateuser value)? updateuser,
     TResult Function(_RemoveItemFailure value)? updateFailure,
+    TResult Function(_UpdateUserprofileValidation value)? loginvaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) {
@@ -1019,6 +1074,185 @@ abstract class _RemoveItemFailure implements UpdateUserProfileState {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RemoveItemFailureImplCopyWith<_$RemoveItemFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateUserprofileValidationImplCopyWith<$Res> {
+  factory _$$UpdateUserprofileValidationImplCopyWith(
+          _$UpdateUserprofileValidationImpl value,
+          $Res Function(_$UpdateUserprofileValidationImpl) then) =
+      __$$UpdateUserprofileValidationImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({ProfileUpdateValidation profileUpdateValidation});
+}
+
+/// @nodoc
+class __$$UpdateUserprofileValidationImplCopyWithImpl<$Res>
+    extends _$UpdateUserProfileStateCopyWithImpl<$Res,
+        _$UpdateUserprofileValidationImpl>
+    implements _$$UpdateUserprofileValidationImplCopyWith<$Res> {
+  __$$UpdateUserprofileValidationImplCopyWithImpl(
+      _$UpdateUserprofileValidationImpl _value,
+      $Res Function(_$UpdateUserprofileValidationImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of UpdateUserProfileState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? profileUpdateValidation = null,
+  }) {
+    return _then(_$UpdateUserprofileValidationImpl(
+      profileUpdateValidation: null == profileUpdateValidation
+          ? _value.profileUpdateValidation
+          : profileUpdateValidation // ignore: cast_nullable_to_non_nullable
+              as ProfileUpdateValidation,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateUserprofileValidationImpl
+    implements _UpdateUserprofileValidation {
+  const _$UpdateUserprofileValidationImpl(
+      {required this.profileUpdateValidation});
+
+  @override
+  final ProfileUpdateValidation profileUpdateValidation;
+
+  @override
+  String toString() {
+    return 'UpdateUserProfileState.loginvaldationFailure(profileUpdateValidation: $profileUpdateValidation)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateUserprofileValidationImpl &&
+            (identical(
+                    other.profileUpdateValidation, profileUpdateValidation) ||
+                other.profileUpdateValidation == profileUpdateValidation));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, profileUpdateValidation);
+
+  /// Create a copy of UpdateUserProfileState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateUserprofileValidationImplCopyWith<_$UpdateUserprofileValidationImpl>
+      get copyWith => __$$UpdateUserprofileValidationImplCopyWithImpl<
+          _$UpdateUserprofileValidationImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(UserUpdateSuccesModel updateuser) updateuser,
+    required TResult Function(String error) updateFailure,
+    required TResult Function(ProfileUpdateValidation profileUpdateValidation)
+        loginvaldationFailure,
+    required TResult Function() noInternet,
+  }) {
+    return loginvaldationFailure(profileUpdateValidation);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(UserUpdateSuccesModel updateuser)? updateuser,
+    TResult? Function(String error)? updateFailure,
+    TResult? Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
+    TResult? Function()? noInternet,
+  }) {
+    return loginvaldationFailure?.call(profileUpdateValidation);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(UserUpdateSuccesModel updateuser)? updateuser,
+    TResult Function(String error)? updateFailure,
+    TResult Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
+    TResult Function()? noInternet,
+    required TResult orElse(),
+  }) {
+    if (loginvaldationFailure != null) {
+      return loginvaldationFailure(profileUpdateValidation);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_Updateuser value) updateuser,
+    required TResult Function(_RemoveItemFailure value) updateFailure,
+    required TResult Function(_UpdateUserprofileValidation value)
+        loginvaldationFailure,
+    required TResult Function(_NoInternet value) noInternet,
+  }) {
+    return loginvaldationFailure(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Updateuser value)? updateuser,
+    TResult? Function(_RemoveItemFailure value)? updateFailure,
+    TResult? Function(_UpdateUserprofileValidation value)?
+        loginvaldationFailure,
+    TResult? Function(_NoInternet value)? noInternet,
+  }) {
+    return loginvaldationFailure?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_Updateuser value)? updateuser,
+    TResult Function(_RemoveItemFailure value)? updateFailure,
+    TResult Function(_UpdateUserprofileValidation value)? loginvaldationFailure,
+    TResult Function(_NoInternet value)? noInternet,
+    required TResult orElse(),
+  }) {
+    if (loginvaldationFailure != null) {
+      return loginvaldationFailure(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _UpdateUserprofileValidation implements UpdateUserProfileState {
+  const factory _UpdateUserprofileValidation(
+          {required final ProfileUpdateValidation profileUpdateValidation}) =
+      _$UpdateUserprofileValidationImpl;
+
+  ProfileUpdateValidation get profileUpdateValidation;
+
+  /// Create a copy of UpdateUserProfileState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UpdateUserprofileValidationImplCopyWith<_$UpdateUserprofileValidationImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1066,6 +1300,8 @@ class _$NoInternetImpl implements _NoInternet {
     required TResult Function() loading,
     required TResult Function(UserUpdateSuccesModel updateuser) updateuser,
     required TResult Function(String error) updateFailure,
+    required TResult Function(ProfileUpdateValidation profileUpdateValidation)
+        loginvaldationFailure,
     required TResult Function() noInternet,
   }) {
     return noInternet();
@@ -1078,6 +1314,8 @@ class _$NoInternetImpl implements _NoInternet {
     TResult? Function()? loading,
     TResult? Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult? Function(String error)? updateFailure,
+    TResult? Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult? Function()? noInternet,
   }) {
     return noInternet?.call();
@@ -1090,6 +1328,8 @@ class _$NoInternetImpl implements _NoInternet {
     TResult Function()? loading,
     TResult Function(UserUpdateSuccesModel updateuser)? updateuser,
     TResult Function(String error)? updateFailure,
+    TResult Function(ProfileUpdateValidation profileUpdateValidation)?
+        loginvaldationFailure,
     TResult Function()? noInternet,
     required TResult orElse(),
   }) {
@@ -1106,6 +1346,8 @@ class _$NoInternetImpl implements _NoInternet {
     required TResult Function(_Loading value) loading,
     required TResult Function(_Updateuser value) updateuser,
     required TResult Function(_RemoveItemFailure value) updateFailure,
+    required TResult Function(_UpdateUserprofileValidation value)
+        loginvaldationFailure,
     required TResult Function(_NoInternet value) noInternet,
   }) {
     return noInternet(this);
@@ -1118,6 +1360,8 @@ class _$NoInternetImpl implements _NoInternet {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_Updateuser value)? updateuser,
     TResult? Function(_RemoveItemFailure value)? updateFailure,
+    TResult? Function(_UpdateUserprofileValidation value)?
+        loginvaldationFailure,
     TResult? Function(_NoInternet value)? noInternet,
   }) {
     return noInternet?.call(this);
@@ -1130,6 +1374,7 @@ class _$NoInternetImpl implements _NoInternet {
     TResult Function(_Loading value)? loading,
     TResult Function(_Updateuser value)? updateuser,
     TResult Function(_RemoveItemFailure value)? updateFailure,
+    TResult Function(_UpdateUserprofileValidation value)? loginvaldationFailure,
     TResult Function(_NoInternet value)? noInternet,
     required TResult orElse(),
   }) {

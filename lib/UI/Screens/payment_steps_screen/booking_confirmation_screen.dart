@@ -1,15 +1,18 @@
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/type_ofday_selection.dart';
+import 'package:cruise_buddy/UI/Screens/payment_steps_screen/collect_phone_number_screen.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/select_payment_method.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/rectangle_bluebutton_loading.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/view_model/bookMyCruise/book_my_cruise_bloc.dart';
 import 'package:cruise_buddy/core/view_model/viewMyPackage/view_my_package_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -910,10 +913,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                             ? RectangleBluebuttonLoading()
                             : FullWidthRectangleBlueButton(
                                 text: "Continue",
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_selectedPaymentType == null) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
+                                      const SnackBar(
                                         content: Text(
                                             'Please select either Partial or Full Payment.'),
                                         backgroundColor: Colors.red,
@@ -921,63 +924,78 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                     );
                                     return;
                                   }
-                                  String formattedDate =
-                                      DateFormat('yyyy-MM-dd')
-                                          .format(_selectedDate);
-                                  String formattedstartDate =
-                                      DateFormat('yyyy-MM-dd')
-                                          .format(startDate);
-                                  String formattedendDate =
-                                      DateFormat('yyyy-MM-dd').format(endDate);
 
-                                  print(
-                                      'parms packageId---------------${widget.packageId} ');
-                                  print(
-                                      'parms formattedDate---------------${formattedDate} ');
-                                  print('startdate ${formattedstartDate}');
-                                  print('endDate ${formattedendDate}');
-                                  print(
-                                      'parms bookingTypeId--------------- ${bookingTypeId}');
-                                  print(
-                                      'parms _nonVegCount--------------- ${_nonVegCount}');
-                                  print(
-                                      'parms _vegCount--------------- ${_vegCount}');
-                                  print(
-                                      'parms _jainVegCount--------------- ${_jainVegCount}');
-                                  print(
-                                      'parms customerNotet--------------- ${addoncontroller.text}');
-                                  print(
-                                      'parms totalAmount--------------- ${totalPrice.toString()}');
-                                  context
-                                      .read<BookMyCruiseBloc>()
-                                      .add(BookMyCruiseEvent.createNewbookings(
-                                        packageId: widget.packageId,
-                                        startdate:
-                                            bookingTypeId.toString() == "1"
-                                                ? formattedDate
-                                                : formattedstartDate,
-                                        endDate: bookingTypeId.toString() == "2"
-                                            ? formattedendDate
-                                            : null,
-                                        bookingtype: bookingTypeId.toString(),
-                                        nonVegCount: _nonVegCount > 0
-                                            ? _nonVegCount.toString()
-                                            : null,
-                                        vegCount: _vegCount > 0
-                                            ? _vegCount.toString()
-                                            : null,
-                                        jainVegCount: _jainVegCount > 0
-                                            ? _jainVegCount.toString()
-                                            : null,
-                                        customerNotet: addoncontroller.text,
-                                        totalAmount:
-                                            _selectedPaymentType == 'partial'
+                                   // Check Hive for phone number
+              final userDetailsBox =
+                  await Hive.openBox<UserDetailsDB>('userDetailsBox');
+              final userDetails = userDetailsBox.get('user');
+              String? phone = userDetails?.phone;
+
+              // If not found, navigate to collect it
+              if (phone == null || phone.isEmpty) {
+                final collectedPhone = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CollectPhoneNumberScreen(),
+                  ),
+                );
+
+                if (collectedPhone != null &&
+                    collectedPhone is String &&
+                    collectedPhone.isNotEmpty) {
+                  phone = collectedPhone;
+                } else {
+                  // User didn't enter phone number, so exit
+                  return;
+                }
+              }
+
+                                  if (phone != null &&
+                                      phone is String &&
+                                      phone.isNotEmpty) {
+                                    String formattedDate =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(_selectedDate);
+                                    String formattedstartDate =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(startDate);
+                                    String formattedendDate =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(endDate);
+
+                                    context.read<BookMyCruiseBloc>().add(
+                                          BookMyCruiseEvent.createNewbookings(
+                                            packageId: widget.packageId,
+                                            startdate:
+                                                bookingTypeId.toString() == "1"
+                                                    ? formattedDate
+                                                    : formattedstartDate,
+                                            endDate:
+                                                bookingTypeId.toString() == "2"
+                                                    ? formattedendDate
+                                                    : null,
+                                            bookingtype:
+                                                bookingTypeId.toString(),
+                                            nonVegCount: _nonVegCount > 0
+                                                ? _nonVegCount.toString()
+                                                : null,
+                                            vegCount: _vegCount > 0
+                                                ? _vegCount.toString()
+                                                : null,
+                                            jainVegCount: _jainVegCount > 0
+                                                ? _jainVegCount.toString()
+                                                : null,
+                                            customerNotet: addoncontroller.text,
+                                            totalAmount: _selectedPaymentType ==
+                                                    'partial'
                                                 ? _formatAmount(widget
                                                     .datum
                                                     .bookingTypes?[0]
                                                     .minAmountToPay)
                                                 : totalPrice.toString(),
-                                      ));
+                                          ),
+                                        );
+                                  }
                                 },
                               );
                       },
@@ -991,6 +1009,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
         ),
       ),
     );
+    
   }
 
   String _formatAmount(String? amount) {
@@ -1076,42 +1095,6 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     );
   }
 
-  // Widget _buildFoodCounter(
-  //     String label, int count, ValueChanged<int> onChanged) {
-  //   return Row(
-  //     children: [
-  //       Text(
-  //         label,
-  //         style: TextStyles.ubuntu16black15w500,
-  //       ),
-  //       const Spacer(),
-  //       Padding(
-  //         padding: const EdgeInsets.only(top: 8, bottom: 8.0),
-  //         child: Container(
-  //           height: 45,
-  //           decoration: BoxDecoration(
-  //             border: Border.all(color: Colors.grey),
-  //             borderRadius: BorderRadius.circular(20),
-  //           ),
-  //           child: Row(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               IconButton(
-  //                 icon: const Icon(Icons.remove),
-  //                 onPressed: () => onChanged(count > 0 ? count - 1 : 0),
-  //               ),
-  //               Text('$count'),
-  //               IconButton(
-  //                 icon: const Icon(Icons.add),
-  //                 onPressed: () => onChanged(count + 1),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
 
   Widget _buildDetailRow(String label, String value, {bool isTotal = false}) {
     return Row(
@@ -1133,6 +1116,38 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       ],
     );
   }
+  // Call this inside your button's onPressed or anywhere you want to handle phone number
+Future<void> handlePhoneNumber(BuildContext context) async {
+  // Open the Hive box
+  final userDetailsBox = await Hive.openBox<UserDetailsDB>('userDetailsBox');
+
+  // Get the saved user details
+  final userDetails = userDetailsBox.get('user');
+
+  // Check if phone number already exists
+  final savedPhone = userDetails?.phone;
+
+  if (savedPhone != null && savedPhone.isNotEmpty) {
+    // Phone number already saved, proceed with it
+    print("Phone number from Hive: $savedPhone");
+
+    // ✅ Use savedPhone for your next logic (like booking API call)
+
+  } else {
+    // Phone number not available, navigate to phone input screen
+    final newPhone = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CollectPhoneNumberScreen(),
+      ),
+    );
+
+    if (newPhone != null && newPhone.toString().isNotEmpty) {
+      // ✅ Use newPhone for your next logic
+      print("Phone number collected from screen: $newPhone");
+    }
+  }
+}
 }
 
 class FoodCounterStateless extends StatelessWidget {

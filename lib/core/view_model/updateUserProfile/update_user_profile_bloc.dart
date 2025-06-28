@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:cruise_buddy/core/model/user_update_succes_model/user_update_succes_model.dart';
+import 'package:cruise_buddy/core/model/validation/profile_update_validation/profile_update_validation.dart';
 import 'package:cruise_buddy/core/services/user/user_service.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -27,6 +28,9 @@ class UpdateUserProfileBloc
         await result.fold((failure) async {
           if (failure == "No internet") {
             emit(const UpdateUserProfileState.noInternet());
+          } else if (failure is ProfileUpdateValidation) {
+            emit(UpdateUserProfileState.loginvaldationFailure(
+                profileUpdateValidation: failure));
           } else {
             emit(UpdateUserProfileState.updateFailure(error: failure));
           }

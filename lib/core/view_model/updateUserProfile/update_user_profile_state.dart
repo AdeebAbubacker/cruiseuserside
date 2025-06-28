@@ -8,5 +8,6 @@ class UpdateUserProfileState with _$UpdateUserProfileState {
       {required UserUpdateSuccesModel updateuser}) = _Updateuser;
   const factory UpdateUserProfileState.updateFailure({required String error}) =
       _RemoveItemFailure;
+  const factory UpdateUserProfileState.loginvaldationFailure({required ProfileUpdateValidation profileUpdateValidation}) = _UpdateUserprofileValidation;    
   const factory UpdateUserProfileState.noInternet() = _NoInternet;
 }

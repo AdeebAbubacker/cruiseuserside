@@ -117,8 +117,8 @@ class _AccountScreenState extends State<AccountScreen> {
             showDialog(
               context: context,
               barrierDismissible: false,
-              builder:
-                  (context) => const Center(child: CircularProgressIndicator()),
+              builder: (context) =>
+                  const Center(child: CircularProgressIndicator()),
             );
           },
           updateuser: (value) async {
@@ -137,51 +137,65 @@ class _AccountScreenState extends State<AccountScreen> {
             }
             showDialog(
               context: context,
-              builder:
-                  (context) => AlertDialog(
-                    title: const Text('Success'),
-                    content: const Text('Profile updated successfully!'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('OK'),
-                      ),
-                    ],
+              builder: (context) => AlertDialog(
+                title: const Text('Success'),
+                content: const Text('Profile updated successfully!'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('OK'),
                   ),
+                ],
+              ),
             );
           },
           updateFailure: (error) {
             Navigator.of(context).pop(); // Close loading
             showDialog(
               context: context,
-              builder:
-                  (context) => AlertDialog(
-                    title: const Text('Error'),
-                    content: Text(error.error ?? 'Something went wrong!'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('OK'),
-                      ),
-                    ],
+              builder: (context) => AlertDialog(
+                title: const Text('Error'),
+                content: Text(error.error ?? 'Something went wrong!'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('OK'),
                   ),
+                ],
+              ),
+            );
+          },
+          loginvaldationFailure: (error) {
+            Navigator.of(context).pop(); // Close loading
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Error'),
+                content: Text(error.profileUpdateValidation.message ??
+                    'Something went wrong!'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
             );
           },
           noInternet: (error) {
             Navigator.of(context).pop(); // Close loading
             showDialog(
               context: context,
-              builder:
-                  (context) => AlertDialog(
-                    title: const Text('Error'),
-                    content: Text('SNo Internet!'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('OK'),
-                      ),
-                    ],
+              builder: (context) => AlertDialog(
+                title: const Text('Error'),
+                content: Text('SNo Internet!'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('OK'),
                   ),
+                ],
+              ),
             );
           },
         );
@@ -217,8 +231,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                 name: nameController.text.trim(),
                                 email: emailController.text.trim(),
                                 phone: phoneController.text.trim(),
-                                image:
-                                    _pickedImage?.path ??
+                                image: _pickedImage?.path ??
                                     '', // pass image path if selected
                               ),
                             );
@@ -240,16 +253,14 @@ class _AccountScreenState extends State<AccountScreen> {
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.transparent,
-                    backgroundImage:
-                        _pickedImage != null
-                            ? FileImage(File(_pickedImage!.path)) // Local image
-                            : imageUrl != null
+                    backgroundImage: _pickedImage != null
+                        ? FileImage(File(_pickedImage!.path)) // Local image
+                        : imageUrl != null
                             ? NetworkImage(imageUrl!) // Network image
                             : null, // Default if no image
-                    child:
-                        _pickedImage == null && imageUrl == null
-                            ? ClipOval(child: Icon(Icons.person))
-                            : null,
+                    child: _pickedImage == null && imageUrl == null
+                        ? ClipOval(child: Icon(Icons.person))
+                        : null,
                   ),
                   Positioned(
                     bottom: 0,
@@ -270,14 +281,13 @@ class _AccountScreenState extends State<AccountScreen> {
                           shape: BoxShape.circle,
                         ),
                         padding: const EdgeInsets.all(4),
-                        child:
-                            isEditing
-                                ? SvgPicture.asset(
-                                  'assets/image/profile/profile_pic_edit.svg',
-                                )
-                                : SvgPicture.asset(
-                                  'assets/image/profile/profile_pic_edit.svg',
-                                ),
+                        child: isEditing
+                            ? SvgPicture.asset(
+                                'assets/image/profile/profile_pic_edit.svg',
+                              )
+                            : SvgPicture.asset(
+                                'assets/image/profile/profile_pic_edit.svg',
+                              ),
                       ),
                     ),
                   ),
@@ -520,11 +530,10 @@ class DottedBorderPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     double radius = size.width / 2;
 
-    final paint =
-        Paint()
-          ..color = Color(0XFF1F8386)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2;
+    final paint = Paint()
+      ..color = Color(0XFF1F8386)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
 
     double dashWidth = 30, dashSpace = 10;
     double circumference = 2 * 3.14159265359 * radius;
@@ -641,9 +650,8 @@ class StyledPhoneNumberField extends StatelessWidget {
       final cleaned = fullPhoneNumber!.substring(1); // Remove '+'
 
       // Sort dial codes by length (desc) so longer ones like '971' are matched first
-      final sortedDialCodes =
-          dialCodeToIso.keys.toList()
-            ..sort((a, b) => b.length.compareTo(a.length));
+      final sortedDialCodes = dialCodeToIso.keys.toList()
+        ..sort((a, b) => b.length.compareTo(a.length));
 
       for (final code in sortedDialCodes) {
         if (cleaned.startsWith(code)) {

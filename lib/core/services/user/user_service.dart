@@ -5,13 +5,14 @@ import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/env/env.dart';
 import 'package:cruise_buddy/core/model/user_profile_model/user_profile_model.dart';
 import 'package:cruise_buddy/core/model/user_update_succes_model/user_update_succes_model.dart';
+import 'package:cruise_buddy/core/model/validation/profile_update_validation/profile_update_validation.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
   final ConnectivityChecker _connectivityChecker = ConnectivityChecker();
 
-  final String url = BaseUrl.dev;
+  final String url = BaseUrl.prod;
 
   final Map<String, String> _headers = {
     'Accept': 'application/json',
@@ -58,7 +59,7 @@ class UserService {
     }
   }
 
-  Future<Either<String, UserUpdateSuccesModel>> updateUserProfile({
+  Future<Either<dynamic, UserUpdateSuccesModel>> updateUserProfile({
     String? name,
     String? email,
     String? phone,
@@ -111,6 +112,12 @@ class UserService {
         final userProfile = UserUpdateSuccesModel.fromJson(data);
         print('Request success: ${response.body}');
         return Right(userProfile);
+      } else if (response.statusCode == 422) {
+        final data = json.decode(response.body);
+
+        final loginModel = ProfileUpdateValidation.fromJson(data);
+        print('data failed ${response.body.toLowerCase()}');
+        return left(loginModel);
       } else {
         print('Request failed: ${response.body}');
         return Left('Failed to update user profile: ${response.statusCode}');

@@ -13,7 +13,7 @@ import 'package:http/http.dart' as http;
 class BookingService {
   final ConnectivityChecker _connectivityChecker = ConnectivityChecker();
 
-  final String url = BaseUrl.dev;
+  final String url = BaseUrl.prod;
 
   final Map<String, String> _headers = {
     'Accept': 'application/json',

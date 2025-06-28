@@ -14,7 +14,7 @@ import 'package:dartz/dartz.dart';
 class AuthServices {
   final ConnectivityChecker _connectivityChecker = ConnectivityChecker();
 
-  final String url = BaseUrl.dev;
+  final String url = BaseUrl.prod;
   final Map<String, String> _headers = {
     'Accept': 'application/json',
     'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',
@@ -132,7 +132,7 @@ class AuthServices {
       }
 
       final response = await http.post(
-        Uri.parse('${BaseUrl.dev}/logout'),
+        Uri.parse('${BaseUrl.prod}/logout'),
         headers: {
           'Authorization': 'Bearer $token',
         },
@@ -159,7 +159,7 @@ class AuthServices {
       }
 
       final response = await http.post(
-        Uri.parse('${BaseUrl.dev}/google-verify-uid'),
+        Uri.parse('${BaseUrl.prod}/google-verify-uid'),
         headers: {'Accept': 'application/json'},
         body: {
           'idToken': idToken,
@@ -199,7 +199,7 @@ class AuthServices {
       //    }
 
       final response = await http.post(
-        Uri.parse('${BaseUrl.dev}/delete-account'),
+        Uri.parse('${BaseUrl.prod}/delete-account'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token', // ✅ Important header

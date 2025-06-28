@@ -103,12 +103,6 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        builder: (context, child) {
-          ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
-            return CustomErrorWidget(errorDetails: errorDetails);
-          };
-          return child!;
-        },
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -130,6 +124,6 @@ class MyApp extends StatelessWidget {
 
 //-----------------------
 
-//Old base url = BaseUrl.dev
+//Old base url = BaseUrl.prod
 //------------------------------
 ///----------------
