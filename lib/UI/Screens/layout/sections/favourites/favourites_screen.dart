@@ -5,6 +5,7 @@ import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmatio
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
+import 'package:cruise_buddy/core/env/env.dart';
 import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
@@ -52,29 +53,27 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
   String name = 'Guest';
   String email = 'N/A';
 
-    Future<void> _getUSerData() async {
+  Future<void> _getUSerData() async {
     try {
       final userdetailsbox = Hive.box<UserDetailsDB>('userDetailsBox');
       final userDetails = userdetailsbox.get('user');
       if (userDetails != null) {
-      setState(() {
-        name = userDetails.name ?? 'Guest';
-        email = userDetails.email ?? 'N/A';
-      });
-    }
+        setState(() {
+          name = userDetails.name ?? 'Guest';
+          email = userDetails.email ?? 'N/A';
+        });
+      }
     } catch (error) {
       print('Error fetching data from Hive: $error');
       // Handle errors appropriately, e.g., display an error message
     }
   }
 
-
-
   Future<void> fetchFavorites() async {
     final token = await GetSharedPreferences.getAccessToken();
     final response = await http.get(
       Uri.parse(
-          'https://cruisebuddy.in/api/v1/favorite?include=user,package.cruise,package.cruise.cruiseType,package.cruise.ratings,package.itineraries,package.amenities,package.food,package.packageImages,package.bookingTypes,package.cruise.cruisesImages,'),
+          '${BaseUrl.dev}/favorite?include=user,package.cruise,package.cruise.cruiseType,package.cruise.ratings,package.itineraries,package.amenities,package.food,package.packageImages,package.bookingTypes,package.cruise.cruisesImages,'),
       headers: {
         'Accept': 'application/json',
         'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',
@@ -408,7 +407,11 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      "${favourite?.package?.name ?? ""}",
+                                      (favourite?.package?.name
+                                                  ?.toLowerCase() ==
+                                              'dulex')
+                                          ? 'Deluxe'
+                                          : 'Premium',
                                       style: TextStyles.ubuntu12blue23w700,
                                     ),
                                   ),

@@ -147,27 +147,6 @@ class _SearchResultsContainerState extends State<SearchResultsContainer> {
                       ),
                     ),
                   ),
-                  // Positioned(
-                  //   top: 8,
-                  //   right: 8,
-                  //   child: InkWell(
-                  //     onTap: () {},
-                  //     child: Container(
-                  //       decoration: BoxDecoration(
-                  //           color: Colors.white,
-                  //           borderRadius: BorderRadius.circular(25)),
-                  //       child: Padding(
-                  //         padding: const EdgeInsets.all(5.0),
-                  //         child: Icon(
-                  //           Icons.favorite,
-                  //           color: Color(0XFF4FC2C5),
-                  //           size: 20,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-
                   Positioned(
                     top: 8,
                     right: 8,
@@ -307,6 +286,27 @@ class _SearchResultsContainerState extends State<SearchResultsContainer> {
       ),
     );
   }
+
+  Widget _buildPlaceholderImage() {
+  return Container(
+    width: double.infinity,
+    height: 160,
+    color: Colors.grey[300],
+    child: const Center(
+      child: Icon(Icons.image, size: 50, color: Colors.grey),
+    ),
+  );
+}
+
+Widget _buildLoadingPlaceholder() {
+  return Container(
+    width: double.infinity,
+    height: 160,
+    color: Colors.grey[300],
+    child: const Center(child: CircularProgressIndicator()),
+  );
+}
+
 }
 
 class PillWidget extends StatelessWidget {

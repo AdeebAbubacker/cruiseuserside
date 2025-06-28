@@ -130,6 +130,6 @@ class MyApp extends StatelessWidget {
 
 //-----------------------
 
-//Old base url = https://cruisebuddy.in/api/v1
+//Old base url = BaseUrl.dev
 //------------------------------
 ///----------------

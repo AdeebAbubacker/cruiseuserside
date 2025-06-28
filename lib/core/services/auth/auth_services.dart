@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:cruise_buddy/core/constants/functions/connection/connectivity_checker.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
+import 'package:cruise_buddy/core/env/env.dart';
 import 'package:cruise_buddy/core/model/delete_account_model/delete_account_model.dart';
 import 'package:cruise_buddy/core/model/login_model/login_model.dart';
 import 'package:cruise_buddy/core/model/validation/login_validation/login_validation.dart';
@@ -13,7 +14,7 @@ import 'package:dartz/dartz.dart';
 class AuthServices {
   final ConnectivityChecker _connectivityChecker = ConnectivityChecker();
 
-  final String url = 'https://cruisebuddy.in/api/v1';
+  final String url = BaseUrl.dev;
   final Map<String, String> _headers = {
     'Accept': 'application/json',
     'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',
@@ -131,7 +132,7 @@ class AuthServices {
       }
 
       final response = await http.post(
-        Uri.parse('https://cruisebuddy.in/api/v1/logout'),
+        Uri.parse('${BaseUrl.dev}/logout'),
         headers: {
           'Authorization': 'Bearer $token',
         },
@@ -158,7 +159,7 @@ class AuthServices {
       }
 
       final response = await http.post(
-        Uri.parse('https://cruisebuddy.in/api/v1/google-verify-uid'),
+        Uri.parse('${BaseUrl.dev}/google-verify-uid'),
         headers: {'Accept': 'application/json'},
         body: {
           'idToken': idToken,
@@ -198,7 +199,7 @@ class AuthServices {
       //    }
 
       final response = await http.post(
-        Uri.parse('https://cruisebuddy.in/api/v1/delete-account'),
+        Uri.parse('${BaseUrl.dev}/delete-account'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token', // ✅ Important header

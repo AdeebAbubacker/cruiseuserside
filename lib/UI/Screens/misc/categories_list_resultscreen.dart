@@ -8,6 +8,7 @@ import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmatio
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
+import 'package:cruise_buddy/core/env/env.dart';
 import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 
 import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';
@@ -92,8 +93,7 @@ class _CategoriesListResultscreenState
   Future<void> fetchFavorites() async {
     final token = await GetSharedPreferences.getAccessToken();
     final response = await http.get(
-      Uri.parse(
-          'https://cruisebuddy.in/api/v1/favorite?include=package.cruise'),
+      Uri.parse('${BaseUrl.dev}/favorite?include=package.cruise'),
       headers: {
         'Accept': 'application/json',
         'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',
@@ -815,7 +815,12 @@ class _CategoriesListResultscreenState
                                                                         .all(
                                                                         8.0),
                                                                 child: Text(
-                                                                  "${value.packagesearchresults.data?[index].name}",
+                                                                  (value.packagesearchresults.data?[index]
+                                                                              .name
+                                                                              ?.toLowerCase() ==
+                                                                          'dulex')
+                                                                      ? 'Deluxe'
+                                                                      : 'Premium',
                                                                   style: TextStyles
                                                                       .ubuntu12blue23w700,
                                                                 ),

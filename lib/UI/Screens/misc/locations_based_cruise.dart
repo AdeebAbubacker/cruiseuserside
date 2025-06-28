@@ -7,6 +7,7 @@ import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
+import 'package:cruise_buddy/core/env/env.dart';
 import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
 import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';
@@ -49,7 +50,7 @@ class _LocationsBasedCruiseScreenState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       fetchFavorites();
-       _getUSerData();
+      _getUSerData();
       BlocProvider.of<ListCruiseonLocationBloc>(context)
           .add(ListCruiseonLocationEvent.getCruise(location: widget.location));
     });
@@ -58,28 +59,26 @@ class _LocationsBasedCruiseScreenState
   String name = 'Guest';
   String email = 'N/A';
 
-    Future<void> _getUSerData() async {
+  Future<void> _getUSerData() async {
     try {
       final userdetailsbox = Hive.box<UserDetailsDB>('userDetailsBox');
       final userDetails = userdetailsbox.get('user');
       if (userDetails != null) {
-      setState(() {
-        name = userDetails.name ?? 'Guest';
-        email = userDetails.email ?? 'N/A';
-      });
-    }
+        setState(() {
+          name = userDetails.name ?? 'Guest';
+          email = userDetails.email ?? 'N/A';
+        });
+      }
     } catch (error) {
       print('Error fetching data from Hive: $error');
       // Handle errors appropriately, e.g., display an error message
     }
   }
 
-
   Future<void> fetchFavorites() async {
     final token = await GetSharedPreferences.getAccessToken();
     final response = await http.get(
-      Uri.parse(
-          'https://cruisebuddy.in/api/v1/favorite?include=package.cruise'),
+      Uri.parse('${BaseUrl.dev}/favorite?include=package.cruise'),
       headers: {
         'Accept': 'application/json',
         'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',
@@ -355,33 +354,43 @@ class _LocationsBasedCruiseScreenState
                       if (cruiseData == null || cruiseData.isEmpty) {
                         // When there's no data, display a "No data available" message
 
-                        return SizedBox(   width:double.infinity,
+                        return SizedBox(
+                          width: double.infinity,
                           child: Stack(
                             children: [
                               Positioned(
                                 bottom: -40,
-                                child: SizedBox(   width:double.infinity,
+                                child: SizedBox(
+                                  width: double.infinity,
                                   child: SvgPicture.asset(
                                     'assets/icons/cruise_background.svg',
-                                    color: const Color.fromARGB(255, 196, 238, 237),     fit: BoxFit.fill, // or BoxFit.cover
+                                    color: const Color.fromARGB(
+                                        255, 196, 238, 237),
+                                    fit: BoxFit.fill, // or BoxFit.cover
                                   ),
                                 ),
                               ),
                               Positioned(
                                 bottom: 140,
-                                child: SizedBox(   width:double.infinity,
+                                child: SizedBox(
+                                  width: double.infinity,
                                   child: SvgPicture.asset(
                                     'assets/icons/cruise_background.svg',
-                                    color: const Color.fromARGB(255, 181, 235, 233),     fit: BoxFit.fill, // or BoxFit.cover
+                                    color: const Color.fromARGB(
+                                        255, 181, 235, 233),
+                                    fit: BoxFit.fill, // or BoxFit.cover
                                   ),
                                 ),
                               ),
                               Positioned(
                                 bottom: 150,
-                                child: SizedBox(   width:double.infinity,
+                                child: SizedBox(
+                                  width: double.infinity,
                                   child: SvgPicture.asset(
                                     'assets/icons/cruise_background.svg',
-                                    color: const Color.fromARGB(255, 181, 235, 233),     fit: BoxFit.fill, // or BoxFit.cover
+                                    color: const Color.fromARGB(
+                                        255, 181, 235, 233),
+                                    fit: BoxFit.fill, // or BoxFit.cover
                                   ),
                                 ),
                               ),
@@ -389,7 +398,8 @@ class _LocationsBasedCruiseScreenState
                                 padding: const EdgeInsets.all(8.0),
                                 child: Center(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       SvgPicture.asset(
@@ -618,7 +628,12 @@ class _LocationsBasedCruiseScreenState
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
-                                                "${value.cruisemodel.data![index].name}",
+                                                (value.cruisemodel.data?[index]
+                                                            .name
+                                                            ?.toLowerCase() ==
+                                                        'dulex')
+                                                    ? 'Deluxe'
+                                                    : 'Premium',
                                                 style: TextStyles
                                                     .ubuntu12blue23w700,
                                               ),

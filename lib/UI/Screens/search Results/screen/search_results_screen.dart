@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/featured_shimmer_card.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
+import 'package:cruise_buddy/core/env/env.dart';
 import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';
 import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -60,8 +61,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   Future<void> fetchFavorites() async {
     final token = await GetSharedPreferences.getAccessToken();
     final response = await http.get(
-      Uri.parse(
-          'https://cruisebuddy.in/api/v1/favorite?include=package.cruise'),
+      Uri.parse('${BaseUrl.dev}/favorite?include=package.cruise'),
       headers: {
         'Accept': 'application/json',
         'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',
@@ -669,17 +669,35 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                           final favouriteId = isFavorite
                                               ? favoritePackageMap[packageId]
                                               : null;
+
                                           final dayCruiseDefaultPrice =
                                               (package?.bookingTypes ?? [])
                                                   .firstWhere(
                                                     (type) =>
                                                         type.name ==
                                                         'day_cruise',
-                                                    orElse: () =>
-                                                        BookingType(), // Make sure BookingType has a default constructor
+                                                    orElse: () => BookingType(),
                                                   )
                                                   .defaultPrice;
-
+                                          final imageUrl =
+                                              (package?.cruise?.images !=
+                                                          null &&
+                                                      package!.cruise!.images!
+                                                          .isNotEmpty)
+                                                  ? package.cruise!.images![0]
+                                                          .cruiseImg ??
+                                                      ''
+                                                  : '';
+                                          final cruiseImages = value
+                                                  .packagesearchresults
+                                                  .data?[index]
+                                                  .cruise
+                                                  ?.images ??
+                                              [];
+                                          final imageUrls = cruiseImages
+                                                  .isNotEmpty
+                                              ? cruiseImages[0].cruiseImg ?? ''
+                                              : '';
                                           return Padding(
                                             padding: const EdgeInsets.only(
                                               bottom: 15,
@@ -700,8 +718,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                                       .cruise
                                                       ?.name ??
                                                   "N/A",
-                                              imageUrl:
-                                                  '${value.packagesearchresults.data?[index].cruise?.images?[0].cruiseImg}',
+                                              imageUrl: imageUrls,
                                               price: '${dayCruiseDefaultPrice}',
                                               isFavorite: isFavorite,
                                               favouriteId: favouriteId,

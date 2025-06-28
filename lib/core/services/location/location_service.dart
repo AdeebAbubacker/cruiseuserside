@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cruise_buddy/core/constants/functions/connection/connectivity_checker.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
+import 'package:cruise_buddy/core/env/env.dart';
 import 'package:cruise_buddy/core/model/location_model/location_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +10,7 @@ import 'package:http/http.dart' as http;
 class LocationService {
   final ConnectivityChecker _connectivityChecker = ConnectivityChecker();
 
-  final String url = 'https://cruisebuddy.in/api/v1';
+  final String url = BaseUrl.dev;
 
   final Map<String, String> _headers = {
     'Accept': 'application/json',

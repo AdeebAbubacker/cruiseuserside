@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BookingTypeSelectorWidget extends StatefulWidget {
   final ValueChanged<int> onTypeSelected; // Change to accept int type
@@ -43,7 +44,7 @@ class _BookingTypeSelectorWidgetState extends State<BookingTypeSelectorWidget> {
       child: Row(
         children: [
           _buildOption(1, "Day Cruise"), // 1 for Day Cruise
-          _buildOption(2, "Full Cruise"), // 2 for Full Cruise
+          _buildOption(2, "Full Day Cruise"), // 2 for Full Cruise
         ],
       ),
     );
@@ -75,9 +76,9 @@ class _BookingTypeSelectorWidgetState extends State<BookingTypeSelectorWidget> {
           alignment: Alignment.center,
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+            style: GoogleFonts.ubuntu(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
               color: isSelected ? Colors.blue : Colors.black,
             ),
           ),
