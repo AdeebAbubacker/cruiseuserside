@@ -800,10 +800,35 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                     ],
                                                   ),
                                                   const SizedBox(height: 4),
-                                                  Text(
-                                                    "₹${dayCruiseDefaultPrice.defaultPrice ?? 'N/A'}",
-                                                    style: TextStyles
-                                                        .ubuntu18bluew700,
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      if (dayCruiseDefaultPrice
+                                                                  .comparePrice !=
+                                                              null &&
+                                                          dayCruiseDefaultPrice
+                                                              .comparePrice
+                                                              .toString()
+                                                              .isNotEmpty)
+                                                        Text(
+                                                          "₹${dayCruiseDefaultPrice.comparePrice}",
+                                                          style: GoogleFonts
+                                                              .ubuntu(
+                                                            fontSize: 14,
+                                                            color: Colors.grey,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough,
+                                                          ),
+                                                        ),
+                                                      Text(
+                                                        "₹${dayCruiseDefaultPrice.defaultPrice ?? 'N/A'}",
+                                                        style: TextStyles
+                                                            .ubuntu18bluew700,
+                                                      ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
