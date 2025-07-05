@@ -5,3 +5,4 @@ class BaseUrl {
   // Production server URL
   static const String prod = 'https://cruisebuddy.in/api/v1';
 }
+// static const String prod = 'https://cruisebuddy.in/api/v1';

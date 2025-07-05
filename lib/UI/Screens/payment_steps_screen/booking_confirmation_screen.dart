@@ -1,6 +1,5 @@
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/type_ofday_selection.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/collect_phone_number_screen.dart';
-import 'package:cruise_buddy/UI/Screens/payment_steps_screen/select_payment_method.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/rectangle_bluebutton_loading.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
@@ -91,7 +90,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       setState(() {
         // Once you have defaultPrice, pricePerPerson, etc...
         // (Make sure these values are set before calling the price calculation)
-        totalPrice = defaultPrice + pricePerPerson;
+        totalPrice = DayCruisedefaultPrice + pricePerPerson;
         //_calculateTotalPrice();
       });
     });
@@ -220,7 +219,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   int maxAdults = 1; // default fallback
   int maxRooms = 1;
   List<featuredBoats.UnavailableDate>? unavailableDates;
-  int defaultPrice = 0;
+  int DayCruisedefaultPrice = 0;
+  int FullDayCruisedefaultPrice = 0;
   int totalPrice = 0;
   int pricePerDay = 0;
   int pricePerPerson = 0;
@@ -303,10 +303,19 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
 
                   unavailableDates = value.mybookingmodel.unavailableDate ?? [];
-                  defaultPrice = parsePrice(
+                  DayCruisedefaultPrice = parsePrice(
                     value.mybookingmodel?.data?.bookingTypes
                             ?.firstWhere(
                               (type) => type.name == 'day_cruise',
+                            )
+                            ?.defaultPrice
+                            ?.toString() ??
+                        '0',
+                  );
+                  FullDayCruisedefaultPrice = parsePrice(
+                    value.mybookingmodel?.data?.bookingTypes
+                            ?.firstWhere(
+                              (type) => type.name == 'full_day_cruise',
                             )
                             ?.defaultPrice
                             ?.toString() ??
@@ -335,7 +344,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
                   print(
                       "defaultprice is ${value.mybookingmodel.data?.bookingTypes?[0].defaultPrice}");
-                  totalPrice = defaultPrice;
+                  totalPrice = DayCruisedefaultPrice;
                   maxRooms = value.mybookingmodel?.data?.cruise?.rooms ?? 1;
                   print('dey my roooms ${maxRooms}');
                   minAmountTopayforDay = parsePrice(
@@ -492,14 +501,49 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                           setState(() {
                             bookingTypeId = selectedType.toString();
                             if (selectedType == 2) {
-                              totalPrice = (maxRooms *
-                                      double.parse(widget
-                                          .datum.bookingTypes![1].pricePerBed
-                                          .toString()))
-                                  .toInt();
+                              final fullDayCruise =
+                                  widget.datum.bookingTypes?.firstWhere(
+                                (b) => b.id == 2,
+                                orElse: () => BookingType(),
+                              );
+
+                              if (fullDayCruise != null) {
+                                final int minBed = int.tryParse(
+                                        fullDayCruise.minimumBed?.toString() ??
+                                            '0') ??
+                                    0;
+                                final int pricePerBed = int.tryParse(
+                                        fullDayCruise.pricePerBed
+                                                ?.toString()
+                                                ?.split('.')
+                                                ?.first ??
+                                            '0') ??
+                                    0;
+                                final int defaultPrice = int.tryParse(
+                                        fullDayCruise.defaultPrice
+                                                ?.toString()
+                                                ?.split('.')
+                                                ?.first ??
+                                            '0') ??
+                                    0;
+
+                                final int extraAdults = (_numAdults > minBed)
+                                    ? _numAdults - minBed
+                                    : 0;
+                                final int extraCharge =
+                                    extraAdults * pricePerBed;
+
+                                totalPrice = defaultPrice + extraCharge;
+
+                                print('🛳 Full Day Cruise Selected');
+                                print('🔹 Default Price: ₹$defaultPrice');
+                                print('🔹 Extra Adults: $extraAdults');
+                                print('🔹 Extra Charge: ₹$extraCharge');
+                                print('✅ Total Price: ₹$totalPrice');
+                              }
                             }
                             if (selectedType == 1) {
-                              totalPrice = (defaultPrice ?? 0) +
+                              totalPrice = (DayCruisedefaultPrice ?? 0) +
                                   (_numAdults * (pricePerPerson ?? 1));
                             }
                           });
@@ -529,13 +573,61 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                 if (_numAdults > defaultPersons) {
                                   final extraAdults =
                                       _numAdults - defaultPersons;
-                                  totalPrice = (defaultPrice ?? 0) +
+                                  totalPrice = (DayCruisedefaultPrice ?? 0) +
                                       (extraAdults * (pricePerPerson ?? 1));
                                 } else {
-                                  totalPrice = defaultPrice ?? 0;
+                                  totalPrice = DayCruisedefaultPrice ?? 0;
                                 }
                                 // totalPrice = (defaultPrice ?? 0) +
                                 //     (_numAdults * (pricePerPerson ?? 1));
+                              }
+                              if (bookingTypeId == '2') {
+                                final BookingType? bookingType =
+                                    widget.datum.bookingTypes?.firstWhere(
+                                  (b) => b.id.toString() == bookingTypeId,
+                                  orElse: () =>
+                                      BookingType(), // ⚠️ Only if you have a default constructor (not recommended usually)
+                                );
+
+                                if (bookingType != null) {
+                                  final int defaultPrice =
+                                      FullDayCruisedefaultPrice ?? 0;
+                                  final int pricePerBed = int.tryParse(
+                                          bookingType.pricePerBed
+                                                  ?.toString()
+                                                  ?.split('.')
+                                                  ?.first ??
+                                              '0') ??
+                                      0;
+                                  final int minimumBed =
+                                      bookingType.minimumBed ?? 0;
+
+                                  print('🔹 Default Price: ₹$defaultPrice');
+                                  print(
+                                      '🔹 Minimum Beds (Free Adults): $minimumBed');
+                                  print(
+                                      '🔹 Price Per Extra Bed: ₹$pricePerBed');
+                                  print('🔹 Current Adults: $_numAdults');
+
+                                  if (_numAdults > minimumBed) {
+                                    final int extraAdults =
+                                        _numAdults - minimumBed;
+                                    final int extraCharge =
+                                        extraAdults * pricePerBed;
+                                    totalPrice = defaultPrice + extraCharge;
+
+                                    print('🔹 Extra Adults: $extraAdults');
+                                    print('🔹 Extra Charge: ₹$extraCharge');
+                                  } else {
+                                    totalPrice = defaultPrice;
+                                    print(
+                                        '✅ Adults within minimum bed limit. No extra charge.');
+                                  }
+
+                                  print('✅ Final Total Price: ₹$totalPrice');
+                                } else {
+                                  print('❌ Booking Type ID 2 not found!');
+                                }
                               }
                             });
                           },
@@ -797,7 +889,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       ),
                     _buildDetailRow(
                       'Charges for the trip',
-                      '₹${bookingTypeId == "2" && fullDayCruise != null ? (int.parse(maxRooms.toString()) * double.parse(fullDayCruise!.pricePerBed.toString())).toStringAsFixed(2) : defaultPrice}',
+                      '₹${bookingTypeId == "2" && fullDayCruise != null ? FullDayCruisedefaultPrice : DayCruisedefaultPrice}',
                     ),
                     Visibility(
                         visible: bookingTypeId == '1',
@@ -805,7 +897,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                             'Price Per Person', '₹${pricePerPerson}')),
                     Visibility(
                       visible: bookingTypeId == '2',
-                      child: _buildDetailRow('Price Per Room',
+                      child: _buildDetailRow('Extra Price Per Bed',
                           '₹${widget.datum.bookingTypes![1].pricePerBed.toString()}'),
                     ),
                     Visibility(
@@ -925,30 +1017,33 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                     return;
                                   }
 
-                                   // Check Hive for phone number
-              final userDetailsBox =
-                  await Hive.openBox<UserDetailsDB>('userDetailsBox');
-              final userDetails = userDetailsBox.get('user');
-              String? phone = userDetails?.phone;
+                                  // Check Hive for phone number
+                                  final userDetailsBox =
+                                      await Hive.openBox<UserDetailsDB>(
+                                          'userDetailsBox');
+                                  final userDetails =
+                                      userDetailsBox.get('user');
+                                  String? phone = userDetails?.phone;
 
-              // If not found, navigate to collect it
-              if (phone == null || phone.isEmpty) {
-                final collectedPhone = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CollectPhoneNumberScreen(),
-                  ),
-                );
+                                  // If not found, navigate to collect it
+                                  if (phone == null || phone.isEmpty) {
+                                    final collectedPhone = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CollectPhoneNumberScreen(),
+                                      ),
+                                    );
 
-                if (collectedPhone != null &&
-                    collectedPhone is String &&
-                    collectedPhone.isNotEmpty) {
-                  phone = collectedPhone;
-                } else {
-                  // User didn't enter phone number, so exit
-                  return;
-                }
-              }
+                                    if (collectedPhone != null &&
+                                        collectedPhone is String &&
+                                        collectedPhone.isNotEmpty) {
+                                      phone = collectedPhone;
+                                    } else {
+                                      // User didn't enter phone number, so exit
+                                      return;
+                                    }
+                                  }
 
                                   if (phone != null &&
                                       phone is String &&
@@ -1009,7 +1104,6 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
         ),
       ),
     );
-    
   }
 
   String _formatAmount(String? amount) {
@@ -1095,7 +1189,6 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     );
   }
 
-
   Widget _buildDetailRow(String label, String value, {bool isTotal = false}) {
     return Row(
       children: [
@@ -1116,38 +1209,38 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       ],
     );
   }
+
   // Call this inside your button's onPressed or anywhere you want to handle phone number
-Future<void> handlePhoneNumber(BuildContext context) async {
-  // Open the Hive box
-  final userDetailsBox = await Hive.openBox<UserDetailsDB>('userDetailsBox');
+  Future<void> handlePhoneNumber(BuildContext context) async {
+    // Open the Hive box
+    final userDetailsBox = await Hive.openBox<UserDetailsDB>('userDetailsBox');
 
-  // Get the saved user details
-  final userDetails = userDetailsBox.get('user');
+    // Get the saved user details
+    final userDetails = userDetailsBox.get('user');
 
-  // Check if phone number already exists
-  final savedPhone = userDetails?.phone;
+    // Check if phone number already exists
+    final savedPhone = userDetails?.phone;
 
-  if (savedPhone != null && savedPhone.isNotEmpty) {
-    // Phone number already saved, proceed with it
-    print("Phone number from Hive: $savedPhone");
+    if (savedPhone != null && savedPhone.isNotEmpty) {
+      // Phone number already saved, proceed with it
+      print("Phone number from Hive: $savedPhone");
 
-    // ✅ Use savedPhone for your next logic (like booking API call)
+      // ✅ Use savedPhone for your next logic (like booking API call)
+    } else {
+      // Phone number not available, navigate to phone input screen
+      final newPhone = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CollectPhoneNumberScreen(),
+        ),
+      );
 
-  } else {
-    // Phone number not available, navigate to phone input screen
-    final newPhone = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CollectPhoneNumberScreen(),
-      ),
-    );
-
-    if (newPhone != null && newPhone.toString().isNotEmpty) {
-      // ✅ Use newPhone for your next logic
-      print("Phone number collected from screen: $newPhone");
+      if (newPhone != null && newPhone.toString().isNotEmpty) {
+        // ✅ Use newPhone for your next logic
+        print("Phone number collected from screen: $newPhone");
+      }
     }
   }
-}
 }
 
 class FoodCounterStateless extends StatelessWidget {
