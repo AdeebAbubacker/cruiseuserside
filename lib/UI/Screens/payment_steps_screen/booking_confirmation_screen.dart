@@ -68,10 +68,13 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       print("my user name is ${widget.name}");
       print("my user email is ${widget.email}");
-      if (widget.datum.bookingTypes!.length == 1) {
-        bookingTypeId = widget.datum.bookingTypes?.first.id.toString() ??
-            "1"; // Set the booking type ID directly
+      if (widget.datum.bookingTypes != null &&
+          widget.datum.bookingTypes!.isNotEmpty) {
+        bookingTypeId = widget.datum.bookingTypes!.first.id.toString();
+      } else {
+        bookingTypeId = "1"; // or handle gracefully with error message
       }
+
       imageUrls = [
         (widget.datum?.cruise?.images?.isNotEmpty == true
                 ? widget.datum!.cruise!.images![0].cruiseImg
@@ -129,7 +132,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
         'wallet': false,
       },
       'theme': {'color': '#FFD700'},
-      'redirect': true,
+      'redirect': false,
     };
 
     try {
@@ -286,8 +289,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
             state.mapOrNull(
               viewMyPacakge: (value) {
                 try {
-                  fullDayCruise = widget.datum.bookingTypes!
-                      .firstWhere((type) => type.name == 'full_day_cruise');
+                  fullDayCruise = widget.datum.bookingTypes?.firstWhere(
+                    (type) => type.name == 'full_day_cruise',
+                    orElse: () => BookingType(),
+                  );
                 } catch (e) {
                   fullDayCruise = null;
                 }
@@ -298,6 +303,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                           )
                           ?.defaultPersons ??
                       0;
+
                   maxRooms = value.mybookingmodel.data?.cruise?.rooms ?? 1;
                   maxAdults =
                       value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
@@ -477,7 +483,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       ],
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
                     Text(
                       'Booking Type',
@@ -490,8 +496,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                         child: Text(
                           _getCruiseName(
                               widget.datum.bookingTypes!.first.id ?? 0),
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+                          style: GoogleFonts.ubuntu(fontSize: 14),
                         ),
                       )
                     else if (widget.datum.bookingTypes!.length > 1)
@@ -553,7 +558,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                             int.tryParse(bookingTypeId.toString()) ?? 1,
                       ),
                     SizedBox(
-                      height: 40,
+                      height: 30,
                     ),
                     // Passengers Section
                     _buildEditableSection(
@@ -897,8 +902,14 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                             'Price Per Person', '₹${pricePerPerson}')),
                     Visibility(
                       visible: bookingTypeId == '2',
-                      child: _buildDetailRow('Extra Price Per Bed',
-                          '₹${widget.datum.bookingTypes![1].pricePerBed.toString()}'),
+                      child: _buildDetailRow(
+                        'Extra Price Per Bed',
+                        '₹${widget.datum.bookingTypes?.firstWhere(
+                              (type) => type.id == 2,
+                              orElse: () =>
+                                  BookingType(), // Return empty fallback if not found
+                            ).pricePerBed?.toString() ?? '0'}',
+                      ),
                     ),
                     Visibility(
                       visible: bookingTypeId == '2',
