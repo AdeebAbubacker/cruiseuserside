@@ -165,7 +165,9 @@ class BookingType {
   String? comparePrice;
   String? minAmountToPay;
   int? defaultPersons;
+   int? maximumBed;
   int? minimumBed;
+
   BookingType({
     this.id,
     this.packageId,
@@ -179,6 +181,7 @@ class BookingType {
     this.comparePrice,
     this.minAmountToPay,  
     this.defaultPersons,
+    this.maximumBed,
     this.minimumBed,
   });
 
@@ -194,7 +197,8 @@ class BookingType {
         defaultPrice: json['default_price'] as String?,
         comparePrice: json['comparePrice'] as String?,
         minAmountToPay: json['minAmountToPay'] as String?,
-         defaultPersons: json['defaultPersons'] as int?,
+        defaultPersons: json['defaultPersons'] as int?,
+        maximumBed: json['maximumBed'] as int?,
         minimumBed: json['minimumBed'] as int?,
       );
 
@@ -211,6 +215,7 @@ class BookingType {
         'comparePrice': comparePrice,
         'minAmountToPay': minAmountToPay,
         'defaultPersons': defaultPersons,
+        'maximumBed' :  maximumBed,
         'minimumBed': minimumBed,
       };
 }

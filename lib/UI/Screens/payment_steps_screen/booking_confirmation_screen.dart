@@ -595,44 +595,64 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                 );
 
                                 if (bookingType != null) {
-                                  final int defaultPrice =
-                                      FullDayCruisedefaultPrice ?? 0;
-                                  final int pricePerBed = int.tryParse(
-                                          bookingType.pricePerBed
-                                                  ?.toString()
-                                                  ?.split('.')
-                                                  ?.first ??
-                                              '0') ??
-                                      0;
-                                  final int minimumBed =
-                                      bookingType.minimumBed ?? 0;
 
-                                  print('🔹 Default Price: ₹$defaultPrice');
-                                  print(
-                                      '🔹 Minimum Beds (Free Adults): $minimumBed');
-                                  print(
-                                      '🔹 Price Per Extra Bed: ₹$pricePerBed');
-                                  print('🔹 Current Adults: $_numAdults');
 
-                                  if (_numAdults > minimumBed) {
-                                    final int extraAdults =
-                                        _numAdults - minimumBed;
-                                    final int extraCharge =
-                                        extraAdults * pricePerBed;
-                                    totalPrice = defaultPrice + extraCharge;
+                                  // final int defaultPrice =
+                                  //     FullDayCruisedefaultPrice ?? 0;
+                                  // final int pricePerBed = int.tryParse(
+                                  //         bookingType.pricePerBed
+                                  //                 ?.toString()
+                                  //                 ?.split('.')
+                                  //                 ?.first ??
+                                  //             '0') ??
+                                  //     0;
+                                  // final int minimumBed =
+                                  //     bookingType.minimumBed ?? 0;
 
-                                    print('🔹 Extra Adults: $extraAdults');
-                                    print('🔹 Extra Charge: ₹$extraCharge');
-                                  } else {
-                                    totalPrice = defaultPrice;
-                                    print(
-                                        '✅ Adults within minimum bed limit. No extra charge.');
-                                  }
+                                  // print('🔹 Default Price: ₹$defaultPrice');
+                                  // print(
+                                  //     '🔹 Minimum Beds (Free Adults): $minimumBed');
+                                  // print(
+                                  //     '🔹 Price Per Extra Bed: ₹$pricePerBed');
+                                  // print('🔹 Current Adults: $_numAdults');
 
-                                  print('✅ Final Total Price: ₹$totalPrice');
-                                } else {
-                                  print('❌ Booking Type ID 2 not found!');
+                                  // if (_numAdults > minimumBed) {
+                                  //   final int extraAdults =
+                                  //       _numAdults - minimumBed;
+                                  //   final int extraCharge =
+                                  //       extraAdults * pricePerBed;
+                                  //   totalPrice = defaultPrice + extraCharge;
+
+                                  //   print('🔹 Extra Adults: $extraAdults');
+                                  //   print('🔹 Extra Charge: ₹$extraCharge');
+                                   final int defaultPrice = int.tryParse(bookingType.defaultPrice ?? '0') ?? 0;
+    final int pricePerBed = int.tryParse(
+      bookingType.pricePerBed?.split('.')?.first ?? '0',
+    ) ?? 0;
+
+    final int minimumBed = bookingType.minimumBed ?? 0;
+    final int maximumBed = bookingType.maximumBed ?? 0;
+
+    int selectedBeds = _numAdults; // Assuming 1 adult = 1 bed. Adjust if needed.
+
+    // Clamp the selected beds between min and max
+    if (selectedBeds < minimumBed) {
+      selectedBeds = minimumBed;
+    } else if (selectedBeds > maximumBed) {
+      selectedBeds = maximumBed;
+    }
+
+    final int extraCharge = selectedBeds * pricePerBed;
+    totalPrice = defaultPrice + extraCharge;
+
+    print('🔹 Default Price: ₹$defaultPrice');
+    print('🔹 Selected Beds: $selectedBeds');
+    print('🔹 Price Per Bed: ₹$pricePerBed');
+    print('🔹 Extra Charge: ₹$extraCharge');
+    print('✅ Final Total Price: ₹$totalPrice');
                                 }
+
+                               
                               }
                             });
                           },
