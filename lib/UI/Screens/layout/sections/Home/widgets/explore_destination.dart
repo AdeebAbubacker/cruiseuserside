@@ -1,5 +1,6 @@
 import 'package:cruise_buddy/UI/Screens/misc/locations_based_cruise.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/helper/common_helper.dart';
 import 'package:cruise_buddy/core/view_model/getLocationDetails/get_location_details_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -213,12 +214,36 @@ class _ExploreDestinationWidgetState extends State<ExploreDestinationWidget> {
                     child: Stack(
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            '${value.locationmodel.data?[index].thumbnail}',
-                            fit: BoxFit.cover,
-                            width: widget.itemWidth,
-                            height: widget.itemHeight,
+                        borderRadius: BorderRadius.circular(10),
+                        child: FutureBuilder<bool>(
+                          future: isValidImageUrl(value.locationmodel.data?[index].thumbnail),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Container(
+                                width: widget.itemWidth,
+                                height: widget.itemHeight,
+                                color: Colors.grey[300],
+                                alignment: Alignment.center,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              );
+                            }
+                        final isValid = snapshot.data ?? false;
+
+                        return isValid
+                            ? Image.network(
+                                value.locationmodel.data![index].thumbnail!,
+                                fit: BoxFit.cover,
+                                width: widget.itemWidth,
+                                height: widget.itemHeight,
+                              )
+                            : Container(
+                                width: widget.itemWidth,
+                                height: widget.itemHeight,
+                                color: Colors.grey[300],
+                                alignment: Alignment.center,
+                                child: Icon(Icons.image_not_supported, color: Colors.grey[700]),
+                              );
+                            },
                           ),
                         ),
                         Positioned(

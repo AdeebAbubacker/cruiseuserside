@@ -8,6 +8,7 @@ import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.da
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
+import 'package:cruise_buddy/core/helper/common_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
@@ -42,17 +43,6 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
 
   int _currentIndex = 0;
 
-  final List<Map<String, dynamic>> reviews = [
-    {
-      "name": "Samantha Payne",
-      "username": "@Sam.Payne90",
-      "profileImage": null,
-      "rating": 4.0,
-      "reviewText":
-          "Good experience, but could be better. The boat ride was scenic, and we loved the views, but the facilities on board felt a bit outdated. The food was nice, though we expected a bit more variety. A few improvements could make this an amazing experience.",
-      "date": "23 Nov 2021",
-    },
-  ];
   Box<UserDetailsDB>? userDetailsBox;
   bool showMore = false;
   @override
@@ -181,23 +171,41 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: imageUrl.startsWith('http')
-                              ? Image.network(
-                                  imageUrl,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Image.asset(
-                                      'assets/image/boat_details_img/boat_detail_img.png',
-                                      fit: BoxFit.cover,
-                                    );
-                                  },
-                                )
-                              : Image.asset(
-                                  imageUrl,
-                                  fit: BoxFit.cover,
-                                ),
+                        borderRadius: BorderRadius.circular(15),
+                        child: FutureBuilder<bool>(
+                          future: isValidImageUrl(imageUrl), // Checks null, empty, and 404
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              // Optional loading placeholder
+                              return Container(
+                                color: Colors.grey[300],
+                                alignment: Alignment.center,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              );
+                            }
+
+                            final isValid = snapshot.data ?? false;
+
+                            if (isValid) {
+                              return Image.network(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset(
+                                    'assets/image/boat_details_img/boat_detail_img.png',
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                              );
+                            } else {
+                              return Image.asset(
+                                'assets/image/boat_details_img/boat_detail_img.png',
+                                fit: BoxFit.cover,
+                              );
+                            }
+                          },
                         ),
+                      ),
                       );
                     },
                   ),
@@ -438,33 +446,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   ),
 
                   SizedBox(height: 25),
-                  Text(
-                    "Reviews",
-                    style: TextStyles.ubntu16,
-                  ),
-                  const SizedBox(height: 8.0),
-                  Column(
-                    children: reviews
-                        .map((review) => _buildReviewCard(review))
-                        .toList(),
-                  ),
-                  if (reviews.length > 1)
-                    Center(
-                      child: TextButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            showMore = !showMore;
-                          });
-                        },
-                        icon: Icon(
-                          showMore
-                              ? Icons.keyboard_arrow_up
-                              : Icons.keyboard_arrow_down,
-                        ),
-                        label: Text(showMore ? "Show less" : "+4 More reviews"),
-                      ),
-                    ),
-                  SizedBox(
+                 SizedBox(
                     height: 30,
                   ),
                   FullWidthRectangleBlueButton(
