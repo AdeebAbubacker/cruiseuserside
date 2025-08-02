@@ -68,12 +68,17 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       print("my user name is ${widget.name}");
       print("my user email is ${widget.email}");
-      if (widget.datum.bookingTypes != null &&
-          widget.datum.bookingTypes!.isNotEmpty) {
-        bookingTypeId = widget.datum.bookingTypes!.first.id.toString();
+      final dayCruise = widget.datum.bookingTypes?.firstWhere(
+        (b) => b.name == 'day_cruise',
+        orElse: () => BookingType(),
+      );
+
+      if (dayCruise!.id != null) {
+        bookingTypeId = dayCruise.id.toString(); 
       } else {
-        bookingTypeId = "1"; // or handle gracefully with error message
+        bookingTypeId = widget.datum.bookingTypes?.first.id.toString() ?? "1";
       }
+
 
       imageUrls = [
         (widget.datum?.cruise?.images?.isNotEmpty == true
@@ -200,6 +205,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   int _day = 1;
   int _numAdults = 1;
   int _numKids = 0;
+  int _numOfBeds = 1;
   DateTime _selectedDate = DateTime.now();
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
@@ -216,9 +222,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   TextEditingController _dateController = TextEditingController();
   bool _isEditingBoatDetails = false;
   bool _isEditingPassengers = false;
+  bool _isEditingBed = false;
   bool _isEditingDate = false;
   String? _selectedPaymentType;
-
+  int maxBeds = 1;
   int maxAdults = 1; // default fallback
   int maxRooms = 1;
   List<featuredBoats.UnavailableDate>? unavailableDates;
@@ -230,6 +237,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   int minAmountTopayforDay = 0;
   int minAmountTopayforFullDay = 0;
   int defaultPersons = 0;
+  int defaultBded = 0;
   final List unavaibledates = [];
   BookingType? fullDayCruise;
   @override
@@ -303,11 +311,24 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                           )
                           ?.defaultPersons ??
                       0;
+                        defaultBded = value.mybookingmodel?.data?.bookingTypes
+                ?.firstWhere(
+                  (type) => type.name == 'full_day_cruise',
+                )
+                ?.minimumBed ??
+            0;  
 
                   maxRooms = value.mybookingmodel.data?.cruise?.rooms ?? 1;
                   maxAdults =
                       value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
-
+                  // ✅ Correct maxBeds logic
+                  if (fullDayCruise != null && bookingTypeId == '2') {
+                    // Use maximumBed from full_day_cruise booking type
+                    maxBeds = fullDayCruise?.maximumBed ?? 1;
+                  } else {
+                    // Fallback for day cruise
+                    maxBeds = maxAdults;
+                  }
                   unavailableDates = value.mybookingmodel.unavailableDate ?? [];
                   DayCruisedefaultPrice = parsePrice(
                     value.mybookingmodel?.data?.bookingTypes
@@ -409,24 +430,29 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: imageUrl.startsWith('http')
-                                ? Image.network(
-                                    imageUrl,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Image.asset(
-                                        'assets/image/boat_details_img/boat_detail_img.png',
-                                        fit: BoxFit.cover,
-                                      );
-                                    },
-                                  )
-                                : Image.asset(
-                                    imageUrl,
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
+                          child:
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              imageUrl ?? '',
+                              fit: BoxFit.cover,
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Container(
+                                  color: Colors.grey[300],
+                                  alignment: Alignment.center,
+                                  child: const CircularProgressIndicator(strokeWidth: 2),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey[300],
+                                  alignment: Alignment.center,
+                                  child:  Icon(Icons.image_not_supported, color: Colors.grey[700]),
+                                );
+                              },
+                            ),
+                          ), 
                         );
                       },
                     ),
@@ -532,17 +558,17 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                             '0') ??
                                     0;
 
-                                final int extraAdults = (_numAdults > minBed)
-                                    ? _numAdults - minBed
+                                final int extraBeds = (_numOfBeds > minBed)
+                                    ? _numOfBeds - minBed
                                     : 0;
                                 final int extraCharge =
-                                    extraAdults * pricePerBed;
+                                    extraBeds * pricePerBed;
 
                                 totalPrice = defaultPrice + extraCharge;
 
                                 print('🛳 Full Day Cruise Selected');
                                 print('🔹 Default Price: ₹$defaultPrice');
-                                print('🔹 Extra Adults: $extraAdults');
+                                print('🔹 Extra AduextraBedslts: $extraBeds');
                                 print('🔹 Extra Charge: ₹$extraCharge');
                                 print('✅ Total Price: ₹$totalPrice');
                               }
@@ -646,7 +672,78 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                             iconPath: 'assets/icons/kid.svg'),
                       ],
                     ),
+                    SizedBox(height: 30),
 
+                      // Passengers Section
+                    _buildEditableSection(
+                      title: 'Number of Beds',
+                      isEditing: _isEditingBed,
+                      onTap: () => setState(
+                          () => _isEditingBed = !_isEditingBed),
+                      editingWidgets: [
+                             _buildNumericInput(
+                      'Beds',
+                      _numOfBeds,
+                      (value) {
+                        setState(() {
+                          _numOfBeds = value;
+
+                          if (bookingTypeId == '2') { // Full day cruise
+                            final BookingType? bookingType = widget.datum.bookingTypes?.firstWhere(
+                              (b) => b.id.toString() == bookingTypeId,
+                              orElse: () => BookingType(),
+                            );
+
+                            if (bookingType != null) {
+                              final int defaultPrice = int.tryParse(
+                                bookingType.defaultPrice?.split('.')?.first ?? '0',
+                              ) ?? 0;
+
+                              final int pricePerBed = int.tryParse(
+                                bookingType.pricePerBed?.split('.')?.first ?? '0',
+                              ) ?? 0;
+
+                              final int minimumBed = bookingType.minimumBed ?? 0;
+                              final int maximumBed = bookingType.maximumBed ?? maxBeds;
+
+                              int selectedBeds = _numOfBeds;
+
+                              // Clamp between min and max
+                              if (selectedBeds < minimumBed) {
+                                selectedBeds = minimumBed;
+                              } else if (selectedBeds > maximumBed) {
+                                selectedBeds = maximumBed;
+                              }
+
+                              // ✅ Only charge for beds beyond the minimum
+                              final int extraBeds = (selectedBeds - minimumBed).clamp(0, maximumBed);
+                              final int extraCharge = extraBeds * pricePerBed;
+
+                              totalPrice = defaultPrice + extraCharge;
+
+                              print('🔹 Default Price: ₹$defaultPrice');
+                              print('🔹 Minimum Beds Included: $minimumBed');
+                              print('🔹 Selected Beds: $selectedBeds');
+                              print('🔹 Extra Beds Charged: $extraBeds');
+                              print('🔹 Price Per Bed: ₹$pricePerBed');
+                              print('🔹 Extra Charge: ₹$extraCharge');
+                              print('✅ Final Total Price: ₹$totalPrice');
+                            }
+                          }
+                        });
+                      },
+                      max: maxBeds, // ✅ uses bed limit, not passengers
+                    ),
+
+ ],
+                      displayWidgets: [
+                        BuildDetailRowwithIcon(
+                            label: 'Beds',
+                            value: _numOfBeds.toString(),
+                            iconPath: 'assets/icons/single-bed.png'),
+                     
+                      ],
+                    ),
                     _buildEditableSection(
                       unavailable_date: unavailableDates,
                       title: 'Date',
@@ -881,6 +978,17 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                               color: Colors.red,
                             )),
                       ),
+                     if (bookingTypeId == '2')
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                            '(Note: Extra charges apply if more than ${defaultBded} beds are added)',
+                            style: GoogleFonts.ubuntu(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.red,
+                            )),
+                      ), 
                     _buildDetailRow(
                       'Charges for the trip',
                       '₹${bookingTypeId == "2" && fullDayCruise != null ? FullDayCruisedefaultPrice : DayCruisedefaultPrice}',
@@ -903,7 +1011,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                     Visibility(
                       visible: bookingTypeId == '2',
                       child: _buildDetailRow(
-                          'No of Rooms', '${maxRooms.toString()}'),
+                          'Max Bed Available', '${maxBeds.toString()}'),
                     ),
                     _buildDetailRow(
                         'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
@@ -1306,9 +1414,12 @@ class BuildDetailRowwithIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isSvg = iconPath.toLowerCase().endsWith('.svg');
     return Row(
       children: [
-        SvgPicture.asset(iconPath, height: 20),
+       isSvg
+            ? SvgPicture.asset(iconPath, height: 20)
+            : Image.asset(iconPath, height: 20, fit: BoxFit.contain),
         const SizedBox(width: 8),
         Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 8.0),
