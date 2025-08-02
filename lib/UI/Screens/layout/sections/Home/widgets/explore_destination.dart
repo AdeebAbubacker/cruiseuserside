@@ -213,40 +213,34 @@ class _ExploreDestinationWidgetState extends State<ExploreDestinationWidget> {
                     curve: Curves.easeInOut,
                     child: Stack(
                       children: [
-                        ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: FutureBuilder<bool>(
-                          future: isValidImageUrl(value.locationmodel.data?[index].thumbnail),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Container(
-                                width: widget.itemWidth,
-                                height: widget.itemHeight,
-                                color: Colors.grey[300],
-                                alignment: Alignment.center,
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              );
-                            }
-                        final isValid = snapshot.data ?? false;
-
-                        return isValid
-                            ? Image.network(
-                                value.locationmodel.data![index].thumbnail!,
-                                fit: BoxFit.cover,
-                                width: widget.itemWidth,
-                                height: widget.itemHeight,
-                              )
-                            : Container(
-                                width: widget.itemWidth,
-                                height: widget.itemHeight,
-                                color: Colors.grey[300],
-                                alignment: Alignment.center,
-                                child: Icon(Icons.image_not_supported, color: Colors.grey[700]),
-                              );
-                            },
-                          ),
-                        ),
-                        Positioned(
+                     ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        value.locationmodel.data?[index].thumbnail ?? '',
+                        fit: BoxFit.cover,
+                        width: widget.itemWidth,
+                        height: widget.itemHeight,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            width: widget.itemWidth,
+                            height: widget.itemHeight,
+                            color: Colors.grey[300],
+                            alignment: Alignment.center,
+                            child: const CircularProgressIndicator(strokeWidth: 2),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: widget.itemWidth,
+                            height: widget.itemHeight,
+                            color: Colors.grey[300],
+                            alignment: Alignment.center,
+                            child:  Icon(Icons.image_not_supported, color: Colors.grey[700]),
+                          );
+                        },
+                      ),
+                    ),    Positioned(
                           bottom: 10,
                           left: 0,
                           right: 0,

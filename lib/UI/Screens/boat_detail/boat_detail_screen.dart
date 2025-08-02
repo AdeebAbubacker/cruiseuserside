@@ -170,7 +170,8 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
 
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: ClipRRect(
+                        child: 
+                        ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: FutureBuilder<bool>(
                           future: isValidImageUrl(imageUrl), // Checks null, empty, and 404
@@ -185,25 +186,17 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                             }
 
                             final isValid = snapshot.data ?? false;
-
-                            if (isValid) {
-                              return Image.network(
+                             return isValid
+                            ? Image.network(
                                 imageUrl,
                                 fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.asset(
-                                    'assets/image/boat_details_img/boat_detail_img.png',
-                                    fit: BoxFit.cover,
-                                  );
-                                },
-                              );
-                            } else {
-                              return Image.asset(
-                                'assets/image/boat_details_img/boat_detail_img.png',
-                                fit: BoxFit.cover,
-                              );
-                            }
-                          },
+                              )
+                            : Container(
+                                color: Colors.grey[300],
+                                alignment: Alignment.center,
+                                child: Icon(Icons.image_not_supported, color: Colors.grey[700]),
+                        );
+                        },
                         ),
                       ),
                       );

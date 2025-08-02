@@ -361,30 +361,36 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                     );
                   },
                   getFeaturedBoats: (value) {
-                    final filteredBoats = value.featuredBoats.data
-                        ?.where((boat) =>
-                            (boat.name ?? '').toLowerCase() == "dulex")
-                        .toList();
+                      final boats = value.featuredBoats.data ?? [];
+                  final filteredBoats = boats
+                      .where((boat) => (boat.name ?? '').toLowerCase() == "dulex")
+                      .toList();
 
-                    return (filteredBoats == null || filteredBoats.isEmpty)
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const SizedBox(height: 20),
-                                Icon(Icons.directions_boat,
-                                    size: 60, color: Colors.grey[400]),
-                                const SizedBox(height: 10),
-                                Text(
-                                  "No Featured Boats Available",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.grey[600]),
-                                ),
-                                const SizedBox(height: 20),
-                              ],
-                            ),
-                          )
-                        : SizedBox(
+                  if (filteredBoats.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 20),
+                          Icon(Icons.directions_boat, size: 60, color: Colors.grey[400]),
+                          const SizedBox(height: 10),
+                          Text(
+                            "No Featured Boats Available",
+                            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    );
+                  }
+                  if (_scales.length != filteredBoats.length) {
+                    _scales = List.filled(filteredBoats.length, 1.0);
+                  }
+                  if (isFavoriteList.length != filteredBoats.length) {
+                    isFavoriteList = List.filled(filteredBoats.length, false);
+                  }
+
+                   return   SizedBox(
                             height: 328,
                             child: ListView.builder(
                               physics: const BouncingScrollPhysics(),
