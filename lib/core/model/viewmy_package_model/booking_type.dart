@@ -12,6 +12,7 @@ class BookingType {
   String? minAmountToPay;
   int? defaultPersons;
   int? minimumBed;
+  int? maximumBed;
   BookingType({
     this.id,
     this.packageId,
@@ -26,6 +27,7 @@ class BookingType {
     this.minAmountToPay,  
     this.defaultPersons,
     this.minimumBed,
+    this.maximumBed,
   });
 
   factory BookingType.fromJson(Map<String, dynamic> json) => BookingType(
@@ -42,6 +44,7 @@ class BookingType {
         minAmountToPay: json['minAmountToPay'] as String?,
          defaultPersons: json['defaultPersons'] as int?,
         minimumBed: json['minimumBed'] as int?,
+        maximumBed : json['maximumBed'] as int?,
       );
 
   Map<String, dynamic> toJson() => {

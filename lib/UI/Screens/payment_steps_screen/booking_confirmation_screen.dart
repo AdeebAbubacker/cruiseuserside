@@ -91,11 +91,26 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
               'assets/image/boat_details_img/boat_detail_img.png',
         ),
       ];
+      
+       final bookingTypes = widget.datum.bookingTypes ?? [];
+
+  if (bookingTypes.length == 1) {
+    // Only one booking type present, assign automatically
+    bookingTypeId = bookingTypes.first.id.toString();
+  } else {
+    // Multiple booking types: prefer day_cruise if available or fallback to first
+    final dayCruise = bookingTypes.firstWhere(
+      (b) => b.name == 'day_cruise',
+      orElse: () => bookingTypes.first,
+    );
+    bookingTypeId = dayCruise.id.toString();
+  }
       BlocProvider.of<ViewMyPackageBloc>(context)
           .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
       print("booking typeid ${bookingTypeId}");
 
       setState(() {
+        
         // Once you have defaultPrice, pricePerPerson, etc...
         // (Make sure these values are set before calling the price calculation)
         totalPrice = DayCruisedefaultPrice + pricePerPerson;
@@ -226,6 +241,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   bool _isEditingDate = false;
   String? _selectedPaymentType;
   int maxBeds = 1;
+  int minBeds = 1;
   int maxAdults = 1; // default fallback
   int maxRooms = 1;
   List<featuredBoats.UnavailableDate>? unavailableDates;
@@ -292,111 +308,82 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
             );
           },
         ),
-        BlocListener<ViewMyPackageBloc, ViewMyPackageState>(
-          listener: (context, state) {
-            state.mapOrNull(
-              viewMyPacakge: (value) {
-                try {
-                  fullDayCruise = widget.datum.bookingTypes?.firstWhere(
-                    (type) => type.name == 'full_day_cruise',
-                    orElse: () => BookingType(),
-                  );
-                } catch (e) {
-                  fullDayCruise = null;
-                }
-                setState(() {
-                  defaultPersons = value.mybookingmodel?.data?.bookingTypes
-                          ?.firstWhere(
-                            (type) => type.name == 'day_cruise',
-                          )
-                          ?.defaultPersons ??
-                      0;
-                        defaultBded = value.mybookingmodel?.data?.bookingTypes
-                ?.firstWhere(
-                  (type) => type.name == 'full_day_cruise',
-                )
-                ?.minimumBed ??
-            0;  
+       BlocListener<ViewMyPackageBloc, ViewMyPackageState>(
+  listener: (context, state) {
+    state.mapOrNull(
+      viewMyPacakge: (value) {
+        try {
+          fullDayCruise = widget.datum.bookingTypes?.firstWhere(
+            (type) => type.name == 'full_day_cruise',
+            orElse: () => BookingType(),
+          );
+          if (fullDayCruise?.id == null) {
+            fullDayCruise = null;
+          }
+        } catch (e) {
+          fullDayCruise = null;
+        }
 
-                  maxRooms = value.mybookingmodel.data?.cruise?.rooms ?? 1;
-                  maxAdults =
-                      value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
-                  // ✅ Correct maxBeds logic
-                  if (fullDayCruise != null && bookingTypeId == '2') {
-                    // Use maximumBed from full_day_cruise booking type
-                    maxBeds = fullDayCruise?.maximumBed ?? 1;
-                  } else {
-                    // Fallback for day cruise
-                    maxBeds = maxAdults;
-                  }
-                  unavailableDates = value.mybookingmodel.unavailableDate ?? [];
-                  DayCruisedefaultPrice = parsePrice(
-                    value.mybookingmodel?.data?.bookingTypes
-                            ?.firstWhere(
-                              (type) => type.name == 'day_cruise',
-                            )
-                            ?.defaultPrice
-                            ?.toString() ??
-                        '0',
-                  );
-                  FullDayCruisedefaultPrice = parsePrice(
-                    value.mybookingmodel?.data?.bookingTypes
-                            ?.firstWhere(
-                              (type) => type.name == 'full_day_cruise',
-                            )
-                            ?.defaultPrice
-                            ?.toString() ??
-                        '0',
-                  );
+        setState(() {
+  final bookingTypes = value.mybookingmodel?.data?.bookingTypes ?? [];
 
-                  pricePerDay = parsePrice(
-                    value.mybookingmodel?.data?.bookingTypes
-                            ?.firstWhere(
-                              (type) => type.name == 'day_cruise',
-                            )
-                            ?.pricePerDay
-                            ?.toString() ??
-                        '0',
-                  );
+  // Find day_cruise first, if exists
+  final dayCruiseType = bookingTypes.firstWhere(
+    (type) => type.name == 'day_cruise',
+   
+  );
 
-                  pricePerPerson = parsePrice(
-                    value.mybookingmodel?.data?.bookingTypes
-                            ?.firstWhere(
-                              (type) => type.name == 'day_cruise',
-                            )
-                            ?.pricePerPerson
-                            ?.toString() ??
-                        '0',
-                  );
+  if (dayCruiseType != null) {
+    DayCruisedefaultPrice = parsePrice(dayCruiseType.defaultPrice?.toString());
+    pricePerPerson = parsePrice(dayCruiseType.pricePerPerson?.toString());
+    defaultPersons = dayCruiseType.defaultPersons ?? 1;
+    minAmountTopayforDay = parsePrice(dayCruiseType.minAmountToPay?.toString());
+  } else {
+    // No day_cruise found, set defaults or handle accordingly
+    DayCruisedefaultPrice = 0;
+    pricePerPerson = 0;
+    defaultPersons = 1;
+    minAmountTopayforDay = 0;
+  }
 
-                  print(
-                      "defaultprice is ${value.mybookingmodel.data?.bookingTypes?[0].defaultPrice}");
-                  totalPrice = DayCruisedefaultPrice;
-                  maxRooms = value.mybookingmodel?.data?.cruise?.rooms ?? 1;
-                  print('dey my roooms ${maxRooms}');
-                  minAmountTopayforDay = parsePrice(
-                    value.mybookingmodel?.data?.bookingTypes
-                            ?.firstWhere(
-                              (type) => type.name == 'day_cruise',
-                            )
-                            ?.minAmountToPay
-                            ?.toString() ??
-                        '0',
-                  );
-                  minAmountTopayforFullDay = parsePrice(
-                    value.mybookingmodel?.data?.bookingTypes
-                            ?.firstWhere(
-                              (type) => type.name == 'full_day_cruise',
-                            )
-                            ?.minAmountToPay
-                            ?.toString() ??
-                        '0',
-                  );
-                });
-              },
-            );
-          },
-        ),
+  // Now find full_day_cruise only if it exists
+  final fullDayCruiseType = bookingTypes.firstWhere(
+    (type) => type.name == 'full_day_cruise',
+ 
+  );
+
+  if (fullDayCruiseType != null) {
+    FullDayCruisedefaultPrice = parsePrice(fullDayCruiseType.defaultPrice?.toString());
+    minBeds = fullDayCruiseType.minimumBed ?? 1;
+    maxBeds = fullDayCruiseType.maximumBed ?? 1;
+    defaultBded = minBeds;
+    minAmountTopayforFullDay = parsePrice(fullDayCruiseType.minAmountToPay?.toString());
+  } else {
+    FullDayCruisedefaultPrice = 0;
+    minBeds = 1;
+    maxBeds = 1;
+    defaultBded = 1;
+    minAmountTopayforFullDay = 0;
+  }
+
+  unavailableDates = value.mybookingmodel?.unavailableDate ?? [];
+  maxRooms = value.mybookingmodel?.data?.cruise?.rooms ?? 1;
+  maxAdults = value.mybookingmodel?.data?.cruise?.maxCapacity ?? 1;
+
+  // Initially set total price to day cruise default price
+  totalPrice = DayCruisedefaultPrice;
+
+  _numOfBeds = minBeds;
+
+  print("Day Cruise Price: $DayCruisedefaultPrice, Price per person: $pricePerPerson");
+  print("Full Day Cruise Price: $FullDayCruisedefaultPrice, Min Beds: $minBeds, Max Beds: $maxBeds");
+});
+
+      },
+    );
+  },
+),
+
       ],
       child: GestureDetector(
         onTap: () {
