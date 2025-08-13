@@ -29,6 +29,7 @@ class GetFeaturedBoatsBloc
               featuredBoats: success,
             ),
           );
+          print("featured boats length is ${success.data?.length}");
         });
       } catch (e) {
         emit(GetFeaturedBoatsState.getFeaturedBoatsFailure(

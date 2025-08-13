@@ -745,7 +745,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         AppRoutes.navigateToGuestUi(context);
                       },
                       child: Text(
-                        "Loin As guest",
+                        "Login As guest",
                         style: TextStyles.ubuntu12blue23w700,
                       ),
                     ),

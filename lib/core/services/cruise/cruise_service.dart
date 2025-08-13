@@ -81,7 +81,7 @@ class CruiseService {
         final data = json.decode(response.body);
 
         final locationdetails = FeaturedBoatsModel.fromJson(data);
-
+          print('------------------');
         return Right(locationdetails);
       } else {
         print('Request failed: ${response.body.toLowerCase()}');

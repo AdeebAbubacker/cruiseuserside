@@ -818,7 +818,7 @@ class _CategoriesListResultscreenState
                                                                   (value.packagesearchresults.data?[index]
                                                                               .name
                                                                               ?.toLowerCase() ==
-                                                                          'dulex')
+                                                                          'deluxe')
                                                                       ? 'Deluxe'
                                                                       : 'Premium',
                                                                   style: TextStyles

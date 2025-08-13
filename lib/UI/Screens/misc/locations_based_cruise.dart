@@ -631,7 +631,7 @@ class _LocationsBasedCruiseScreenState
                                                 (value.cruisemodel.data?[index]
                                                             .name
                                                             ?.toLowerCase() ==
-                                                        'dulex')
+                                                        'deluxe')
                                                     ? 'Deluxe'
                                                     : 'Premium',
                                                 style: TextStyles

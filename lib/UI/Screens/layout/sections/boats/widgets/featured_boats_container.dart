@@ -116,7 +116,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
   @override
   void initState() {
     super.initState();
-    _scales = List.generate(10, (index) => 1.0);
+    _scales = List.generate(1000, (index) => 1.0);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       fetchFavorites();
       _getUSerData();
@@ -363,7 +363,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                   getFeaturedBoats: (value) {
                       final boats = value.featuredBoats.data ?? [];
                   final filteredBoats = boats
-                      .where((boat) => (boat.name ?? '').toLowerCase() == "dulex")
+                      .where((boat) => (boat.name ?? '').toLowerCase() == "deluxe")
                       .toList();
 
                   if (filteredBoats.isEmpty) {
@@ -623,7 +623,7 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
                                                             child: Text(
                                                               (package.name
                                                                           ?.toLowerCase() ==
-                                                                      'dulex')
+                                                                      'deluxe')
                                                                   ? 'Deluxe'
                                                                   : 'Premium',
                                                               style: TextStyles

@@ -32,6 +32,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             emit(LoginState.loginFailure(error: failure.toString()));
           }
         }, (success) async {
+          print('access token is ${success.token.toString()}');
           await SetSharedPreferences.storeAccessToken(
             accessToken: success.token.toString(),
           );

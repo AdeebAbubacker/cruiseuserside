@@ -409,7 +409,7 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                     child: Text(
                                       (favourite?.package?.name
                                                   ?.toLowerCase() ==
-                                              'dulex')
+                                              'deluxe')
                                           ? 'Deluxe'
                                           : 'Premium',
                                       style: TextStyles.ubuntu12blue23w700,

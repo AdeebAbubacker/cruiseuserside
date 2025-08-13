@@ -310,7 +310,7 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                                         : noOfRooms,
                                 premiumOrDeluxe: bookingType == "Premium"
                                     ? "premium"
-                                    : "dulex",
+                                    : "deluxe",
                                 minAMount: minAmount,
                                 maxAmount: maxAmount,
                               );
