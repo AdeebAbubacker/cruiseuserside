@@ -74,11 +74,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       );
 
       if (dayCruise!.id != null) {
-        bookingTypeId = dayCruise.id.toString(); 
+        bookingTypeId = dayCruise.id.toString();
       } else {
         bookingTypeId = widget.datum.bookingTypes?.first.id.toString() ?? "1";
       }
-
 
       imageUrls = [
         (widget.datum?.cruise?.images?.isNotEmpty == true
@@ -91,26 +90,25 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
               'assets/image/boat_details_img/boat_detail_img.png',
         ),
       ];
-      
-       final bookingTypes = widget.datum.bookingTypes ?? [];
 
-  if (bookingTypes.length == 1) {
-    // Only one booking type present, assign automatically
-    bookingTypeId = bookingTypes.first.id.toString();
-  } else {
-    // Multiple booking types: prefer day_cruise if available or fallback to first
-    final dayCruise = bookingTypes.firstWhere(
-      (b) => b.name == 'day_cruise',
-      orElse: () => bookingTypes.first,
-    );
-    bookingTypeId = dayCruise.id.toString();
-  }
+      final bookingTypes = widget.datum.bookingTypes ?? [];
+
+      if (bookingTypes.length == 1) {
+        // Only one booking type present, assign automatically
+        bookingTypeId = bookingTypes.first.id.toString();
+      } else {
+        // Multiple booking types: prefer day_cruise if available or fallback to first
+        final dayCruise = bookingTypes.firstWhere(
+          (b) => b.name == 'day_cruise',
+          orElse: () => bookingTypes.first,
+        );
+        bookingTypeId = dayCruise.id.toString();
+      }
       BlocProvider.of<ViewMyPackageBloc>(context)
           .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
       print("booking typeid ${bookingTypeId}");
 
       setState(() {
-        
         // Once you have defaultPrice, pricePerPerson, etc...
         // (Make sure these values are set before calling the price calculation)
         totalPrice = DayCruisedefaultPrice + pricePerPerson;
@@ -308,82 +306,88 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
             );
           },
         ),
-       BlocListener<ViewMyPackageBloc, ViewMyPackageState>(
-  listener: (context, state) {
-    state.mapOrNull(
-      viewMyPacakge: (value) {
-        try {
-          fullDayCruise = widget.datum.bookingTypes?.firstWhere(
-            (type) => type.name == 'full_day_cruise',
-            orElse: () => BookingType(),
-          );
-          if (fullDayCruise?.id == null) {
-            fullDayCruise = null;
-          }
-        } catch (e) {
-          fullDayCruise = null;
-        }
+        BlocListener<ViewMyPackageBloc, ViewMyPackageState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              viewMyPacakge: (value) {
+                try {
+                  fullDayCruise = widget.datum.bookingTypes?.firstWhere(
+                    (type) => type.name == 'full_day_cruise',
+                    orElse: () => BookingType(),
+                  );
+                  if (fullDayCruise?.id == null) {
+                    fullDayCruise = null;
+                  }
+                } catch (e) {
+                  fullDayCruise = null;
+                }
 
-        setState(() {
-  final bookingTypes = value.mybookingmodel?.data?.bookingTypes ?? [];
+                setState(() {
+                  final bookingTypes =
+                      value.mybookingmodel?.data?.bookingTypes ?? [];
 
-  // Find day_cruise first, if exists
-  final dayCruiseType = bookingTypes.firstWhere(
-    (type) => type.name == 'day_cruise',
-   
-  );
+                  // Find day_cruise first, if exists
+                  final dayCruiseType = bookingTypes.firstWhere(
+                    (type) => type.name == 'day_cruise',
+                  );
 
-  if (dayCruiseType != null) {
-    DayCruisedefaultPrice = parsePrice(dayCruiseType.defaultPrice?.toString());
-    pricePerPerson = parsePrice(dayCruiseType.pricePerPerson?.toString());
-    defaultPersons = dayCruiseType.defaultPersons ?? 1;
-    minAmountTopayforDay = parsePrice(dayCruiseType.minAmountToPay?.toString());
-  } else {
-    // No day_cruise found, set defaults or handle accordingly
-    DayCruisedefaultPrice = 0;
-    pricePerPerson = 0;
-    defaultPersons = 1;
-    minAmountTopayforDay = 0;
-  }
+                  if (dayCruiseType != null) {
+                    DayCruisedefaultPrice =
+                        parsePrice(dayCruiseType.defaultPrice?.toString());
+                    pricePerPerson =
+                        parsePrice(dayCruiseType.pricePerPerson?.toString());
+                    defaultPersons = dayCruiseType.defaultPersons ?? 1;
+                    minAmountTopayforDay =
+                        parsePrice(dayCruiseType.minAmountToPay?.toString());
+                  } else {
+                    // No day_cruise found, set defaults or handle accordingly
+                    DayCruisedefaultPrice = 0;
+                    pricePerPerson = 0;
+                    defaultPersons = 1;
+                    minAmountTopayforDay = 0;
+                  }
 
-  // Now find full_day_cruise only if it exists
-  final fullDayCruiseType = bookingTypes.firstWhere(
-    (type) => type.name == 'full_day_cruise',
- 
-  );
+                  // Now find full_day_cruise only if it exists
+                  final fullDayCruiseType = bookingTypes.firstWhere(
+                    (type) => type.name == 'full_day_cruise',
+                  );
 
-  if (fullDayCruiseType != null) {
-    FullDayCruisedefaultPrice = parsePrice(fullDayCruiseType.defaultPrice?.toString());
-    minBeds = fullDayCruiseType.minimumBed ?? 1;
-    maxBeds = fullDayCruiseType.maximumBed ?? 1;
-    defaultBded = minBeds;
-    minAmountTopayforFullDay = parsePrice(fullDayCruiseType.minAmountToPay?.toString());
-  } else {
-    FullDayCruisedefaultPrice = 0;
-    minBeds = 1;
-    maxBeds = 1;
-    defaultBded = 1;
-    minAmountTopayforFullDay = 0;
-  }
+                  if (fullDayCruiseType != null) {
+                    FullDayCruisedefaultPrice =
+                        parsePrice(fullDayCruiseType.defaultPrice?.toString());
+                    minBeds = fullDayCruiseType.minimumBed ?? 1;
+                    maxBeds = fullDayCruiseType.maximumBed ?? 1;
+                    defaultBded = minBeds;
+                    minAmountTopayforFullDay = parsePrice(
+                        fullDayCruiseType.minAmountToPay?.toString());
+                  } else {
+                    FullDayCruisedefaultPrice = 0;
+                    minBeds = 1;
+                    maxBeds = 1;
+                    defaultBded = 1;
+                    minAmountTopayforFullDay = 0;
+                  }
 
-  unavailableDates = value.mybookingmodel?.unavailableDate ?? [];
-  maxRooms = value.mybookingmodel?.data?.cruise?.rooms ?? 1;
-  maxAdults = value.mybookingmodel?.data?.cruise?.maxCapacity ?? 1;
+                  unavailableDates =
+                      value.mybookingmodel?.unavailableDate ?? [];
+                  maxRooms = value.mybookingmodel?.data?.cruise?.rooms ?? 1;
+                  maxAdults =
+                      value.mybookingmodel?.data?.cruise?.maxCapacity ?? 1;
 
-  // Initially set total price to day cruise default price
-  totalPrice = DayCruisedefaultPrice;
+                  // Initially set total price to day cruise default price
+                  totalPrice = DayCruisedefaultPrice;
 
-  _numOfBeds = minBeds;
+                  _numOfBeds = minBeds;
 
-  print("Day Cruise Price: $DayCruisedefaultPrice, Price per person: $pricePerPerson");
-  print("Full Day Cruise Price: $FullDayCruisedefaultPrice, Min Beds: $minBeds, Max Beds: $maxBeds");
-});
-
-      },
-    );
-  },
-),
-
+                  print(
+                      "Day Cruise Price: $DayCruisedefaultPrice, Price per person: $pricePerPerson");
+                  print(
+                      "Full Day Cruise Price: $FullDayCruisedefaultPrice, Min Beds: $minBeds, Max Beds: $maxBeds");
+                });
+              },
+            );
+          },
+        ),
       ],
       child: GestureDetector(
         onTap: () {
@@ -417,29 +421,31 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child:
-                          ClipRRect(
+                          child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image.network(
                               imageUrl ?? '',
                               fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
                                 if (loadingProgress == null) return child;
                                 return Container(
                                   color: Colors.grey[300],
                                   alignment: Alignment.center,
-                                  child: const CircularProgressIndicator(strokeWidth: 2),
+                                  child: const CircularProgressIndicator(
+                                      strokeWidth: 2),
                                 );
                               },
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
                                   color: Colors.grey[300],
                                   alignment: Alignment.center,
-                                  child:  Icon(Icons.image_not_supported, color: Colors.grey[700]),
+                                  child: Icon(Icons.image_not_supported,
+                                      color: Colors.grey[700]),
                                 );
                               },
                             ),
-                          ), 
+                          ),
                         );
                       },
                     ),
@@ -548,8 +554,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                 final int extraBeds = (_numOfBeds > minBed)
                                     ? _numOfBeds - minBed
                                     : 0;
-                                final int extraCharge =
-                                    extraBeds * pricePerBed;
+                                final int extraCharge = extraBeds * pricePerBed;
 
                                 totalPrice = defaultPrice + extraCharge;
 
@@ -574,162 +579,189 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       height: 30,
                     ),
                     // Passengers Section
-                    _buildEditableSection(
-                      title: 'Number of passengers',
-                      isEditing: _isEditingPassengers,
-                      onTap: () => setState(
-                          () => _isEditingPassengers = !_isEditingPassengers),
-                      editingWidgets: [
-                        _buildNumericInput(
-                          'Adults',
-                          _numAdults,
-                          (value) {
-                            setState(() {
-                              defaultPersons;
-                              _numAdults = value;
-                              if (bookingTypeId == '1') {
-                                if (_numAdults > defaultPersons) {
-                                  final extraAdults =
-                                      _numAdults - defaultPersons;
-                                  totalPrice = (DayCruisedefaultPrice ?? 0) +
-                                      (extraAdults * (pricePerPerson ?? 1));
-                                } else {
-                                  totalPrice = DayCruisedefaultPrice ?? 0;
-                                }
-                              }
-                              if (bookingTypeId == '2') {
-                                final BookingType? bookingType =
-                                    widget.datum.bookingTypes?.firstWhere(
-                                  (b) => b.id.toString() == bookingTypeId,
-                                  orElse: () =>
-                                      BookingType(), // ⚠️ Only if you have a default constructor (not recommended usually)
-                                );
-
-                                if (bookingType != null) {
-
-                                   final int defaultPrice = int.tryParse(bookingType.defaultPrice ?? '0') ?? 0;
-                                  final int pricePerBed = int.tryParse(
-                                    bookingType.pricePerBed?.split('.')?.first ?? '0',
-                                  ) ?? 0;
-
-                                  final int minimumBed = bookingType.minimumBed ?? 0;
-                                  final int maximumBed = bookingType.maximumBed ?? 0;
-
-                                  int selectedBeds = _numAdults; // Assuming 1 adult = 1 bed. Adjust if needed.
-
-                                  // Clamp the selected beds between min and max
-                                  if (selectedBeds < minimumBed) {
-                                    selectedBeds = minimumBed;
-                                  } else if (selectedBeds > maximumBed) {
-                                    selectedBeds = maximumBed;
+                    Visibility(
+                      visible: bookingTypeId == "1",
+                      child: _buildEditableSection(
+                        title: 'Number of passengers',
+                        isEditing: _isEditingPassengers,
+                        onTap: () => setState(
+                            () => _isEditingPassengers = !_isEditingPassengers),
+                        editingWidgets: [
+                          _buildNumericInput(
+                            'Adults',
+                            _numAdults,
+                            (value) {
+                              setState(() {
+                                defaultPersons;
+                                _numAdults = value;
+                                if (bookingTypeId == '1') {
+                                  if (_numAdults > defaultPersons) {
+                                    final extraAdults =
+                                        _numAdults - defaultPersons;
+                                    totalPrice = (DayCruisedefaultPrice ?? 0) +
+                                        (extraAdults * (pricePerPerson ?? 1));
+                                  } else {
+                                    totalPrice = DayCruisedefaultPrice ?? 0;
                                   }
-
-                                  final int extraCharge = selectedBeds * pricePerBed;
-                                  totalPrice = defaultPrice + extraCharge;
-
-                                  print('🔹 Default Price: ₹$defaultPrice');
-                                  print('🔹 Selected Beds: $selectedBeds');
-                                  print('🔹 Price Per Bed: ₹$pricePerBed');
-                                  print('🔹 Extra Charge: ₹$extraCharge');
-                                  print('✅ Final Total Price: ₹$totalPrice');
                                 }
-
-                               
-                              }
-                            });
-                          },
-                          max: maxAdults,
-                        ),
-                        _buildNumericInput(
-                          'Kids',
-                          _numKids,
-                          (value) => setState(
-                            () => _numKids = value,
+                                if (bookingTypeId == '2') {
+                                  final BookingType? bookingType =
+                                      widget.datum.bookingTypes?.firstWhere(
+                                    (b) => b.id.toString() == bookingTypeId,
+                                    orElse: () =>
+                                        BookingType(), // ⚠️ Only if you have a default constructor (not recommended usually)
+                                  );
+                      
+                                  if (bookingType != null) {
+                                    final int defaultPrice = int.tryParse(
+                                            bookingType.defaultPrice ?? '0') ??
+                                        0;
+                                    final int pricePerBed = int.tryParse(
+                                          bookingType.pricePerBed
+                                                  ?.split('.')
+                                                  ?.first ??
+                                              '0',
+                                        ) ??
+                                        0;
+                      
+                                    final int minimumBed =
+                                        bookingType.minimumBed ?? 0;
+                                    final int maximumBed =
+                                        bookingType.maximumBed ?? 0;
+                      
+                                    int selectedBeds =
+                                        _numAdults; // Assuming 1 adult = 1 bed. Adjust if needed.
+                      
+                                    // Clamp the selected beds between min and max
+                                    if (selectedBeds < minimumBed) {
+                                      selectedBeds = minimumBed;
+                                    } else if (selectedBeds > maximumBed) {
+                                      selectedBeds = maximumBed;
+                                    }
+                      
+                                    final int extraCharge =
+                                        selectedBeds * pricePerBed;
+                                    totalPrice = defaultPrice + extraCharge;
+                      
+                                    print('🔹 Default Price: ₹$defaultPrice');
+                                    print('🔹 Selected Beds: $selectedBeds');
+                                    print('🔹 Price Per Bed: ₹$pricePerBed');
+                                    print('🔹 Extra Charge: ₹$extraCharge');
+                                    print('✅ Final Total Price: ₹$totalPrice');
+                                  }
+                                }
+                              });
+                            },
+                            max: maxAdults,
                           ),
-                        ),
-                      ],
-                      displayWidgets: [
-                        BuildDetailRowwithIcon(
-                            label: 'Adults',
-                            value: _numAdults.toString(),
-                            iconPath: 'assets/icons/adult.svg'),
-                        BuildDetailRowwithIcon(
-                            label: 'Kids',
-                            value: _numKids.toString(),
-                            iconPath: 'assets/icons/kid.svg'),
-                      ],
+                          _buildNumericInput(
+                            'Kids',
+                            _numKids,
+                            (value) => setState(
+                              () => _numKids = value,
+                            ),
+                          ),
+                        ],
+                        displayWidgets: [
+                          BuildDetailRowwithIcon(
+                              label: 'Adults',
+                              value: _numAdults.toString(),
+                              iconPath: 'assets/icons/adult.svg'),
+                          BuildDetailRowwithIcon(
+                              label: 'Kids',
+                              value: _numKids.toString(),
+                              iconPath: 'assets/icons/kid.svg'),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 30),
 
-                      // Passengers Section
-                    _buildEditableSection(
-                      title: 'Number of Beds',
-                      isEditing: _isEditingBed,
-                      onTap: () => setState(
-                          () => _isEditingBed = !_isEditingBed),
-                      editingWidgets: [
-                             _buildNumericInput(
-                      'Beds',
-                      _numOfBeds,
-                      (value) {
-                        setState(() {
-                          _numOfBeds = value;
-
-                          if (bookingTypeId == '2') { // Full day cruise
-                            final BookingType? bookingType = widget.datum.bookingTypes?.firstWhere(
-                              (b) => b.id.toString() == bookingTypeId,
-                              orElse: () => BookingType(),
-                            );
-
-                            if (bookingType != null) {
-                              final int defaultPrice = int.tryParse(
-                                bookingType.defaultPrice?.split('.')?.first ?? '0',
-                              ) ?? 0;
-
-                              final int pricePerBed = int.tryParse(
-                                bookingType.pricePerBed?.split('.')?.first ?? '0',
-                              ) ?? 0;
-
-                              final int minimumBed = bookingType.minimumBed ?? 0;
-                              final int maximumBed = bookingType.maximumBed ?? maxBeds;
-
-                              int selectedBeds = _numOfBeds;
-
-                              // Clamp between min and max
-                              if (selectedBeds < minimumBed) {
-                                selectedBeds = minimumBed;
-                              } else if (selectedBeds > maximumBed) {
-                                selectedBeds = maximumBed;
-                              }
-
-                              // ✅ Only charge for beds beyond the minimum
-                              final int extraBeds = (selectedBeds - minimumBed).clamp(0, maximumBed);
-                              final int extraCharge = extraBeds * pricePerBed;
-
-                              totalPrice = defaultPrice + extraCharge;
-
-                              print('🔹 Default Price: ₹$defaultPrice');
-                              print('🔹 Minimum Beds Included: $minimumBed');
-                              print('🔹 Selected Beds: $selectedBeds');
-                              print('🔹 Extra Beds Charged: $extraBeds');
-                              print('🔹 Price Per Bed: ₹$pricePerBed');
-                              print('🔹 Extra Charge: ₹$extraCharge');
-                              print('✅ Final Total Price: ₹$totalPrice');
-                            }
-                          }
-                        });
-                      },
-                      max: maxBeds, // ✅ uses bed limit, not passengers
-                    ),
-
- ],
-                      displayWidgets: [
-                        BuildDetailRowwithIcon(
-                            label: 'Beds',
-                            value: _numOfBeds.toString(),
-                            iconPath: 'assets/icons/single-bed.png'),
-                     
-                      ],
+                    // Passengers Section Full Day
+                    Visibility(
+                      visible: bookingTypeId == "2",
+                      child: _buildEditableSection(
+                        title: 'Number of Passengers',
+                        isEditing: _isEditingBed,
+                        onTap: () =>
+                            setState(() => _isEditingBed = !_isEditingBed),
+                        editingWidgets: [
+                          _buildNumericInput(
+                            'Beds',
+                            _numOfBeds,
+                            (value) {
+                              setState(() {
+                                _numOfBeds = value;
+                      
+                                if (bookingTypeId == '2') {
+                                  // Full day cruise
+                                  final BookingType? bookingType =
+                                      widget.datum.bookingTypes?.firstWhere(
+                                    (b) => b.id.toString() == bookingTypeId,
+                                    orElse: () => BookingType(),
+                                  );
+                      
+                                  if (bookingType != null) {
+                                    final int defaultPrice = int.tryParse(
+                                          bookingType.defaultPrice
+                                                  ?.split('.')
+                                                  ?.first ??
+                                              '0',
+                                        ) ??
+                                        0;
+                      
+                                    final int pricePerBed = int.tryParse(
+                                          bookingType.pricePerBed
+                                                  ?.split('.')
+                                                  ?.first ??
+                                              '0',
+                                        ) ??
+                                        0;
+                      
+                                    final int minimumBed =
+                                        bookingType.minimumBed ?? 0;
+                                    final int maximumBed =
+                                        bookingType.maximumBed ?? maxBeds;
+                      
+                                    int selectedBeds = _numOfBeds;
+                      
+                                    // Clamp between min and max
+                                    if (selectedBeds < minimumBed) {
+                                      selectedBeds = minimumBed;
+                                    } else if (selectedBeds > maximumBed) {
+                                      selectedBeds = maximumBed;
+                                    }
+                      
+                                    // ✅ Only charge for beds beyond the minimum
+                                    final int extraBeds =
+                                        (selectedBeds - minimumBed)
+                                            .clamp(0, maximumBed);
+                                    final int extraCharge =
+                                        extraBeds * pricePerBed;
+                      
+                                    totalPrice = defaultPrice + extraCharge;
+                      
+                                    print('🔹 Default Price: ₹$defaultPrice');
+                                    print(
+                                        '🔹 Minimum Beds Included: $minimumBed');
+                                    print('🔹 Selected Beds: $selectedBeds');
+                                    print('🔹 Extra Beds Charged: $extraBeds');
+                                    print('🔹 Price Per Bed: ₹$pricePerBed');
+                                    print('🔹 Extra Charge: ₹$extraCharge');
+                                    print('✅ Final Total Price: ₹$totalPrice');
+                                  }
+                                }
+                              });
+                            },
+                            max: maxBeds, // ✅ uses bed limit, not passengers
+                          ),
+                        ],
+                        displayWidgets: [
+                          BuildDetailRowwithIcon(
+                              label: 'Beds',
+                              value: _numOfBeds.toString(),
+                              iconPath: 'assets/icons/single-bed.png'),
+                        ],
+                      ),
                     ),
                     _buildEditableSection(
                       unavailable_date: unavailableDates,
@@ -965,7 +997,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                               color: Colors.red,
                             )),
                       ),
-                     if (bookingTypeId == '2')
+                    if (bookingTypeId == '2')
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Text(
@@ -975,7 +1007,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                               fontWeight: FontWeight.w400,
                               color: Colors.red,
                             )),
-                      ), 
+                      ),
                     _buildDetailRow(
                       'Charges for the trip',
                       '₹${bookingTypeId == "2" && fullDayCruise != null ? FullDayCruisedefaultPrice : DayCruisedefaultPrice}',
@@ -996,7 +1028,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: bookingTypeId == '2',
+                      visible: bookingTypeId == '1',
                       child: _buildDetailRow(
                           'Max Bed Available', '${maxBeds.toString()}'),
                     ),
@@ -1404,7 +1436,7 @@ class BuildDetailRowwithIcon extends StatelessWidget {
     final isSvg = iconPath.toLowerCase().endsWith('.svg');
     return Row(
       children: [
-       isSvg
+        isSvg
             ? SvgPicture.asset(iconPath, height: 20)
             : Image.asset(iconPath, height: 20, fit: BoxFit.contain),
         const SizedBox(width: 8),
