@@ -145,32 +145,35 @@ class _FeaturedBoatsSectionState extends State<FeaturedBoatsSection> {
     }
   }
 
-  Future<void> fetchFavorites() async {
-    final token = await GetSharedPreferences.getAccessToken();
-    final response = await http.get(
-      Uri.parse('${BaseUrl.prod}/favorite?include=package.cruise'),
-      headers: {
-        'Accept': 'application/json',
-        'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',
-        'Authorization': 'Bearer $token',
-      },
-    );
+Future<void> fetchFavorites() async {
+  final token = await GetSharedPreferences.getAccessToken();
+  final response = await http.get(
+    Uri.parse('${BaseUrl.prod}/favorite?include=package.cruise'),
+    headers: {
+      'Accept': 'application/json',
+      'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',
+      'Authorization': 'Bearer Bearer $token', // 👈 fix here too
+    },
+  );
 
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      final Map<String, dynamic> decodedJson = json.decode(response.body);
-      final FavoritesListModel jsonResponse =
-          FavoritesListModel.fromJson(decodedJson);
-      _favoritesController.add(jsonResponse);
+  if (response.statusCode == 201 || response.statusCode == 200) {
+    final Map<String, dynamic> decodedJson = json.decode(response.body);
+    final FavoritesListModel jsonResponse =
+        FavoritesListModel.fromJson(decodedJson);
+    _favoritesController.add(jsonResponse);
 
-      favoritePackageMap = {
-        for (var item in jsonResponse.data ?? [])
-          if (item.package?.id != null && item.id != null)
-            item.package!.id!.toString(): item.id!.toString()
-      };
-    } else {
-      _favoritesController.addError("Failed to load favorites");
-    }
+    favoritePackageMap = {
+      for (var item in jsonResponse.data ?? [])
+        if (item.package?.id != null && item.id != null)
+          item.package!.id!.toString(): item.id!.toString()
+    };
+    print("from stream success");
+  } else {
+    print("from stream failure ${response.body}");
+    _favoritesController.addError("Failed to load favorites");
   }
+}
+
 
   void toggleFavorite(
       {String? packageId, bool? isFavorite, String? favouriteId}) {

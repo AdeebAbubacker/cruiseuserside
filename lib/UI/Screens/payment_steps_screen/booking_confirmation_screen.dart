@@ -964,6 +964,16 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       'Add-ons (optional)',
                       style: TextStyles.ubntu16,
                     ),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                            '(Note: Extra charges may apply for add-ons)',
+                            style: GoogleFonts.ubuntu(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.red,
+                            )),
+                      ),
                     const SizedBox(height: 10),
                     TextField(
                       style: TextStyles.ubuntutextfieldText,
