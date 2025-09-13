@@ -181,7 +181,7 @@ class _ExploreDestinationWidgetState extends State<ExploreDestinationWidget> {
           getLocationDetails: (value) {
             return GridView.builder(
               physics: NeverScrollableScrollPhysics(),
-              itemCount: value.locationmodel.data?.length,
+              itemCount: value.locationmodel.data?.length ?? 0,
               shrinkWrap: true,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,

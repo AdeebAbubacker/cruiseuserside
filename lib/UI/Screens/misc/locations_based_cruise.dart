@@ -674,12 +674,16 @@ class _LocationsBasedCruiseScreenState
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  value
-                                                          .cruisemodel
-                                                          .data![index]
-                                                          .bookingTypes?[0]
-                                                          .defaultPrice ??
-                                                      "",
+                                                  // value
+                                                  //         .cruisemodel
+                                                  //         .data![index]
+                                                  //         .bookingTypes?[0]
+                                                  //         .defaultPrice ??
+                                                  //     "",
+                                                  (value.cruisemodel.data![index].bookingTypes != null &&
+ value.cruisemodel.data![index].bookingTypes!.isNotEmpty)
+    ? value.cruisemodel.data![index].bookingTypes!.first.defaultPrice ?? ""
+    : "N/A",
                                                   style: TextStyles
                                                       .ubuntu18bluew700,
                                                 ),
@@ -754,157 +758,3 @@ class _LocationsBasedCruiseScreenState
         });
   }
 }
-
-// class BuildLocationsCard extends StatelessWidget {
-//   final String name;
-//   const BuildLocationsCard({
-//     super.key,
-//     required this.name,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       child: Card(
-//         margin: const EdgeInsets.symmetric(vertical: 10),
-//         elevation: 2,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(13),
-//         ),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Stack(
-//               children: [
-//                 ClipRRect(
-//                   borderRadius: const BorderRadius.only(
-//                     topLeft: Radius.circular(13),
-//                     topRight: Radius.circular(13),
-//                   ),
-//                   child: Image.asset(
-//                     "assets/image/fav_screen_img2.png",
-//                     fit: BoxFit.cover,
-//                     width: double.infinity,
-//                     height: 140,
-//                   ),
-//                 ),
-//                 Positioned(
-//                   top: 10,
-//                   right: 10,
-//                   child: GestureDetector(
-//                     //  onTap: () => _toggleFavorite(index),
-//                     child: Container(
-//                       width: 30,
-//                       height: 30,
-//                       decoration: const BoxDecoration(
-//                         shape: BoxShape.circle,
-//                         color: Colors.white,
-//                       ),
-//                       child: Center(
-//                         child: Icon(
-//                           Icons.favorite,
-//                           color: const Color(0xff4FC2C5),
-//                           size: 24,
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 Positioned(
-//                   bottom: 10,
-//                   right: 10,
-//                   child: Container(
-//                     padding:
-//                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-//                     decoration: BoxDecoration(
-//                       color: Colors.white,
-//                       borderRadius: BorderRadius.circular(24),
-//                     ),
-//                     child: Row(
-//                       mainAxisSize: MainAxisSize.min,
-//                       children: const [
-//                         Icon(
-//                           Icons.star,
-//                           color: Colors.amber,
-//                           size: 16,
-//                         ),
-//                         Text("4.3"),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             Padding(
-//               padding: const EdgeInsets.all(12.0),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Row(
-//                     children: [
-//                       PillWidget(
-//                         image: 'assets/icons/wifi.svg',
-//                         text: 'Wifi',
-//                       ),
-//                       const SizedBox(width: 5),
-//                       PillWidget(
-//                         image: 'assets/icons/heater.svg',
-//                         text: 'Heater',
-//                       ),
-//                     ],
-//                   ),
-//                   const SizedBox(height: 8),
-//                   Text(
-//                     name,
-//                     style: TextStyles.ubuntu16black15w500,
-//                     maxLines: 2,
-//                     overflow: TextOverflow.ellipsis,
-//                   ),
-//                   const SizedBox(height: 8),
-//                   Row(
-//                     children: [
-//                       Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text(
-//                             "₹5000",
-//                             style: TextStyles.ubuntu18bluew700,
-//                           ),
-//                           const Text(
-//                             "per night",
-//                             style: TextStyle(
-//                               color: Colors.grey,
-//                               fontSize: 12,
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                       const Spacer(),
-//                       ElevatedButton(
-//                         onPressed: () {},
-//                         style: ElevatedButton.styleFrom(
-//                           backgroundColor: const Color(0XFF1F8386),
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(8),
-//                           ),
-//                           padding: const EdgeInsets.symmetric(
-//                             horizontal: 16,
-//                             vertical: 12,
-//                           ),
-//                         ),
-//                         child: Text(
-//                           "Book Now",
-//                           style: TextStyles.ubuntu12whiteFFw400,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
