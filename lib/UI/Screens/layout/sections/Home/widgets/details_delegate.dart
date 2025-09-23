@@ -201,8 +201,8 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                         setState(() {
                           startDate = _formatDate(start);
                           endDate = _formatDate(end);
-                          print("start date ${startDate}");
-                          print("end date ${endDate}");
+                          print("start date $startDate");
+                          print("end date $endDate");
                         });
                       },
                     ),
@@ -214,7 +214,7 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                       setState(() {
                         selectedCruise = cruise;
                         fullDayOrDayCruise = cruise;
-                        print("${fullDayOrDayCruise}");
+                        print(fullDayOrDayCruise);
                       });
                     },
                   ),
@@ -262,7 +262,7 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                     onBookingTypeSelected: (type) {
                       setState(() {
                         bookingType = type;
-                        print("booking type ${bookingType}");
+                        print("booking type $bookingType");
                       });
                     },
                   ),
@@ -278,14 +278,14 @@ class _DetailsDelegateState extends State<DetailsDelegate> {
                       ),
                       onPressed: () {
                         print("---------------");
-                        print("bookingType--------------- ${bookingType}");
+                        print("bookingType--------------- $bookingType");
                         print("location--------------- ${widget.location}");
-                        print("startDate--------------- ${startDate}");
-                        print("endDate--------------- ${endDate}");
+                        print("startDate--------------- $startDate");
+                        print("endDate--------------- $endDate");
                         print(
-                            "fullDayOrDayCruise--------------- ${fullDayOrDayCruise}");
-                        print("noOfRooms--------------- ${noOfRooms}");
-                        print("bookingType--------------- ${bookingType}");
+                            "fullDayOrDayCruise--------------- $fullDayOrDayCruise");
+                        print("noOfRooms--------------- $noOfRooms");
+                        print("bookingType--------------- $bookingType");
 
                         Navigator.of(context).push(
                           MaterialPageRoute(

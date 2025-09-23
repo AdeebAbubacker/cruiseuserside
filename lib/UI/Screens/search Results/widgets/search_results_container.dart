@@ -22,7 +22,7 @@ class SearchResultsContainer extends StatefulWidget {
       bool? isFavorite,
       String? favouriteId}) toggleFavorite;
 
-  SearchResultsContainer({
+  const SearchResultsContainer({
     required this.packageId,
     this.cruisename = "Kerala’s Heritage Haven – Traditional Kerala Décor",
     required this.imageUrl,
@@ -227,8 +227,8 @@ class _SearchResultsContainerState extends State<SearchResultsContainer> {
                 children: [
                   SizedBox(height: 10),
                   AmenityRow(
-                    amenities: widget.datum?.amenities!
-                            ?.map((e) => Amenity(
+                    amenities: widget.datum.amenities!
+                            .map((e) => Amenity(
                                   name: e.name ?? '',
                                   icon: e.icon ?? '',
                                 ))

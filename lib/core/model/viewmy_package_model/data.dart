@@ -1,11 +1,8 @@
-import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart'
-    as featuredBoats;
 
 import 'amenity.dart';
 import 'booking_type.dart';
 import 'cruise.dart';
 import 'image.dart';
-import 'unavailable_date.dart';
 
 class Data {
   int? id;

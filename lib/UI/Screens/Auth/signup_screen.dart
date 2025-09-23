@@ -56,12 +56,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 context: context,
                 status: false,
                 title: "Oops",
-                content: value.registervaldationFailure.message
+                content: '${value.registervaldationFailure.message
                         .toString()
                         .split('.')
                         .first
-                        .trim() +
-                    '.',
+                        .trim()}.',
               );
             },
             registrationFailure: (value) {

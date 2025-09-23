@@ -1,5 +1,4 @@
 import 'cruise_type.dart';
-import 'image.dart';
 import 'rating.dart';
 
 class Cruise {

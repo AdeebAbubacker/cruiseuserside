@@ -1,5 +1,4 @@
 import 'package:cruise_buddy/UI/Screens/guest/guest_categories_list_result_screen.dart';
-import 'package:cruise_buddy/UI/Screens/misc/categories_list_resultscreen.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/view_model/getCruiseTypes/get_cruise_types_bloc.dart';
 import 'package:flutter/material.dart';

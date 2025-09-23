@@ -6,7 +6,6 @@ import 'package:cruise_buddy/core/env/env.dart';
 import 'package:cruise_buddy/core/model/booking_response_model/booking_response_model.dart';
 import 'package:cruise_buddy/core/model/my_bookings_model/my_bookings_model.dart';
 
-import 'package:cruise_buddy/core/model/posted_favouritem_item_model/posted_favouritem_item_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 
@@ -67,7 +66,7 @@ class BookingService {
         if (endDate != null) 'endDate': endDate,
         if (totalAmount != null) 'totalAmount': totalAmount,
       };
-      print('my body ${body}');
+      print('my body $body');
       // Make POST request
       final response = await http
           .post(

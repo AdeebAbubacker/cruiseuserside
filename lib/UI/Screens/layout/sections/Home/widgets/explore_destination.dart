@@ -1,6 +1,5 @@
 import 'package:cruise_buddy/UI/Screens/misc/locations_based_cruise.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
-import 'package:cruise_buddy/core/helper/common_helper.dart';
 import 'package:cruise_buddy/core/view_model/getLocationDetails/get_location_details_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

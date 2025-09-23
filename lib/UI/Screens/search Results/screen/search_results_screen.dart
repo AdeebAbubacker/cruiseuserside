@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/featured_shimmer_card.dart';
-import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
 import 'package:cruise_buddy/core/env/env.dart';
 import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';
 import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/amenities_pill.dart';
 import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/boat_category_pill.dart';
 import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/search_results_container.dart';
 import 'package:cruise_buddy/core/constants/colors/app_colors.dart';
@@ -50,7 +47,7 @@ class SearchResultsScreen extends StatefulWidget {
 }
 
 class _SearchResultsScreenState extends State<SearchResultsScreen> {
-  List<double> _scales = [];
+  final List<double> _scales = [];
   List<bool> isFavoriteList = [];
 
   final StreamController<FavoritesListModel> _favoritesController =
@@ -533,7 +530,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                             selectedAmenities.isNotEmpty
                                                 ? selectedAmenities.join(',')
                                                 : null;
-                                        print('myy ammmy --- ${amenitiesName}');
+                                        print('myy ammmy --- $amenitiesName');
                                         // Use the selected minAmount and maxAmount as strings
                                         print(
                                             "Selected Min Amount: $minAmount");
@@ -719,7 +716,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                                       ?.name ??
                                                   "N/A",
                                               imageUrl: imageUrls,
-                                              price: '${dayCruiseDefaultPrice}',
+                                              price: '$dayCruiseDefaultPrice',
                                               isFavorite: isFavorite,
                                               favouriteId: favouriteId,
                                               loadingFavorites:

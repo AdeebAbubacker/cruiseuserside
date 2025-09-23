@@ -1,27 +1,16 @@
-import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
 import 'package:cruise_buddy/UI/Screens/guest/guest_boat_detail_screen.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/featured_boats_container.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/favourites/favourites_screen.dart';
-import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
-import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
-import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
-import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
-import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';
 import 'package:cruise_buddy/core/view_model/listCruiseonLocation/list_cruiseon_location_bloc.dart';
-import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:http/http.dart' as http;
 
 class GuestLocationBasedScreen extends StatefulWidget {
   final String location;
@@ -114,7 +103,7 @@ class _GuestLocationBasedScreenState extends State<GuestLocationBasedScreen> {
             getcruiseuccess: (value) {
               final cruiseData = value.cruisemodel.data;
 
-              if (cruiseData == null || cruiseData.isEmpty) {
+              if (cruiseData.isEmpty) {
                 // When there's no data, display a "No data available" message
 
                 return SizedBox(
@@ -190,7 +179,7 @@ class _GuestLocationBasedScreenState extends State<GuestLocationBasedScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 itemCount: value.cruisemodel.data.length,
                 itemBuilder: (context, index) {
-                  final packageId = '${value.cruisemodel.data?[index].id}';
+                  final packageId = '${value.cruisemodel.data[index].id}';
 
                   // return BuildFavouritesCard(
                   //   name:
@@ -200,11 +189,11 @@ class _GuestLocationBasedScreenState extends State<GuestLocationBasedScreen> {
                   //           .toString() ??
                   //       "",
                   // );
-                  final imageUrl = value.cruisemodel.data?[index]?.cruise
+                  final imageUrl = value.cruisemodel.data[index].cruise
                               ?.images?.isNotEmpty ==
                           true
                       ? value
-                          .cruisemodel.data![index].cruise!.images![0].cruiseImg
+                          .cruisemodel.data[index].cruise!.images![0].cruiseImg
                           ?.toString()
                       : null;
                   final String rating =
@@ -292,7 +281,7 @@ class _GuestLocationBasedScreenState extends State<GuestLocationBasedScreen> {
                                         size: 16,
                                       ),
                                       Text(
-                                        "${(value.cruisemodel.data?[index].avgRating != null && value.cruisemodel.data?[index].avgRating.toString() != "null") ? double.parse(value.cruisemodel.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3"}",
+                                        (value.cruisemodel.data[index].avgRating != null && value.cruisemodel.data[index].avgRating.toString() != "null") ? double.parse(value.cruisemodel.data[index].avgRating.toString()).toStringAsFixed(1) : "4.3",
                                       ),
                                     ],
                                   ),
@@ -310,7 +299,7 @@ class _GuestLocationBasedScreenState extends State<GuestLocationBasedScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        "${value.cruisemodel.data![index].name}",
+                                        "${value.cruisemodel.data[index].name}",
                                         style: TextStyles.ubuntu12blue23w700,
                                       ),
                                     ),
@@ -324,7 +313,7 @@ class _GuestLocationBasedScreenState extends State<GuestLocationBasedScreen> {
                               children: [
                                 AmenityRow(
                                   amenities:
-                                      value?.cruisemodel.data[index]?.amenities
+                                      value.cruisemodel.data[index].amenities
                                               ?.map((e) => Amenity(
                                                     name: e.name ?? '',
                                                     icon: e.icon ?? '',
@@ -334,7 +323,7 @@ class _GuestLocationBasedScreenState extends State<GuestLocationBasedScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  value.cruisemodel.data?[index]?.cruise
+                                  value.cruisemodel.data[index].cruise
                                           ?.name ??
                                       "N/A",
                                   style: TextStyles.ubuntu16black15w500,
@@ -351,7 +340,7 @@ class _GuestLocationBasedScreenState extends State<GuestLocationBasedScreen> {
                                         Text(
                                           value
                                                   .cruisemodel
-                                                  .data![index]
+                                                  .data[index]
                                                   .bookingTypes?[0]
                                                   .defaultPrice ??
                                               "",

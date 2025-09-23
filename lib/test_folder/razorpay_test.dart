@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorpayTestScreen extends StatefulWidget {
+  const RazorpayTestScreen({super.key});
+
   @override
   _RazorpayTestScreenState createState() => _RazorpayTestScreenState();
 }

@@ -20,7 +20,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:intl_phone_field/countries.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -123,19 +122,17 @@ class _AccountScreenState extends State<AccountScreen> {
           },
           updateuser: (value) async {
             Navigator.of(context).pop(); // Close loading
-            if (value.updateuser != null) {
-              // Create UserDetailsDB from LoginModel's user
-              final userDetails = UserDetailsDB(
-                name: value.updateuser.user?.name ?? "",
-                email: value.updateuser.user?.email ?? "",
-                phone: value.updateuser.user?.phoneNumber ?? "",
-                image: value.updateuser.user?.imagePath ?? "",
-              );
+            // Create UserDetailsDB from LoginModel's user
+            final userDetails = UserDetailsDB(
+              name: value.updateuser.user?.name ?? "",
+              email: value.updateuser.user?.email ?? "",
+              phone: value.updateuser.user?.phoneNumber ?? "",
+              image: value.updateuser.user?.imagePath ?? "",
+            );
 
-              // Save it to Hive
-              await userDetailsBox.put('user', userDetails);
-            }
-            showDialog(
+            // Save it to Hive
+            await userDetailsBox.put('user', userDetails);
+                      showDialog(
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text('Success'),

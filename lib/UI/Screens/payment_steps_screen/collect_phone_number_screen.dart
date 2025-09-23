@@ -8,16 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
-import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
-import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
-import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
-import 'package:cruise_buddy/core/view_model/updateUserProfile/update_user_profile_bloc.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class CollectPhoneNumberScreen extends StatefulWidget {
   const CollectPhoneNumberScreen({super.key});

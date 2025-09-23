@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/featured_shimmer_card.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
@@ -16,9 +15,7 @@ import 'package:cruise_buddy/core/view_model/getSearchCruiseResults/get_seached_
 import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/amenities_pill.dart';
 import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/boat_category_pill.dart';
-import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/search_results_container.dart';
 import 'package:cruise_buddy/core/constants/colors/app_colors.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -192,7 +189,7 @@ class _CategoriesListResultscreenState
                                   selectedAmenities.isNotEmpty
                                       ? selectedAmenities.join(',')
                                       : null;
-                              print('myy ammmy --- ${amenitiesName}');
+                              print('myy ammmy --- $amenitiesName');
 
                               // Dispatch the BLoC event with the updated filter values
                               BlocProvider.of<GetSeachedCruiseresultsBloc>(
@@ -606,7 +603,7 @@ class _CategoriesListResultscreenState
                                                               //     );
                                                               //   },
                                                               // )),
-                                                              Container(
+                                                              SizedBox(
                                                             width:
                                                                 double.infinity,
                                                             height:
@@ -788,7 +785,7 @@ class _CategoriesListResultscreenState
                                                                   size: 24,
                                                                 ),
                                                                 Text(
-                                                                  "${(value.packagesearchresults.data?[index].avgRating != null && value.packagesearchresults.data?[index].avgRating.toString() != "null") ? double.parse(value.packagesearchresults.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3"}",
+                                                                  (value.packagesearchresults.data?[index].avgRating != null && value.packagesearchresults.data?[index].avgRating.toString() != "null") ? double.parse(value.packagesearchresults.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3",
                                                                 ),
                                                                 SizedBox(
                                                                     width: 10),
@@ -842,8 +839,8 @@ class _CategoriesListResultscreenState
                                                         AmenityRow(
                                                           amenities: value
                                                                   .packagesearchresults
-                                                                  ?.data?[index]
-                                                                  ?.amenities
+                                                                  .data?[index]
+                                                                  .amenities
                                                                   ?.map((e) =>
                                                                       Amenity(
                                                                         name: e.name ??

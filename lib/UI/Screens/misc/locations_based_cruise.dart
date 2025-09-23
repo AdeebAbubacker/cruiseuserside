@@ -1,7 +1,5 @@
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/featured_boats_container.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/favourites/favourites_screen.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
@@ -351,7 +349,7 @@ class _LocationsBasedCruiseScreenState
                     getcruiseuccess: (value) {
                       final cruiseData = value.cruisemodel.data;
 
-                      if (cruiseData == null || cruiseData.isEmpty) {
+                      if (cruiseData.isEmpty) {
                         // When there's no data, display a "No data available" message
 
                         return SizedBox(
@@ -432,7 +430,7 @@ class _LocationsBasedCruiseScreenState
                         itemCount: value.cruisemodel.data.length,
                         itemBuilder: (context, index) {
                           final packageId =
-                              '${value.cruisemodel.data?[index].id}';
+                              '${value.cruisemodel.data[index].id}';
 
                           final isFavorite =
                               favoritePackageMap.containsKey(packageId);
@@ -448,10 +446,10 @@ class _LocationsBasedCruiseScreenState
                           //           .toString() ??
                           //       "",
                           // );
-                          final imageUrl = value.cruisemodel.data?[index]
-                                      ?.cruise?.images?.isNotEmpty ==
+                          final imageUrl = value.cruisemodel.data[index]
+                                      .cruise?.images?.isNotEmpty ==
                                   true
-                              ? value.cruisemodel.data![index].cruise!
+                              ? value.cruisemodel.data[index].cruise!
                                   .images![0].cruiseImg
                                   ?.toString()
                               : null;
@@ -534,11 +532,11 @@ class _LocationsBasedCruiseScreenState
                                           onTap: () {
                                             if (isFavoriteList.length <
                                                 (value.cruisemodel.data
-                                                        ?.length ??
+                                                        .length ??
                                                     0)) {
                                               isFavoriteList = List.generate(
                                                   value
-                                                      .cruisemodel.data!.length,
+                                                      .cruisemodel.data.length,
                                                   (i) => false);
                                             }
                                             toggleFavorite(
@@ -608,7 +606,7 @@ class _LocationsBasedCruiseScreenState
                                                 size: 16,
                                               ),
                                               Text(
-                                                "${(value.cruisemodel.data?[index].avgRating != null && value.cruisemodel.data?[index].avgRating.toString() != "null") ? double.parse(value.cruisemodel.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3"}",
+                                                (value.cruisemodel.data[index].avgRating != null && value.cruisemodel.data[index].avgRating.toString() != "null") ? double.parse(value.cruisemodel.data[index].avgRating.toString()).toStringAsFixed(1) : "4.3",
                                               ),
                                             ],
                                           ),
@@ -628,7 +626,7 @@ class _LocationsBasedCruiseScreenState
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
-                                                (value.cruisemodel.data?[index]
+                                                (value.cruisemodel.data[index]
                                                             .name
                                                             ?.toLowerCase() ==
                                                         'deluxe')
@@ -648,8 +646,8 @@ class _LocationsBasedCruiseScreenState
                                           CrossAxisAlignment.start,
                                       children: [
                                         AmenityRow(
-                                          amenities: value?.cruisemodel
-                                                  .data[index]?.amenities
+                                          amenities: value.cruisemodel
+                                                  .data[index].amenities
                                                   ?.map((e) => Amenity(
                                                         name: e.name ?? '',
                                                         icon: e.icon ?? '',
@@ -659,7 +657,7 @@ class _LocationsBasedCruiseScreenState
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
-                                          value.cruisemodel.data?[index]?.cruise
+                                          value.cruisemodel.data[index].cruise
                                                   ?.name ??
                                               "N/A",
                                           style: TextStyles.ubuntu16black15w500,
@@ -680,9 +678,9 @@ class _LocationsBasedCruiseScreenState
                                                   //         .bookingTypes?[0]
                                                   //         .defaultPrice ??
                                                   //     "",
-                                                  (value.cruisemodel.data![index].bookingTypes != null &&
- value.cruisemodel.data![index].bookingTypes!.isNotEmpty)
-    ? value.cruisemodel.data![index].bookingTypes!.first.defaultPrice ?? ""
+                                                  (value.cruisemodel.data[index].bookingTypes != null &&
+ value.cruisemodel.data[index].bookingTypes!.isNotEmpty)
+    ? value.cruisemodel.data[index].bookingTypes!.first.defaultPrice ?? ""
     : "N/A",
                                                   style: TextStyles
                                                       .ubuntu18bluew700,

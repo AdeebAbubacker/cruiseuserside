@@ -1,6 +1,5 @@
 import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
 
-import 'package.dart';
 import 'user.dart';
 
 class Datum {

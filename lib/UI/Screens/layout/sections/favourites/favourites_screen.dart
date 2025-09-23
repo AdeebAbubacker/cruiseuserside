@@ -12,7 +12,6 @@ import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_ite
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/featured_boats_container.dart';
 import 'package:cruise_buddy/UI/Widgets/noDataCondition/no_data_screen.dart';
 
 import 'package:cruise_buddy/core/view_model/getFavouritesList/get_favourites_list_bloc.dart';

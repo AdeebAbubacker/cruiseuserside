@@ -80,11 +80,11 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       }
 
       imageUrls = [
-        (widget.datum?.cruise?.images?.isNotEmpty == true
-                ? widget.datum!.cruise!.images![0].cruiseImg
+        (widget.datum.cruise?.images?.isNotEmpty == true
+                ? widget.datum.cruise!.images![0].cruiseImg
                 : null) ??
             'assets/image/boat_details_img/boat_detail_img.png',
-        ...?widget.datum?.images?.map(
+        ...?widget.datum.images?.map(
           (e) =>
               e.packageImg ??
               'assets/image/boat_details_img/boat_detail_img.png',
@@ -106,7 +106,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       }
       BlocProvider.of<ViewMyPackageBloc>(context)
           .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
-      print("booking typeid ${bookingTypeId}");
+      print("booking typeid $bookingTypeId");
 
       setState(() {
         // Once you have defaultPrice, pricePerPerson, etc...
@@ -138,7 +138,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
       'amount': (totalamount * 100).toString(),
       'currency': 'INR',
       'name': widget.name,
-      'description': 'Cruise' ' ' + 'Payment',
+      'description': 'Cruise' ' ' 'Payment',
       'order_id': orderid,
       'prefill': {
         'contact': '9949055351',
@@ -213,16 +213,16 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   TextEditingController addoncontroller = TextEditingController();
 
   int _currentIndex = 0;
-  String _selectedCruiseType = 'Day Cruise';
-  int _numRooms = 1;
-  int _day = 1;
+  final String _selectedCruiseType = 'Day Cruise';
+  final int _numRooms = 1;
+  final int _day = 1;
   int _numAdults = 1;
   int _numKids = 0;
   int _numOfBeds = 1;
   DateTime _selectedDate = DateTime.now();
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
-  String _location = "Kottayam";
+  final String _location = "Kottayam";
   int _nonVegCount = 0;
   int _vegCount = 0;
   int _jainVegCount = 0;
@@ -232,8 +232,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
   final double _tax = 600;
   final double _discounts = 0.0;
   final double _others = 0.0;
-  TextEditingController _dateController = TextEditingController();
-  bool _isEditingBoatDetails = false;
+  final TextEditingController _dateController = TextEditingController();
+  final bool _isEditingBoatDetails = false;
   bool _isEditingPassengers = false;
   bool _isEditingBed = false;
   bool _isEditingDate = false;
@@ -324,55 +324,39 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
                 setState(() {
                   final bookingTypes =
-                      value.mybookingmodel?.data?.bookingTypes ?? [];
+                      value.mybookingmodel.data?.bookingTypes ?? [];
 
                   // Find day_cruise first, if exists
                   final dayCruiseType = bookingTypes.firstWhere(
                     (type) => type.name == 'day_cruise',
                   );
 
-                  if (dayCruiseType != null) {
-                    DayCruisedefaultPrice =
-                        parsePrice(dayCruiseType.defaultPrice?.toString());
-                    pricePerPerson =
-                        parsePrice(dayCruiseType.pricePerPerson?.toString());
-                    defaultPersons = dayCruiseType.defaultPersons ?? 1;
-                    minAmountTopayforDay =
-                        parsePrice(dayCruiseType.minAmountToPay?.toString());
-                  } else {
-                    // No day_cruise found, set defaults or handle accordingly
-                    DayCruisedefaultPrice = 0;
-                    pricePerPerson = 0;
-                    defaultPersons = 1;
-                    minAmountTopayforDay = 0;
-                  }
-
+                  DayCruisedefaultPrice =
+                      parsePrice(dayCruiseType.defaultPrice?.toString());
+                  pricePerPerson =
+                      parsePrice(dayCruiseType.pricePerPerson?.toString());
+                  defaultPersons = dayCruiseType.defaultPersons ?? 1;
+                  minAmountTopayforDay =
+                      parsePrice(dayCruiseType.minAmountToPay?.toString());
+                
                   // Now find full_day_cruise only if it exists
                   final fullDayCruiseType = bookingTypes.firstWhere(
                     (type) => type.name == 'full_day_cruise',
                   );
 
-                  if (fullDayCruiseType != null) {
-                    FullDayCruisedefaultPrice =
-                        parsePrice(fullDayCruiseType.defaultPrice?.toString());
-                    minBeds = fullDayCruiseType.minimumBed ?? 1;
-                    maxBeds = fullDayCruiseType.maximumBed ?? 1;
-                    defaultBded = minBeds;
-                    minAmountTopayforFullDay = parsePrice(
-                        fullDayCruiseType.minAmountToPay?.toString());
-                  } else {
-                    FullDayCruisedefaultPrice = 0;
-                    minBeds = 1;
-                    maxBeds = 1;
-                    defaultBded = 1;
-                    minAmountTopayforFullDay = 0;
-                  }
-
+                  FullDayCruisedefaultPrice =
+                      parsePrice(fullDayCruiseType.defaultPrice?.toString());
+                  minBeds = fullDayCruiseType.minimumBed ?? 1;
+                  maxBeds = fullDayCruiseType.maximumBed ?? 1;
+                  defaultBded = minBeds;
+                  minAmountTopayforFullDay = parsePrice(
+                      fullDayCruiseType.minAmountToPay?.toString());
+                
                   unavailableDates =
-                      value.mybookingmodel?.unavailableDate ?? [];
-                  maxRooms = value.mybookingmodel?.data?.cruise?.rooms ?? 1;
+                      value.mybookingmodel.unavailableDate ?? [];
+                  maxRooms = value.mybookingmodel.data?.cruise?.rooms ?? 1;
                   maxAdults =
-                      value.mybookingmodel?.data?.cruise?.maxCapacity ?? 1;
+                      value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
 
                   // Initially set total price to day cruise default price
                   totalPrice = DayCruisedefaultPrice;
@@ -496,7 +480,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                               style: TextStyles.ubuntu14black55w400,
                             ),
                             const Spacer(),
-                            Text("${maxRooms.toString()}")
+                            Text(maxRooms.toString())
                           ],
                         ),
                       ],
@@ -539,15 +523,15 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                 final int pricePerBed = int.tryParse(
                                         fullDayCruise.pricePerBed
                                                 ?.toString()
-                                                ?.split('.')
-                                                ?.first ??
+                                                .split('.')
+                                                .first ??
                                             '0') ??
                                     0;
                                 final int defaultPrice = int.tryParse(
                                         fullDayCruise.defaultPrice
                                                 ?.toString()
-                                                ?.split('.')
-                                                ?.first ??
+                                                .split('.')
+                                                .first ??
                                             '0') ??
                                     0;
 
@@ -619,7 +603,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                     final int pricePerBed = int.tryParse(
                                           bookingType.pricePerBed
                                                   ?.split('.')
-                                                  ?.first ??
+                                                  .first ??
                                               '0',
                                         ) ??
                                         0;
@@ -704,7 +688,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                     final int defaultPrice = int.tryParse(
                                           bookingType.defaultPrice
                                                   ?.split('.')
-                                                  ?.first ??
+                                                  .first ??
                                               '0',
                                         ) ??
                                         0;
@@ -712,7 +696,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                     final int pricePerBed = int.tryParse(
                                           bookingType.pricePerBed
                                                   ?.split('.')
-                                                  ?.first ??
+                                                  .first ??
                                               '0',
                                         ) ??
                                         0;
@@ -779,7 +763,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                 builder: (context) {
                                   return AlertDialog(
                                     contentPadding: EdgeInsets.all(12),
-                                    content: Container(
+                                    content: SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           0.9,
                                       height: 460,
@@ -794,8 +778,9 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                           bool isUnavailable = unavailableDates
                                                   ?.any((range) {
                                                 if (range.startDate == null ||
-                                                    range.endDate == null)
+                                                    range.endDate == null) {
                                                   return false;
+                                                }
 
                                                 return selectedDay.isAfter(range
                                                         .startDate!
@@ -833,8 +818,9 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                                 unavailableDates?.any((range) {
                                                       if (range.startDate ==
                                                               null ||
-                                                          range.endDate == null)
+                                                          range.endDate == null) {
                                                         return false;
+                                                      }
                                                       return day.isAfter(range
                                                               .startDate!
                                                               .subtract(Duration(
@@ -1011,7 +997,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Text(
-                            '(Note: Extra charges apply if more than ${defaultBded} beds are added)',
+                            '(Note: Extra charges apply if more than $defaultBded beds are added)',
                             style: GoogleFonts.ubuntu(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -1025,7 +1011,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                     Visibility(
                         visible: bookingTypeId == '1',
                         child: _buildDetailRow(
-                            'Price Per Person', '₹${pricePerPerson}')),
+                            'Price Per Person', '₹$pricePerPerson')),
                     Visibility(
                       visible: bookingTypeId == '2',
                       child: _buildDetailRow(
@@ -1040,7 +1026,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                     Visibility(
                       visible: bookingTypeId == '1',
                       child: _buildDetailRow(
-                          'Max Bed Available', '${maxBeds.toString()}'),
+                          'Max Bed Available', maxBeds.toString()),
                     ),
                     _buildDetailRow(
                         'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
@@ -1048,7 +1034,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
                     BuilTotalDetailRow(
                       label: 'Total',
-                      value: '₹${totalPrice}',
+                      value: '₹$totalPrice',
                     ),
 
                     const SizedBox(height: 40),
@@ -1182,9 +1168,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                     }
                                   }
 
-                                  if (phone != null &&
-                                      phone is String &&
-                                      phone.isNotEmpty) {
+                                  if (phone.isNotEmpty) {
                                     String formattedDate =
                                         DateFormat('yyyy-MM-dd')
                                             .format(_selectedDate);

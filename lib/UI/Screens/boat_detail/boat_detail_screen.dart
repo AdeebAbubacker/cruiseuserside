@@ -1,8 +1,5 @@
 import 'dart:io';
 
-import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/booking_selection_widget.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/cruise_selection_widget.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/type_ofday_selection.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
@@ -10,7 +7,6 @@ import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/helper/common_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -53,11 +49,11 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     });
 
     imageUrls = [
-      (widget.datum?.cruise?.images?.isNotEmpty == true
-              ? widget.datum!.cruise!.images![0].cruiseImg
+      (widget.datum.cruise?.images?.isNotEmpty == true
+              ? widget.datum.cruise!.images![0].cruiseImg
               : null) ??
           'assets/image/boat_details_img/boat_detail_img.png',
-      ...?widget.datum?.images?.map(
+      ...?widget.datum.images?.map(
         (e) =>
             e.packageImg ?? 'assets/image/boat_details_img/boat_detail_img.png',
       ),
@@ -109,7 +105,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final location = widget.datum?.cruise?.location;
+    final location = widget.datum.cruise?.location;
 
     final address = [
       location?.district,
@@ -117,7 +113,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       location?.state,
       location?.country
     ].where((part) => part != null && part.trim().isNotEmpty).join(', ');
-    Future<LatLng?> _getCoordinatesFromAddress(String address) async {
+    Future<LatLng?> getCoordinatesFromAddress(String address) async {
       try {
         List locations = await locationFromAddress(address);
         if (locations.isNotEmpty) {
@@ -239,13 +235,13 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                             Icon(Icons.star, size: 16, color: Colors.amber),
                             SizedBox(width: 4),
                             Text(
-                              (widget.datum?.avgRating != null &&
-                                      widget.datum?.avgRating
+                              (widget.datum.avgRating != null &&
+                                      widget.datum.avgRating
                                               .toString()
                                               .toLowerCase() !=
                                           "null")
                                   ? double.parse(
-                                          widget.datum!.avgRating.toString())
+                                          widget.datum.avgRating.toString())
                                       .toStringAsFixed(1)
                                   : "4.3",
                               style: TextStyles.ubuntu16black23w300,
@@ -262,7 +258,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          widget.datum?.cruise?.name.toString() ?? "N/A",
+                          widget.datum.cruise?.name.toString() ?? "N/A",
                           style: TextStyles.ubuntu16black15w500,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -288,7 +284,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      widget.datum?.name ?? "N/A",
+                      widget.datum.name ?? "N/A",
                       style: TextStyles.ubntu16w300,
                     ),
                   ),
@@ -324,12 +320,12 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    widget.datum?.cruise?.description.toString() ?? "N/A",
+                    widget.datum.cruise?.description.toString() ?? "N/A",
                     style: TextStyles.ubntu14w300grey,
                   ),
                   SizedBox(height: 15),
                   _buildInfoRow(Icons.people, "Passenger Capacity",
-                      "${widget.datum?.cruise?.maxCapacity.toString() ?? "N/A"} Adults"),
+                      "${widget.datum.cruise?.maxCapacity.toString() ?? "N/A"} Adults"),
                   SizedBox(height: 10),
                   // _buildInfoRow(
                   //     Icons.access_time, "Boat Timing", "09:00 PM - 06:00 AM"),
@@ -415,7 +411,7 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     ],
                   ),
                   const SizedBox(height: 30.0),
-                  if ((widget.datum?.amenities?.isNotEmpty ?? false))
+                  if ((widget.datum.amenities?.isNotEmpty ?? false))
                     Text(
                       "Amenities",
                       style: TextStyles.ubntu16,
@@ -431,9 +427,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 15,
                     ),
-                    itemCount: widget.datum?.amenities?.length ?? 0,
+                    itemCount: widget.datum.amenities?.length ?? 0,
                     itemBuilder: (context, index) {
-                      final amenity = widget.datum!.amenities![index];
+                      final amenity = widget.datum.amenities![index];
                       return _buildAmenityItem(amenity.name);
                     },
                   ),

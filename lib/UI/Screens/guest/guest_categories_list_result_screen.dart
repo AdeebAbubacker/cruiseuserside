@@ -1,30 +1,18 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
 import 'package:cruise_buddy/UI/Screens/guest/guest_boat_detail_screen.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/featured_shimmer_card.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
-import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
-import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
-import 'package:cruise_buddy/core/db/shared/shared_prefernce.dart';
-import 'package:cruise_buddy/core/model/favorites_list_model/favorites_list_model.dart';
 
-import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';
 import 'package:cruise_buddy/core/view_model/getSearchCruiseResults/get_seached_cruiseresults_bloc.dart';
-import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/amenities_pill.dart';
 import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/boat_category_pill.dart';
-import 'package:cruise_buddy/UI/Screens/search%20Results/widgets/search_results_container.dart';
 import 'package:cruise_buddy/core/constants/colors/app_colors.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../core/model/featured_boats_model/featured_boats_model.dart';
 
@@ -355,7 +343,7 @@ class _GuestCategoriesListResultScreenState
                                                         //     );
                                                         //   },
                                                         // )),
-                                                        Container(
+                                                        SizedBox(
                                                       width: double.infinity,
                                                       height:
                                                           160, // Consistent height for all states
@@ -441,7 +429,7 @@ class _GuestCategoriesListResultScreenState
                                                             size: 24,
                                                           ),
                                                           Text(
-                                                            "${(value.packagesearchresults.data?[index].avgRating != null && value.packagesearchresults.data?[index].avgRating.toString() != "null") ? double.parse(value.packagesearchresults.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3"}",
+                                                            (value.packagesearchresults.data?[index].avgRating != null && value.packagesearchresults.data?[index].avgRating.toString() != "null") ? double.parse(value.packagesearchresults.data![index].avgRating.toString()).toStringAsFixed(1) : "4.3",
                                                           ),
                                                           SizedBox(width: 10),
                                                         ],
@@ -487,8 +475,8 @@ class _GuestCategoriesListResultScreenState
                                                   AmenityRow(
                                                     amenities: value
                                                             .packagesearchresults
-                                                            ?.data?[index]
-                                                            ?.amenities
+                                                            .data?[index]
+                                                            .amenities
                                                             ?.map(
                                                                 (e) => Amenity(
                                                                       name:

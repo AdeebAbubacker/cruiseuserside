@@ -1,9 +1,6 @@
 import 'package:cruise_buddy/UI/Screens/guest/guest_categories.dart';
 import 'package:cruise_buddy/UI/Screens/guest/guest_explore_destintion.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/categories_section.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/explore_destination.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/location_search_delgate.dart';
-import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/featured_boats_container.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
@@ -15,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:shimmer/shimmer.dart';
 
 class GuestHome extends StatefulWidget {
   final VoidCallback changetab;

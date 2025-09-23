@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
@@ -402,7 +401,7 @@ Future<void> fetchFavorites() async {
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 final package =
-                                    filteredBoats?[index] ?? DatumTest();
+                                    filteredBoats[index] ?? DatumTest();
                                 final packageId = package.id?.toString() ?? "0";
 
                                 final isFavorite =
@@ -411,9 +410,9 @@ Future<void> fetchFavorites() async {
                                     favoritePackageMap[packageId];
 
                                 if (isFavoriteList.length <
-                                    (filteredBoats?.length ?? 0)) {
+                                    (filteredBoats.length ?? 0)) {
                                   isFavoriteList = List.generate(
-                                    filteredBoats?.length ?? 0,
+                                    filteredBoats.length ?? 0,
                                     (i) => false,
                                   );
                                 }
@@ -435,7 +434,7 @@ Future<void> fetchFavorites() async {
                                   padding: EdgeInsets.only(
                                     left: index == 0 ? 30 : 10,
                                     right: (index ==
-                                            (filteredBoats?.length ?? 1) - 1)
+                                            (filteredBoats.length ?? 1) - 1)
                                         ? 20
                                         : 0,
                                   ),
@@ -515,8 +514,9 @@ Future<void> fetchFavorites() async {
                                                                             child,
                                                                             loadingProgress) {
                                                                       if (loadingProgress ==
-                                                                          null)
+                                                                          null) {
                                                                         return child;
+                                                                      }
                                                                       return Container(
                                                                         width: double
                                                                             .infinity,

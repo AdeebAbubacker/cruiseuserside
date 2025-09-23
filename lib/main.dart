@@ -1,5 +1,4 @@
 import 'package:cruise_buddy/UI/Screens/Splash/splash_screen.dart';
-import 'package:cruise_buddy/core/constants/functions/error/custom_error.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
 import 'package:cruise_buddy/core/view_model/addItemToFavourites/add_item_to_favourites_bloc.dart';

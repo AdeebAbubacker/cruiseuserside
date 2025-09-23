@@ -10,7 +10,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -82,10 +81,10 @@ class _BoatsScreenState extends State<BoatsScreen> {
               padding: EdgeInsets.all(16),
               itemCount: value.mybookingmodel.data?.length,
               itemBuilder: (context, index) {
-                final booking = value?.mybookingmodel.data?[index];
+                final booking = value.mybookingmodel.data?[index];
                 final imageUrl = (booking?.package?.cruise?.images != null &&
                         booking!.package!.cruise!.images!.isNotEmpty)
-                    ? booking!.package!.cruise!.images![0].cruiseImg ??
+                    ? booking.package!.cruise!.images![0].cruiseImg ??
                         'https://via.placeholder.com/100'
                     : 'https://via.placeholder.com/100';
                 GlobalKey qrKey = GlobalKey();

@@ -1,4 +1,3 @@
-import 'package:cruise_buddy/core/constants/colors/app_colors.dart';
 import 'package:cruise_buddy/core/view_model/deleteAccount/delete_account_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +5,6 @@ import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cruise_buddy/core/view_model/deleteAccount/delete_account_bloc.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/UI/Screens/Auth/login_screens.dart';
 import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
