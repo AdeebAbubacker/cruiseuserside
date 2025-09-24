@@ -12,7 +12,7 @@ class SearchResultsContainer extends StatefulWidget {
   final String packageId;
   final String cruisename;
   final String imageUrl;
-  final String price;
+  final String rooms;
   final DatumTest datum;
   final bool isFavorite;
   final String? favouriteId;
@@ -27,7 +27,7 @@ class SearchResultsContainer extends StatefulWidget {
     this.cruisename = "Kerala’s Heritage Haven – Traditional Kerala Décor",
     required this.imageUrl,
     required this.datum,
-    required this.price,
+    required this.rooms,
     required this.isFavorite,
     this.favouriteId,
     required this.loadingFavorites,
@@ -243,7 +243,7 @@ class _SearchResultsContainerState extends State<SearchResultsContainer> {
                   Row(
                     children: [
                       Text(
-                        "₹${(widget.price == 'null') ? "1000" : widget.price}",
+                        "${(widget.rooms == 'null') ? "1" : widget.rooms} Room",
                         style: TextStyles.ubuntu18bluew700,
                       ),
                       Spacer(),

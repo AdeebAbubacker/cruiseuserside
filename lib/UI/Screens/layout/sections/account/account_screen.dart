@@ -350,7 +350,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
 
                     onTap: () {
-                      makeCall('9072855886', context);
+                      makeCall('9544947751', context);
                     },
                   ),
                   SizedBox(height: 5),

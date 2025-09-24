@@ -716,7 +716,8 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                                       ?.name ??
                                                   "N/A",
                                               imageUrl: imageUrls,
-                                              price: '$dayCruiseDefaultPrice',
+                                              rooms: '${value.packagesearchresults
+                                                      .data?[index].cruise?.rooms}',
                                               isFavorite: isFavorite,
                                               favouriteId: favouriteId,
                                               loadingFavorites:

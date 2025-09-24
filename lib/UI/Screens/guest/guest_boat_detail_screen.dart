@@ -304,7 +304,7 @@ class _GuestBoatDetailScreenState extends State<GuestBoatDetailScreen> {
                       SizedBox(width: 9),
                       GestureDetector(
                         onTap: () {
-                          makeCall('9072855886', context);
+                          makeCall('9544947751', context);
                         },
                         child: SvgPicture.asset(
                             'assets/image/boat_details_img/call_icon.svg'),
