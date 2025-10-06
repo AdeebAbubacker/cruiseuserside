@@ -408,7 +408,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       'App Version',
                       style: TextStyles.ubuntu15normal,
                     ),
-                    trailing: Text("v1.0.29", style: TextStyles.ubuntu15normal),
+                    trailing: Text("v1.0.75", style: TextStyles.ubuntu15normal),
                   ),
                   SizedBox(height: 5),
                   SizedBox(height: 5),
