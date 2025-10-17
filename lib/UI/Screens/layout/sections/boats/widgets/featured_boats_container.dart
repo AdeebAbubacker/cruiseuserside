@@ -418,11 +418,22 @@ Future<void> fetchFavorites() async {
                                 }
 
                                 final bookingTypes = package.bookingTypes ?? [];
-                                final dayCruiseDefaultPrice =
-                                    bookingTypes.firstWhere(
-                                  (type) => type.name == 'day_cruise',
-                                  orElse: () => BookingType(),
-                                );
+                                // final dayCruiseDefaultPrice =
+                                //     bookingTypes.firstWhere(
+                                //   (type) => type.name == 'day_cruise',
+                                //   orElse: () => BookingType(),
+                                // );
+                                final dayCruiseDefaultPrice = bookingTypes.firstWhere(
+                                (type) => type.name == 'day_cruise',
+                                orElse: () {
+                                  // Try full_day if day_cruise not found
+                                  return bookingTypes.firstWhere(
+                                    (type) => type.name == 'full_day_cruise',
+                                    orElse: () => BookingType(), // default fallback
+                                  );
+                                },
+                              );
+
 
                                 final cruiseImages =
                                     package.cruise?.images ?? [];
@@ -748,6 +759,7 @@ Future<void> fetchFavorites() async {
                                                 ),
                                               ),
                                             ),
+                                            
                                             Positioned(
                                               bottom: 8,
                                               right: 8,
@@ -789,6 +801,7 @@ Future<void> fetchFavorites() async {
                                                 ),
                                               ),
                                             ),
+                                            
                                             Positioned(
                                               bottom: 19,
                                               left: 8,
@@ -842,6 +855,7 @@ Future<void> fetchFavorites() async {
                                                 ],
                                               ),
                                             )
+                                        
                                           ],
                                         ),
                                       ),
