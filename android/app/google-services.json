@@ -58,6 +58,14 @@
           }
         },
         {
+          "client_id": "261245076643-7bn92f4pak9saqikqqsaua1hjrg4m9vv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.leburacruisebuddy.app",
+            "certificate_hash": "ff3163f16317805610df63bb7f04ed1fcebc72a7"
+          }
+        },
+        {
           "client_id": "261245076643-bt90ck96h319uroc99s3q9vh0f90a3dl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -79,6 +87,14 @@
           "android_info": {
             "package_name": "com.leburacruisebuddy.app",
             "certificate_hash": "b6f4f21bb329007ecf0df4e5a9344ae67b3532d8"
+          }
+        },
+        {
+          "client_id": "261245076643-tm0s09gc08r7t6sqfhg462kjq8hipsno.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.leburacruisebuddy.app",
+            "certificate_hash": "266754be277ba995868a4f173e28af7750a0e5e6"
           }
         },
         {
