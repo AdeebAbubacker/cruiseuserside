@@ -24,7 +24,17 @@ class _BookingTypeSelectorWidgetState extends State<BookingTypeSelectorWidget> {
     super.initState();
     selectedType = widget.initialType; // Initialize with the passed type
   }
-
+ 
+ // 👇 ADD THIS METHOD
+  @override
+  void didUpdateWidget(covariant BookingTypeSelectorWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialType != widget.initialType) {
+      setState(() {
+        selectedType = widget.initialType; 
+      });
+    }
+  }
   void _selectType(int type) {
     setState(() {
       selectedType = type;

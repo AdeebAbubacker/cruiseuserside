@@ -151,7 +151,7 @@ Future<void> fetchFavorites() async {
     headers: {
       'Accept': 'application/json',
       'CRUISE_AUTH_KEY': '29B37-89DFC5E37A525891-FE788E23',
-      'Authorization': 'Bearer Bearer $token', // 👈 fix here too
+      'Authorization': 'Bearer Bearer $token', 
     },
   );
 

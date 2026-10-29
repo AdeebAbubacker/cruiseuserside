@@ -27,13 +27,24 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   final TextEditingController _captchaController = TextEditingController();
   final TextEditingController _userInputController = TextEditingController();
   final FocusNode captchaFocus = FocusNode();
+  bool _isCaptchaMatched = false;
 
   @override
   void initState() {
     super.initState();
     _generateCaptcha();
+    _userInputController.addListener(_checkCaptchaMatch);
   }
-
+  void _checkCaptchaMatch() {
+    setState(() {
+      if (_userInputController.text.trim() == _captcha) {
+        _isCaptchaMatched = true;
+        _captchaErrorText = null;
+      } else {
+        _isCaptchaMatched = false;
+      }
+    });
+  }
   void _generateCaptcha() {
     final random = Random();
     const chars =
@@ -190,47 +201,28 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                                               _userInputController,
                                         ),
                                         const SizedBox(height: 20),
-                                        Center(
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  Colors.red, // Danger color
-                                              foregroundColor:
-                                                  Colors.white, // Text color
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 40, vertical: 14),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(
-                                                    8), // Slightly rounded corners
-                                              ),
-                                              elevation: 3,
-                                            ),
-                                            onPressed: () async {
-                                              if (_userInputController.text ==
-                                                  _captcha) {
-                                                print("Matched");
-                                                setState(() {
-                                                  _captchaErrorText = null;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  _captchaErrorText =
-                                                      'Incorrect Captcha';
-                                                });
-                                                BlocProvider.of<DeleteAccountBloc>(
-                                                        context)
-                                                    .add(DeleteAccountEvent
-                                                        .deleteAccount());
-                                                print("Not Matched");
-                                              }
-                                            },
-                                            child: Text(
-                                              'Delete Account',
-                                              style: GoogleFonts.ubuntu(),
-                                            ),
+                                      Center(
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              _isCaptchaMatched ? Colors.red : Colors.grey, // ✅ Disable look
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 40, vertical: 14),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
                                           ),
+                                          elevation: 3,
                                         ),
-                                      ],
+                                        onPressed: _isCaptchaMatched
+                                            ? () {
+                                                BlocProvider.of<DeleteAccountBloc>(context)
+                                                    .add(DeleteAccountEvent.deleteAccount());
+                                              }
+                                            : null, 
+                                        child: Text('Delete Account', style: GoogleFonts.ubuntu()),
+                                      ),
+                                    ),],
                                     ),
                                   ],
                                 ),

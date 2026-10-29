@@ -1,0 +1,1583 @@
+import 'package:cruise_buddy/UI/Screens/layout/sections/Home/widgets/type_ofday_selection.dart';
+import 'package:cruise_buddy/UI/Screens/payment_steps_screen/collect_phone_number_screen.dart';
+import 'package:cruise_buddy/UI/Widgets/Button/fullwidth_rectangle_bluebutton.dart';
+import 'package:cruise_buddy/UI/Widgets/Button/rectangle_bluebutton_loading.dart';
+import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
+import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
+import 'package:cruise_buddy/core/helper/gst_helper.dart';
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
+import 'package:cruise_buddy/core/view_model/bookMyCruise/book_my_cruise_bloc.dart';
+import 'package:cruise_buddy/core/view_model/viewMyPackage/view_my_package_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart'
+    as featuredBoats;
+
+class BookingconfirmationBySearchScreen extends StatefulWidget {
+  final int dayorFullDay;
+  final String packageId;
+  final DatumTest datum;
+  final String name;
+  final String email;
+  final String? startDate;
+  final String? endDate;
+  final int? noOfAdults;
+  final int? noOfChildren;
+  const BookingconfirmationBySearchScreen({
+    super.key,
+    required this.packageId,
+    required this.datum,
+    required this.name,
+    required this.email,
+    this.dayorFullDay = 1,
+    this.startDate,
+    this.endDate,
+    this.noOfAdults,
+    this.noOfChildren,
+  });
+
+  @override
+  _BookingconfirmationBySearchScreenState createState() =>
+      _BookingconfirmationBySearchScreenState();
+}
+
+class _BookingconfirmationBySearchScreenState
+    extends State<BookingconfirmationBySearchScreen> {
+  late Razorpay _razorpay;
+  bool _isLoading = false;
+  String bookingTypeId = "1";
+  List<String> imageUrls = [];
+  int _numAdults = 1;
+  int _numKids = 0;
+  FocusNode addonFocusnode = FocusNode();
+  TextEditingController addoncontroller = TextEditingController();
+
+  int _currentIndex = 0;
+  final String _selectedCruiseType = 'Day Cruise';
+  final int _numRooms = 1;
+  final int _day = 1;
+  int _numOfBeds = 1;
+  DateTime _selectedDate = DateTime.now();
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
+  final String _location = "Kottayam";
+  int _nonVegCount = 0;
+  int _vegCount = 0;
+  int _jainVegCount = 0;
+  String _addOns = '';
+
+  final double _chargesForTheDay = 7000;
+  final double _tax = 600;
+  final double _discounts = 0.0;
+  final double _others = 0.0;
+  final TextEditingController _dateController = TextEditingController();
+  final bool _isEditingBoatDetails = false;
+  bool _isEditingPassengers = false;
+  bool _isEditingBed = false;
+  bool _isEditingDate = false;
+  String? _selectedPaymentType;
+  int maxBeds = 1;
+  int minBeds = 1;
+  int maxAdults = 1; // default fallback
+  int maxRooms = 1;
+  List<featuredBoats.UnavailableDate>? unavailableDates;
+  int? DayCruisedefaultPrice;
+  int FullDayCruisedefaultPrice = 0;
+  int totalPrice = 0;
+  int pricePerDay = 0;
+  int pricePerPerson = 0;
+  int minAmountTopayforDay = 0;
+  int minAmountTopayforFullDay = 0;
+  int defaultPersons = 0;
+  int defaultBded = 0;
+  final List unavaibledates = [];
+  BookingType? fullDayCruise;
+  @override
+  void initState() {
+    super.initState();
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentErrorResponse);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccessResponse);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWalletSelected);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // ✅ Autofill start and end dates if provided
+      print("widget.startdate ${widget.startDate}");
+      print("widget.endDate ${widget.endDate}");
+      if (widget.startDate != null && widget.startDate!.isNotEmpty) {
+        try {
+          setState(() {
+            startDate = DateFormat('yyyy-MM-dd').parse(widget.startDate!);
+            _selectedDate = startDate;
+          });
+        } catch (e) {
+          print("Invalid startDate format: ${widget.startDate}");
+        }
+      }
+
+      if (widget.endDate != null && widget.endDate!.isNotEmpty) {
+        try {
+          setState(() {
+            endDate = DateFormat('yyyy-MM-dd').parse(widget.endDate!);
+          });
+        } catch (e) {
+          print("Invalid endDate format: ${widget.endDate}");
+        }
+      }
+
+      setState(() {
+        _numAdults = widget.noOfAdults ?? 1;
+        _numKids = widget.noOfChildren ?? 0;
+      });
+
+      final bookingTypes = widget.datum.bookingTypes ?? [];
+
+      // STEP 1️⃣: Choose correct booking type
+      final dayCruise = bookingTypes.firstWhere(
+        (b) => b.name == 'day_cruise',
+        orElse: () => BookingType(),
+      );
+
+      final fullDayCruise = bookingTypes.firstWhere(
+        (b) => b.name == 'full_day_cruise',
+        orElse: () => BookingType(),
+      );
+
+      if (dayCruise.id != null) {
+        bookingTypeId = dayCruise.id.toString();
+      } else if (fullDayCruise.id != null) {
+        bookingTypeId = fullDayCruise.id.toString();
+      } else if (bookingTypes.isNotEmpty) {
+        bookingTypeId = bookingTypes.first.id.toString();
+      } else {
+        bookingTypeId = "1";
+      }
+      bookingTypeId = widget.dayorFullDay.toString();
+      if (dayCruise.id != null && widget.dayorFullDay == 1) {
+        bookingTypeId = dayCruise.id.toString();
+      } else if (fullDayCruise.id != null && widget.dayorFullDay == 2) {
+        bookingTypeId = fullDayCruise.id.toString();
+      }
+
+      // STEP 2️⃣: Handle image URLs
+      imageUrls = [
+        (widget.datum.cruise?.images?.isNotEmpty == true
+                ? widget.datum.cruise!.images![0].cruiseImg
+                : null) ??
+            'assets/image/boat_details_img/boat_detail_img.png',
+        ...?widget.datum.images?.map(
+          (e) =>
+              e.packageImg ??
+              'assets/image/boat_details_img/boat_detail_img.png',
+        ),
+      ];
+
+      // STEP 3️⃣: Set initial price safely
+      int defaultPrice = 0;
+      int perPersonPrice = 0;
+
+      if (dayCruise.id != null) {
+        defaultPrice = parsePrice(dayCruise.defaultPrice);
+        perPersonPrice = parsePrice(dayCruise.pricePerPerson);
+      } else if (fullDayCruise.id != null) {
+        defaultPrice = parsePrice(fullDayCruise.defaultPrice);
+      }
+
+      setState(() {
+        totalPrice = defaultPrice + perPersonPrice;
+      });
+
+      BlocProvider.of<ViewMyPackageBloc>(context)
+          .add(ViewMyPackageEvent.viewMyPackage(packageId: widget.packageId));
+
+      print("booking typeid $bookingTypeId");
+      print("default price ₹$defaultPrice");
+      print("total price ₹$totalPrice");
+      // ✅ Trigger automatic calculation if adults > 0
+
+      if (_numAdults > 0 && bookingTypeId.isNotEmpty) {
+        _calculateTotalPrice();
+      }
+    });
+  }
+
+  void _onBookingTypeSelected(String bookingTypeId) {
+    setState(() {
+      bookingTypeId = bookingTypeId; // Store the selected booking type ID
+    });
+  }
+
+  @override
+  void dispose() {
+    _razorpay.clear(); // Clean up Razorpay instance
+    super.dispose();
+  }
+
+  void _calculateTotalPrice() {
+    int newTotalPrice = 0;
+
+    if (bookingTypeId == '1') {
+      print("extra charge added");
+      // 🛥️ Day cruise logic
+      if (_numAdults > defaultPersons) {
+        final extraAdults = _numAdults - defaultPersons;
+        newTotalPrice =
+            (DayCruisedefaultPrice ?? 0) + (extraAdults * (pricePerPerson));
+      } else {
+        newTotalPrice = DayCruisedefaultPrice ?? 0;
+      }
+    } else if (bookingTypeId == '2') {
+      // Full-day cruise
+      final BookingType? bookingType = widget.datum.bookingTypes?.firstWhere(
+        (b) => b.id.toString() == bookingTypeId,
+        orElse: () => BookingType(),
+      );
+
+      // Fallback to instance vars if bookingType missing
+      final int defaultPrice =
+          int.tryParse(bookingType?.defaultPrice ?? '') != null
+              ? int.tryParse(bookingType!.defaultPrice!) ?? 0
+              : FullDayCruisedefaultPrice;
+
+      final int pricePerBed =
+          int.tryParse(bookingType?.pricePerBed?.split('.').first ?? '') ?? 0;
+
+      final int minimumBed = bookingType?.minimumBed ?? minBeds;
+      final int maximumBed = bookingType?.maximumBed ?? maxBeds;
+
+      // Each adult -> one bed assumption (adjust if logic differs)
+      int selectedBeds = _numAdults;
+
+      newTotalPrice = defaultPrice;
+    }
+
+    setState(() {
+      totalPrice = newTotalPrice;
+    });
+
+    print('✅ Auto-calculated total price: ₹$totalPrice');
+  }
+
+  void openCheckout({
+    String? orderid,
+    required int totalamount,
+  }) {
+    var options = {
+      'key': 'rzp_live_ZAFN8qKXodIxis',
+      'amount': (totalamount * 100).toString(),
+      'currency': 'INR',
+      'name': widget.name,
+      'description': 'Cruise' ' ' 'Payment',
+      'order_id': orderid,
+      'prefill': {
+        'contact': '9949055351',
+        'email': widget.email,
+      },
+      'method': {
+        'upi': true,
+        'netbanking': false,
+        'wallet': false,
+      },
+      'theme': {'color': '#FFD700'},
+      'redirect': false,
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint("-----------Error: $e");
+    }
+  }
+
+  void handlePaymentErrorResponse(PaymentFailureResponse response) {
+    showAlertDialog(context, "Payment Failed",
+        "Code: ${response.code}/nDescription: ${response.message}/nMetadata: ${response.error.toString()}");
+  }
+
+  void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
+    showAlertDialog(
+        context, "Payment Successful", "Payment ID: ${response.paymentId}");
+  }
+
+  void handleExternalWalletSelected(ExternalWalletResponse response) {
+    showAlertDialog(
+        context, "External Wallet Selected", "Wallet: ${response.walletName}");
+  }
+
+  void showAlertDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            ElevatedButton(
+              child: const Text("OK"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String _getCruiseName(int id) {
+    switch (id) {
+      case 1:
+        return "Day Cruise";
+      case 2:
+        return "Full Day Cruise";
+      default:
+        return "Unknown";
+    }
+  }
+
+  int parsePrice(String? priceString) {
+    if (priceString == null) return 0;
+    return int.tryParse(priceString.split('.').first) ?? 0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("sds ${widget.packageId}");
+    unavailableDates = widget.datum.unavailableDate ?? [];
+
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<BookMyCruiseBloc, BookMyCruiseState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              loading: (value) {
+                setState(() => _isLoading = true);
+              },
+              getBookedBoats: (value) {
+                setState(() => _isLoading = false);
+                print('order id ${value.bookingresponse.booking?.orderId}');
+
+                openCheckout(
+                    orderid: value.bookingresponse.booking?.orderId.toString(),
+                    totalamount: int.parse(PriceHelper.addTax(
+                        totalPrice.toString()))); // Call Razorpay on success
+                BlocProvider.of<ViewMyPackageBloc>(context).add(
+                    ViewMyPackageEvent.viewMyPackage(
+                        packageId: widget.packageId));
+              },
+              getBookedFailure: (value) {
+                setState(() => _isLoading = false);
+
+                CustomToast.showFlushBar(
+                  context: context,
+                  status: false,
+                  title: "Oops",
+                  content:
+                      "Booking failed, your cruise is not available in this date",
+                );
+
+                BlocProvider.of<ViewMyPackageBloc>(context).add(
+                    ViewMyPackageEvent.viewMyPackage(
+                        packageId: widget.packageId));
+              },
+              noInternet: (value) {
+                setState(() => _isLoading = false);
+
+                CustomToast.showFlushBar(
+                  context: context,
+                  status: false,
+                  title: "Oops",
+                  content: "No Internet please try again",
+                );
+              },
+            );
+          },
+        ),
+        BlocListener<ViewMyPackageBloc, ViewMyPackageState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              viewMyPacakge: (value) {
+                try {
+                  fullDayCruise = widget.datum.bookingTypes?.firstWhere(
+                    (type) => type.name == 'full_day_cruise',
+                    orElse: () => BookingType(),
+                  );
+                  if (fullDayCruise?.id == null) {
+                    fullDayCruise = null;
+                  }
+                } catch (e) {
+                  fullDayCruise = null;
+                }
+
+                setState(() {
+                  final bookingTypes = widget.datum.bookingTypes ?? [];
+
+                  // Find day_cruise first, if exists
+                  final dayCruiseType = bookingTypes.firstWhere(
+                    (type) => type.name == 'day_cruise',
+                    orElse: () => BookingType(),
+                  );
+
+                  DayCruisedefaultPrice =
+                      parsePrice(dayCruiseType.defaultPrice?.toString());
+                  pricePerPerson =
+                      parsePrice(dayCruiseType.pricePerPerson?.toString());
+                  defaultPersons = dayCruiseType.defaultPersons ?? 1;
+                  minAmountTopayforDay =
+                      parsePrice(dayCruiseType.minAmountToPay?.toString());
+
+                  // Now find full_day_cruise only if it exists
+                  final fullDayCruiseType = bookingTypes.firstWhere(
+                    (type) => type.name == 'full_day_cruise',
+                  );
+
+                  FullDayCruisedefaultPrice =
+                      parsePrice(fullDayCruiseType.defaultPrice?.toString());
+                  minBeds = fullDayCruiseType.minimumBed ?? 1;
+                  maxBeds = fullDayCruiseType.maximumBed ?? 1;
+                  defaultBded = minBeds;
+                  minAmountTopayforFullDay =
+                      parsePrice(fullDayCruiseType.minAmountToPay?.toString());
+
+                  unavailableDates = value.mybookingmodel.unavailableDate ?? [];
+                  maxRooms = value.mybookingmodel.data?.cruise?.rooms ?? 1;
+                  maxAdults =
+                      value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
+
+                  // Initially set total price to day cruise default price
+                  totalPrice = ((DayCruisedefaultPrice != 0 &&
+                          DayCruisedefaultPrice != null)
+                      ? DayCruisedefaultPrice
+                      : FullDayCruisedefaultPrice)!;
+
+                  _numOfBeds = minBeds;
+
+                  print(
+                      "Day Cruise Price: $DayCruisedefaultPrice, Price per person: $pricePerPerson");
+                  print(
+                      "Full Day Cruise Price: $FullDayCruisedefaultPrice, Min Beds: $minBeds, Max Beds: $maxBeds");
+                  _calculateTotalPrice();
+                });
+              },
+            );
+          },
+        ),
+      ],
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            forceMaterialTransparency: true,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          body: ListView(
+            physics: BouncingScrollPhysics(),
+            padding: const EdgeInsets.all(16.0),
+            children: [
+              Stack(
+                children: [
+                  SizedBox(
+                    height: 200,
+                    child: PageView.builder(
+                      itemCount: imageUrls.length,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        final imageUrl = imageUrls[index];
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              imageUrl ?? '',
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Container(
+                                  color: Colors.grey[300],
+                                  alignment: Alignment.center,
+                                  child: const CircularProgressIndicator(
+                                      strokeWidth: 2),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey[300],
+                                  alignment: Alignment.center,
+                                  child: Icon(Icons.image_not_supported,
+                                      color: Colors.grey[700]),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 15,
+                    left: 10,
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 125, 125, 125),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '${_currentIndex + 1}/${imageUrls.length}',
+                        style: TextStyles.ubuntu16whitew2700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Boat Details',
+                              style: TextStyles.ubntu16,
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Text(
+                              'No of Rooms',
+                              style: TextStyles.ubuntu14black55w400,
+                            ),
+                            const Spacer(),
+                            Text(maxRooms.toString())
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      'Booking Type',
+                      style: TextStyles.ubntu16,
+                    ),
+                    SizedBox(height: 8),
+                    if (widget.datum.bookingTypes!.length == 1)
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          _getCruiseName(
+                              widget.datum.bookingTypes!.first.id ?? 0),
+                          style: GoogleFonts.ubuntu(fontSize: 14),
+                        ),
+                      )
+                    else if (widget.datum.bookingTypes!.length > 1)
+                      BookingTypeSelectorWidget(
+                        onTypeSelected: (selectedType) {
+                          print("Selected booking type: $selectedType");
+                          setState(() {
+                            bookingTypeId = selectedType.toString();
+                            if (selectedType == 2) {
+                              final fullDayCruise =
+                                  widget.datum.bookingTypes?.firstWhere(
+                                (b) => b.id == 2,
+                                orElse: () => BookingType(),
+                              );
+
+                              if (fullDayCruise != null) {
+                                final int minBed = int.tryParse(
+                                        fullDayCruise.minimumBed?.toString() ??
+                                            '0') ??
+                                    0;
+                                final int pricePerBed = int.tryParse(
+                                        fullDayCruise.pricePerBed
+                                                ?.toString()
+                                                .split('.')
+                                                .first ??
+                                            '0') ??
+                                    0;
+                                final int defaultPrice = int.tryParse(
+                                        fullDayCruise.defaultPrice
+                                                ?.toString()
+                                                .split('.')
+                                                .first ??
+                                            '0') ??
+                                    0;
+
+                                final int extraBeds = (_numOfBeds > minBed)
+                                    ? _numOfBeds - minBed
+                                    : 0;
+                                final int extraCharge = extraBeds * pricePerBed;
+
+                                totalPrice = defaultPrice + extraCharge;
+
+                                print('🛳 Full Day Cruise Selected');
+                                print('🔹 Default Price: ₹$defaultPrice');
+                                print('🔹 Extra AduextraBedslts: $extraBeds');
+                                print('🔹 Extra Charge: ₹$extraCharge');
+                                print('✅ Total Price: ₹$totalPrice');
+                              }
+                            }
+                            if (selectedType == 1) {
+                              totalPrice = (DayCruisedefaultPrice ?? 0) +
+                                  (_numAdults * (pricePerPerson ?? 1));
+                            }
+                          });
+                          _onBookingTypeSelected(selectedType.toString());
+                        },
+                        initialType:
+                            int.tryParse(bookingTypeId.toString()) ?? 1,
+                      ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    // Passengers Section
+                    Visibility(
+                      visible: bookingTypeId == "1",
+                      child: _buildEditableSection(
+                        title: 'Number of passengers',
+                        isEditing: _isEditingPassengers,
+                        onTap: () => setState(
+                            () => _isEditingPassengers = !_isEditingPassengers),
+                        editingWidgets: [
+                          _buildNumericInput(
+                            'Adults',
+                            _numAdults,
+                            (value) {
+                              setState(() {
+                                defaultPersons;
+                                _numAdults = value;
+                                if (bookingTypeId == '1') {
+                                  if (_numAdults > defaultPersons) {
+                                    final extraAdults =
+                                        _numAdults - defaultPersons;
+                                    totalPrice = (DayCruisedefaultPrice ?? 0) +
+                                        (extraAdults * (pricePerPerson ?? 1));
+                                  } else {
+                                    totalPrice = DayCruisedefaultPrice ?? 0;
+                                  }
+                                }
+                                if (bookingTypeId == '2') {
+                                  final BookingType? bookingType =
+                                      widget.datum.bookingTypes?.firstWhere(
+                                    (b) => b.id.toString() == bookingTypeId,
+                                    orElse: () =>
+                                        BookingType(), // ⚠️ Only if you have a default constructor (not recommended usually)
+                                  );
+
+                                  if (bookingType != null) {
+                                    final int defaultPrice = int.tryParse(
+                                            bookingType.defaultPrice ?? '0') ??
+                                        0;
+                                    final int pricePerBed = int.tryParse(
+                                          bookingType.pricePerBed
+                                                  ?.split('.')
+                                                  .first ??
+                                              '0',
+                                        ) ??
+                                        0;
+
+                                    final int minimumBed =
+                                        bookingType.minimumBed ?? 0;
+                                    final int maximumBed =
+                                        bookingType.maximumBed ?? 0;
+
+                                    int selectedBeds =
+                                        _numAdults; // Assuming 1 adult = 1 bed. Adjust if needed.
+
+                                    // Clamp the selected beds between min and max
+                                    if (selectedBeds < minimumBed) {
+                                      selectedBeds = minimumBed;
+                                    } else if (selectedBeds > maximumBed) {
+                                      selectedBeds = maximumBed;
+                                    }
+
+                                    final int extraCharge =
+                                        selectedBeds * pricePerBed;
+                                    totalPrice = defaultPrice + extraCharge;
+
+                                    print('🔹 Default Price: ₹$defaultPrice');
+                                    print('🔹 Selected Beds: $selectedBeds');
+                                    print('🔹 Price Per Bed: ₹$pricePerBed');
+                                    print('🔹 Extra Charge: ₹$extraCharge');
+                                    print('✅ Final Total Price: ₹$totalPrice');
+                                  }
+                                }
+                              });
+                            },
+                            max: maxAdults,
+                          ),
+                          _buildNumericInput(
+                            'Kids',
+                            _numKids,
+                            (value) => setState(
+                              () => _numKids = value,
+                            ),
+                          ),
+                        ],
+                        displayWidgets: [
+                          BuildDetailRowwithIcon(
+                              label: 'Adults',
+                              value: _numAdults.toString(),
+                              iconPath: 'assets/icons/adult.svg'),
+                          BuildDetailRowwithIcon(
+                              label: 'Kids',
+                              value: _numKids.toString(),
+                              iconPath: 'assets/icons/kid.svg'),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 30),
+
+                    // Passengers Section Full Day
+                    Visibility(
+                      visible: bookingTypeId == "2",
+                      child: _buildEditableSection(
+                        title: 'Number of Passengers',
+                        isEditing: _isEditingBed,
+                        onTap: () =>
+                            setState(() => _isEditingBed = !_isEditingBed),
+                        editingWidgets: [
+                          _buildNumericInput(
+                            'Beds',
+                            _numOfBeds,
+                            (value) {
+                              setState(() {
+                                _numOfBeds = value;
+
+                                if (bookingTypeId == '2') {
+                                  // Full day cruise
+                                  final BookingType? bookingType =
+                                      widget.datum.bookingTypes?.firstWhere(
+                                    (b) => b.id.toString() == bookingTypeId,
+                                    orElse: () => BookingType(),
+                                  );
+
+                                  if (bookingType != null) {
+                                    final int defaultPrice = int.tryParse(
+                                          bookingType.defaultPrice
+                                                  ?.split('.')
+                                                  .first ??
+                                              '0',
+                                        ) ??
+                                        0;
+
+                                    final int pricePerBed = int.tryParse(
+                                          bookingType.pricePerBed
+                                                  ?.split('.')
+                                                  .first ??
+                                              '0',
+                                        ) ??
+                                        0;
+
+                                    final int minimumBed =
+                                        bookingType.minimumBed ?? 0;
+                                    final int maximumBed =
+                                        bookingType.maximumBed ?? maxBeds;
+
+                                    int selectedBeds = _numOfBeds;
+
+                                    // Clamp between min and max
+                                    if (selectedBeds < minimumBed) {
+                                      selectedBeds = minimumBed;
+                                    } else if (selectedBeds > maximumBed) {
+                                      selectedBeds = maximumBed;
+                                    }
+
+                                    // ✅ Only charge for beds beyond the minimum
+                                    final int extraBeds =
+                                        (selectedBeds - minimumBed)
+                                            .clamp(0, maximumBed);
+                                    final int extraCharge =
+                                        extraBeds * pricePerBed;
+
+                                    totalPrice = defaultPrice + extraCharge;
+
+                                    print('🔹 Default Price: ₹$defaultPrice');
+                                    print(
+                                        '🔹 Minimum Beds Included: $minimumBed');
+                                    print('🔹 Selected Beds: $selectedBeds');
+                                    print('🔹 Extra Beds Charged: $extraBeds');
+                                    print('🔹 Price Per Bed: ₹$pricePerBed');
+                                    print('🔹 Extra Charge: ₹$extraCharge');
+                                    print('✅ Final Total Price: ₹$totalPrice');
+                                  }
+                                }
+                              });
+                            },
+                            max: maxBeds, // ✅ uses bed limit, not passengers
+                          ),
+                        ],
+                        displayWidgets: [
+                          BuildDetailRowwithIcon(
+                              label: 'Beds',
+                              value: _numOfBeds.toString(),
+                              iconPath: 'assets/icons/single-bed.png'),
+                        ],
+                      ),
+                    ),
+                    _buildEditableSection(
+                      unavailable_date: unavailableDates,
+                      title: 'Date',
+                      isEditing: _isEditingDate,
+                      onTap: () =>
+                          setState(() => _isEditingDate = !_isEditingDate),
+                      editingWidgets: [
+                        GestureDetector(
+                          onTap: () async {
+                            if (bookingTypeId == "1") {
+                              // Single date selection
+                              await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    contentPadding: EdgeInsets.all(12),
+                                    content: SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
+                                      height: 460,
+                                      child: TableCalendar(
+                                        firstDay: DateTime(2000),
+                                        lastDay: DateTime(2101),
+                                        focusedDay: _selectedDate,
+                                        selectedDayPredicate: (day) =>
+                                            isSameDay(_selectedDate, day),
+                                        onDaySelected:
+                                            (selectedDay, focusedDay) {
+                                          bool isUnavailable = unavailableDates
+                                                  ?.any((range) {
+                                                if (range.startDate == null ||
+                                                    range.endDate == null) {
+                                                  return false;
+                                                }
+
+                                                return selectedDay.isAfter(range
+                                                        .startDate!
+                                                        .subtract(Duration(
+                                                            days: 1))) &&
+                                                    selectedDay.isBefore(
+                                                        range.endDate!.add(
+                                                            Duration(days: 1)));
+                                              }) ??
+                                              false;
+
+                                          if (isUnavailable) {
+                                            CustomToast.showFlushBar(
+                                              context: context,
+                                              status: false,
+                                              title: "Oops",
+                                              content:
+                                                  "This date is not available.",
+                                            );
+                                            return;
+                                          }
+
+                                          setState(() {
+                                            _selectedDate = selectedDay;
+                                            _dateController.text =
+                                                DateFormat('dd/MM/yyyy')
+                                                    .format(selectedDay);
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                        calendarBuilders: CalendarBuilders(
+                                          defaultBuilder:
+                                              (context, day, focusedDay) {
+                                            bool isUnavailable =
+                                                unavailableDates?.any((range) {
+                                                      if (range.startDate ==
+                                                              null ||
+                                                          range.endDate ==
+                                                              null) {
+                                                        return false;
+                                                      }
+                                                      return day.isAfter(range
+                                                              .startDate!
+                                                              .subtract(Duration(
+                                                                  days: 1))) &&
+                                                          day.isBefore(range
+                                                              .endDate!
+                                                              .add(Duration(
+                                                                  days: 1)));
+                                                    }) ??
+                                                    false;
+
+                                            if (isUnavailable) {
+                                              return Container(
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.red,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Text(
+                                                  '${day.day}',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              );
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                        headerStyle: HeaderStyle(
+                                          formatButtonVisible: true,
+                                          leftChevronVisible: true,
+                                          rightChevronVisible: true,
+                                          titleTextStyle: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          formatButtonShowsNext: false,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              // Date range selection
+                              final picked = await showDateRangePicker(
+                                context: context,
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(2101),
+                                initialDateRange: DateTimeRange(
+                                    start: startDate, end: endDate),
+                              );
+
+                              if (picked != null) {
+                                setState(() {
+                                  startDate = picked.start;
+                                  endDate = picked.end;
+                                  _dateController.text =
+                                      "${DateFormat('dd/MM/yyyy').format(startDate)} - ${DateFormat('dd/MM/yyyy').format(endDate)}";
+                                });
+                              }
+                            }
+                          },
+                          child: Container(
+                            height: 40,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(36),
+                              border: Border.all(width: 1),
+                            ),
+                            child: Center(
+                              child: Text(
+                                bookingTypeId == "1"
+                                    ? DateFormat('dd/MM/yyyy')
+                                        .format(_selectedDate)
+                                    : "${DateFormat('dd/MM/yyyy').format(startDate)} - ${DateFormat('dd/MM/yyyy').format(endDate)}",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      displayWidgets: [
+                        _buildDetailRow(
+                          'Date',
+                          bookingTypeId == "1"
+                              ? DateFormat('dd/MM/yyyy').format(_selectedDate)
+                              : "${DateFormat('dd/MM/yyyy').format(startDate)} - ${DateFormat('dd/MM/yyyy').format(endDate)}",
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
+
+                    Text(
+                      'Choose your food count',
+                      style: TextStyles.ubntu16,
+                    ),
+                    SizedBox(height: 20),
+                    FoodCounterStateless(
+                      label: 'Non-Veg',
+                      count: _nonVegCount,
+                      onChanged: (value) => setState(
+                        () => _nonVegCount = value,
+                      ),
+                    ),
+                    FoodCounterStateless(
+                      label: 'Veg',
+                      count: _vegCount,
+                      onChanged: (value) => setState(
+                        () => _vegCount = value,
+                      ),
+                    ),
+                    FoodCounterStateless(
+                      label: 'Jain Veg',
+                      count: _jainVegCount,
+                      onChanged: (value) => setState(
+                        () => _jainVegCount = value,
+                      ),
+                    ),
+
+                    // Add ons
+                    const SizedBox(height: 25),
+                    Text(
+                      'Add-ons (optional)',
+                      style: TextStyles.ubntu16,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('(Note: Extra charges may apply for add-ons)',
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.red,
+                          )),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      style: TextStyles.ubuntutextfieldText,
+                      controller: addoncontroller,
+                      focusNode: addonFocusnode,
+                      onChanged: (value) => _addOns = value,
+                      decoration: InputDecoration(
+                        hintStyle: TextStyles.ubuntuhintText,
+                        hintText: 'Eg: Need a mic set',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(45)),
+                      ),
+                    ),
+
+                    const SizedBox(height: 40),
+                    // Grand Total Section
+                    Text(
+                      'Grand Total',
+                      style: TextStyles.ubntu16,
+                    ),
+
+                    // Show note for day cruise (bookingTypeId == '1')
+                    if (bookingTypeId == '1')
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                            '(Note: Extra charges apply if more than $defaultPersons adults are added)',
+                            style: GoogleFonts.ubuntu(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.red,
+                            )),
+                      ),
+                    if (bookingTypeId == '2')
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                            '(Note: Extra charges apply if more than $defaultBded beds are added)',
+                            style: GoogleFonts.ubuntu(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.red,
+                            )),
+                      ),
+                    _buildDetailRow(
+                      'Charges for the trip',
+                      '₹${bookingTypeId == "2" && fullDayCruise != null ? FullDayCruisedefaultPrice : DayCruisedefaultPrice}',
+                    ),
+                    Visibility(
+                        visible: bookingTypeId == '1',
+                        child: _buildDetailRow(
+                            'Price Per Person', '₹$pricePerPerson')),
+                    Visibility(
+                      visible: bookingTypeId == '2',
+                      child: _buildDetailRow(
+                        'Extra Price Per Bed',
+                        '₹${widget.datum.bookingTypes?.firstWhere(
+                              (type) => type.id == 2,
+                              orElse: () =>
+                                  BookingType(), // Return empty fallback if not found
+                            ).pricePerBed?.toString() ?? '0'}',
+                      ),
+                    ),
+                    Visibility(
+                      visible: bookingTypeId == '1',
+                      child: _buildDetailRow(
+                          'Max Bed Available', maxBeds.toString()),
+                    ),
+                    _buildDetailRow(
+                        'Discounts', '₹${_discounts.toStringAsFixed(2)}'),
+                    _buildDetailRow('Others', '₹${_others.toStringAsFixed(2)}'),
+
+                    BuilTotalDetailRow(
+                      label: 'Total',
+                      value: '₹$totalPrice',
+                    ),
+
+                    const SizedBox(height: 40),
+                    Row(
+                      children: [
+                        SizedBox(
+                          height: 220,
+                          width: 140,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedPaymentType = 'partial';
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: _selectedPaymentType == 'partial'
+                                    ? Colors.blue.shade100
+                                    : Colors.blue.shade50,
+                                border: Border.all(
+                                  color: _selectedPaymentType == 'partial'
+                                      ? Colors.blue
+                                      : Colors.grey,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(Icons.lock_clock, color: Colors.orange),
+                                  SizedBox(height: 8),
+                                  Text('Partial Payment',
+                                      style: TextStyles.ubntu16),
+                                  SizedBox(height: 4),
+                                  Text(
+                                      'Pay ₹${bookingTypeId == '1' ? minAmountTopayforDay : minAmountTopayforFullDay} to lock your cruise',
+                                      style: GoogleFonts.ubuntu()),
+                                  Spacer(),
+                                  Text(
+                                    "(Nb: 18 % gst applicable)",
+                                    style: TextStyles.ubntu12w400red,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        SizedBox(
+                          height: 220,
+                          width: 140,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedPaymentType = 'full';
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: _selectedPaymentType == 'full'
+                                    ? Colors.green.shade100
+                                    : Colors.green.shade50,
+                                border: Border.all(
+                                  color: _selectedPaymentType == 'full'
+                                      ? Colors.green
+                                      : Colors.grey,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(Icons.lock_open, color: Colors.green),
+                                  SizedBox(height: 8),
+                                  Text('Full Payment',
+                                      style: TextStyles.ubntu16),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    'Pay ₹${totalPrice.toStringAsFixed(2)} and confirm now',
+                                    style: GoogleFonts.ubuntu(),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    "(Nb: 18 % gst applicable)",
+                                    style: TextStyles.ubntu12w400red,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 40),
+                    BlocBuilder<BookMyCruiseBloc, BookMyCruiseState>(
+                      builder: (context, state) {
+                        return _isLoading
+                            ? RectangleBluebuttonLoading()
+                            : FullWidthRectangleBlueButton(
+                                text: "Continue",
+                                onPressed: () async {
+                                  print("date selected: $_selectedDate");
+                                  if (_selectedPaymentType == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Please select either Partial or Full Payment.'),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  // Check Hive for phone number
+                                  final userDetailsBox =
+                                      await Hive.openBox<UserDetailsDB>(
+                                          'userDetailsBox');
+                                  final userDetails =
+                                      userDetailsBox.get('user');
+                                  String? phone = userDetails?.phone;
+
+                                  // If not found, navigate to collect it
+                                  if (phone == null || phone.isEmpty) {
+                                    final collectedPhone = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CollectPhoneNumberScreen(),
+                                      ),
+                                    );
+
+                                    if (collectedPhone != null &&
+                                        collectedPhone is String &&
+                                        collectedPhone.isNotEmpty) {
+                                      phone = collectedPhone;
+                                    } else {
+                                      // User didn't enter phone number, so exit
+                                      return;
+                                    }
+                                  }
+
+                                  if (phone.isNotEmpty) {
+                                    String formattedDate =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(_selectedDate);
+                                    String formattedstartDate =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(startDate);
+                                    String formattedendDate =
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(endDate);
+
+                                    context.read<BookMyCruiseBloc>().add(
+                                          BookMyCruiseEvent.createNewbookings(
+                                            packageId: widget.packageId,
+                                            startdate:
+                                                bookingTypeId.toString() == "1"
+                                                    ? formattedDate
+                                                    : formattedstartDate,
+                                            endDate:
+                                                bookingTypeId.toString() == "2"
+                                                    ? formattedendDate
+                                                    : null,
+                                            bookingtype:
+                                                bookingTypeId.toString(),
+                                            nonVegCount: _nonVegCount > 0
+                                                ? _nonVegCount.toString()
+                                                : null,
+                                            vegCount: _vegCount > 0
+                                                ? _vegCount.toString()
+                                                : null,
+                                            jainVegCount: _jainVegCount > 0
+                                                ? _jainVegCount.toString()
+                                                : null,
+                                            customerNotet: addoncontroller.text,
+                                            totalAmount: _selectedPaymentType ==
+                                                    'partial'
+                                                ? PriceHelper.addTax(
+                                                    _formatAmount(widget
+                                                        .datum
+                                                        .bookingTypes?[0]
+                                                        .minAmountToPay))
+                                                : PriceHelper.addTax(
+                                                    totalPrice.toString()),
+                                          ),
+                                        );
+                                  }
+                                },
+                              );
+                      },
+                    ),
+                    const SizedBox(height: 40),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatAmount(String? amount) {
+    if (amount == null) return '0';
+    double value = double.tryParse(amount) ?? 0;
+    if (value == value.roundToDouble()) {
+      // It's an integer amount, no decimal part
+      return value.toInt().toString();
+    } else {
+      // Has decimals, keep them
+      return value.toString();
+    }
+  }
+
+//--------------
+  Widget _buildNumericInput(
+      String label, int value, ValueChanged<int> onChanged,
+      {int? max}) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 8.0),
+          child: Text(
+            label,
+            style: TextStyles.ubuntu14black55w400,
+          ),
+        ),
+        Spacer(),
+        IconButton(
+          icon: Icon(Icons.remove),
+          onPressed: () => onChanged(value > 1 ? value - 1 : 1),
+        ),
+        Text('$value'),
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            if (max != null && value >= max) {
+              CustomToast.showFlushBar(
+                context: context,
+                status: false,
+                title: "Oops",
+                content: 'Maximum $label reached',
+              );
+            } else {
+              onChanged(value + 1);
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+//-------------------
+  Widget _buildEditableSection({
+    List<UnavailableDate>? unavailable_date,
+    required String title,
+    required bool isEditing,
+    required VoidCallback onTap,
+    required List<Widget> editingWidgets,
+    required List<Widget> displayWidgets,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              title,
+              style: TextStyles.ubntu16,
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: onTap,
+              child: isEditing
+                  ? const Icon(Icons.check)
+                  : SvgPicture.asset('assets/icons/Edit_icon.svg'),
+            ),
+          ],
+        ),
+        if (isEditing) ...editingWidgets else ...displayWidgets,
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value, {bool isTotal = false}) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 8.0),
+          child: Text(label, style: TextStyles.ubuntu14black55w400),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: isTotal
+              ? const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xff1F8386))
+              : TextStyles.ubntu14w400black,
+        ),
+      ],
+    );
+  }
+
+  // Call this inside your button's onPressed or anywhere you want to handle phone number
+  Future<void> handlePhoneNumber(BuildContext context) async {
+    // Open the Hive box
+    final userDetailsBox = await Hive.openBox<UserDetailsDB>('userDetailsBox');
+
+    // Get the saved user details
+    final userDetails = userDetailsBox.get('user');
+
+    // Check if phone number already exists
+    final savedPhone = userDetails?.phone;
+
+    if (savedPhone != null && savedPhone.isNotEmpty) {
+      // Phone number already saved, proceed with it
+      print("Phone number from Hive: $savedPhone");
+
+      // ✅ Use savedPhone for your next logic (like booking API call)
+    } else {
+      // Phone number not available, navigate to phone input screen
+      final newPhone = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CollectPhoneNumberScreen(),
+        ),
+      );
+
+      if (newPhone != null && newPhone.toString().isNotEmpty) {
+        // ✅ Use newPhone for your next logic
+        print("Phone number collected from screen: $newPhone");
+      }
+    }
+  }
+}
+
+class FoodCounterStateless extends StatelessWidget {
+  final String label;
+  final int count;
+  final ValueChanged<int> onChanged;
+
+  const FoodCounterStateless({
+    super.key,
+    required this.label,
+    required this.count,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          label,
+          style: TextStyles.ubuntu16black15w500,
+        ),
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 8.0),
+          child: Container(
+            height: 45,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.remove),
+                  onPressed: () => onChanged(count > 0 ? count - 1 : 0),
+                ),
+                Text('$count'),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () => onChanged(count + 1),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class BuildDetailRowwithIcon extends StatelessWidget {
+  final String label;
+  final String value;
+  final String iconPath;
+  const BuildDetailRowwithIcon({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.iconPath,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isSvg = iconPath.toLowerCase().endsWith('.svg');
+    return Row(
+      children: [
+        isSvg
+            ? SvgPicture.asset(iconPath, height: 20)
+            : Image.asset(iconPath, height: 20, fit: BoxFit.contain),
+        const SizedBox(width: 8),
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 8.0),
+          child: Text(label, style: TextStyles.ubuntu14black55w400),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: TextStyles.ubntu14w400black,
+        ),
+      ],
+    );
+  }
+}
+
+class BuilTotalDetailRow extends StatelessWidget {
+  final String label;
+  final String value;
+  const BuilTotalDetailRow({
+    super.key,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 8.0),
+          child: Text(label, style: TextStyles.ubuntu14black55w400),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: TextStyles.ubntu15w600black,
+        ),
+      ],
+    );
+  }
+}

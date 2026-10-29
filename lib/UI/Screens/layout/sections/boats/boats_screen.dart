@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/ratings_card.dart';
 import 'package:cruise_buddy/UI/Widgets/noDataCondition/no_data_screen.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/view_model/seeAllMyBookings/see_allmy_bookings_bloc.dart';
@@ -58,6 +59,24 @@ class _BoatsScreenState extends State<BoatsScreen> {
     } catch (e) {
       print('Error sharing QR: $e');
     }
+  }
+
+  void _showRatingModal(BuildContext context, {required String cruiseId}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: RatingModal(
+          cruiseId: cruiseId,
+        ),
+      ),
+    );
   }
 
   @override
@@ -145,7 +164,7 @@ class _BoatsScreenState extends State<BoatsScreen> {
                           ),
                           const SizedBox(height: 16),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               // QR Code
                               Container(
@@ -166,7 +185,31 @@ class _BoatsScreenState extends State<BoatsScreen> {
                                   ),
                                 ),
                               ),
-
+                              Spacer(),
+                              // Rate Us Button
+                              ElevatedButton.icon(
+                                onPressed: () async {
+                                  _showRatingModal(context,
+                                      cruiseId: booking?.package?.cruise?.id
+                                              .toString() ??
+                                          "");
+                                },
+                                icon: Icon(
+                                  Icons.rate_review,
+                                  color: Colors.white,
+                                ),
+                                label: Text(
+                                  "Rate Us",
+                                  style: GoogleFonts.ubuntu(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+                              SizedBox(width: 8),
                               // WhatsApp Share Button
                               ElevatedButton.icon(
                                 onPressed: () async {

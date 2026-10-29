@@ -28,6 +28,9 @@ class SearchResultsScreen extends StatefulWidget {
   final String? noOfPassengers;
   final String? noOfRooms;
   final String? premiumOrDeluxe;
+  final int? dayorFullDay;
+  final int? noOfAdults;
+  final int? noOfChildren;
   const SearchResultsScreen({
     super.key,
     this.filterCriteria,
@@ -40,6 +43,9 @@ class SearchResultsScreen extends StatefulWidget {
     this.premiumOrDeluxe,
     this.maxAmount,
     this.minAMount,
+    this.dayorFullDay = 1,
+    this.noOfAdults,
+    this.noOfChildren,
   });
 
   @override
@@ -700,6 +706,11 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                               bottom: 15,
                                             ),
                                             child: SearchResultsContainer(
+                                              noOfAdults: widget.noOfAdults,
+                                              noOfChildren: widget.noOfChildren,
+                                              dayorFullDay: widget.dayorFullDay ?? 1,
+                                              startDate: widget.startDate,
+                                              endDate: widget.endDate,
                                               packageId: value
                                                       .packagesearchresults
                                                       .data?[index]
@@ -730,6 +741,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                                 packageId: packageId,
                                                 isFavorite: isFavorite,
                                                 favouriteId: favouriteId,
+                                                
                                               ),
                                             ),
                                           );

@@ -293,7 +293,7 @@ class _AccountScreenState extends State<AccountScreen> {
               const SizedBox(height: 20),
               if (isEditing) ...[
                 BuildEditableField(
-                  hinttext: 'Enter yoy name',
+                  hinttext: 'Enter your name',
                   textEditingController: nameController,
                   focusNode: nameFocusnode,
                 ),
@@ -408,7 +408,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       'App Version',
                       style: TextStyles.ubuntu15normal,
                     ),
-                    trailing: Text("v1.0.78", style: TextStyles.ubuntu15normal),
+                    trailing: Text("v1.0.82", style: TextStyles.ubuntu15normal),
                   ),
                   SizedBox(height: 5),
                   SizedBox(height: 5),

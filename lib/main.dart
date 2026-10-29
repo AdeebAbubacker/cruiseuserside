@@ -14,6 +14,7 @@ import 'package:cruise_buddy/core/view_model/getUserProfile/get_user_profile_blo
 import 'package:cruise_buddy/core/view_model/listCruiseonLocation/list_cruiseon_location_bloc.dart';
 import 'package:cruise_buddy/core/view_model/login/login_bloc.dart';
 import 'package:cruise_buddy/core/view_model/postGoogleId/post_google_bloc.dart';
+import 'package:cruise_buddy/core/view_model/postRatings/post_ratings_bloc.dart';
 import 'package:cruise_buddy/core/view_model/regsiter/register_bloc.dart';
 import 'package:cruise_buddy/core/view_model/removeItemFromFavourites/remove_item_favourites_bloc.dart';
 import 'package:cruise_buddy/core/view_model/seeAllMyBookings/see_allmy_bookings_bloc.dart';
@@ -25,6 +26,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -99,6 +101,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => BookingConfirmScreenBloc(),
+        ),
+        BlocProvider(
+          create: (context) => PostRatingsBloc(),
         ),
       ],
       child: MaterialApp(

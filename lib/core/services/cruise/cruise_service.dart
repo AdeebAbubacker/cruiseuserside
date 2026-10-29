@@ -104,7 +104,7 @@ class CruiseService {
     String? noOfPassengers,
   }) async {
     try {
-      print("mystartdate $startDate");
+      print("my aminity is $amenities");
       final hasInternet = await _connectivityChecker.hasInternetAccess();
       if (!hasInternet) return const Left('No internet');
 
@@ -123,7 +123,7 @@ class CruiseService {
         urlString += '&filter[bookingTypes.name]=$fullDayorDayCruise';
       }
       if (amenities?.isNotEmpty == true) {
-        urlString += '&filter[amenities.name]=$amenities';
+        urlString += '&filter[amenities]=$amenities';
       }
 
       if (premiumOrDeluxe?.isNotEmpty == true) {
@@ -163,7 +163,7 @@ class CruiseService {
         final data = json.decode(response.body);
 
         final locationDetails = FeaturedBoatsModel.fromJson(data);
-        print('---- ${locationDetails.data?.length}');
+        print('---- ${urlString}');
         return Right(locationDetails);
       } else {
         print('---- Failed to get cruise results${response.body}');
@@ -213,4 +213,3 @@ class CruiseService {
     }
   }
 }
-//-----------------

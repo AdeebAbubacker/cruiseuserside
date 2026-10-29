@@ -140,7 +140,7 @@ class MainLayoutState extends State<MainLayout> {
           child: _screens[_selectedIndex],
         ),
         bottomNavigationBar: SizedBox(
-          height: 95.0,
+          height: 110.0,
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             items: <BottomNavigationBarItem>[

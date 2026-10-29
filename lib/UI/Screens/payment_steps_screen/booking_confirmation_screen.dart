@@ -5,6 +5,7 @@ import 'package:cruise_buddy/UI/Widgets/Button/rectangle_bluebutton_loading.dart
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
+import 'package:cruise_buddy/core/helper/gst_helper.dart';
 import 'package:cruise_buddy/core/view_model/bookMyCruise/book_my_cruise_bloc.dart';
 import 'package:cruise_buddy/core/view_model/viewMyPackage/view_my_package_bloc.dart';
 import 'package:flutter/material.dart';
@@ -266,7 +267,8 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
 
                 openCheckout(
                     orderid: value.bookingresponse.booking?.orderId.toString(),
-                    totalamount: totalPrice); // Call Razorpay on success
+                    totalamount: int.parse(PriceHelper.addTax(
+                        totalPrice.toString()))); // Call Razorpay on success
                 BlocProvider.of<ViewMyPackageBloc>(context).add(
                     ViewMyPackageEvent.viewMyPackage(
                         packageId: widget.packageId));
@@ -316,8 +318,7 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                 }
 
                 setState(() {
-                  final bookingTypes =
-                      widget.datum.bookingTypes ?? [];
+                  final bookingTypes = widget.datum.bookingTypes ?? [];
 
                   // Find day_cruise first, if exists
                   final dayCruiseType = bookingTypes.firstWhere(
@@ -352,7 +353,10 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                       value.mybookingmodel.data?.cruise?.maxCapacity ?? 1;
 
                   // Initially set total price to day cruise default price
-                  totalPrice =  ((DayCruisedefaultPrice != 0 && DayCruisedefaultPrice != null)  ? DayCruisedefaultPrice : FullDayCruisedefaultPrice)!;
+                  totalPrice = ((DayCruisedefaultPrice != 0 &&
+                          DayCruisedefaultPrice != null)
+                      ? DayCruisedefaultPrice
+                      : FullDayCruisedefaultPrice)!;
 
                   _numOfBeds = minBeds;
 
@@ -364,7 +368,6 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
               },
             );
           },
-        
         ),
       ],
       child: GestureDetector(
@@ -1067,6 +1070,11 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                   Text(
                                       'Pay ₹${bookingTypeId == '1' ? minAmountTopayforDay : minAmountTopayforFullDay} to lock your cruise',
                                       style: GoogleFonts.ubuntu()),
+                                  Spacer(),
+                                  Text(
+                                    "(Nb: 18 % gst applicable)",
+                                    style: TextStyles.ubntu12w400red,
+                                  )
                                 ],
                               ),
                             ),
@@ -1107,6 +1115,11 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                     'Pay ₹${totalPrice.toStringAsFixed(2)} and confirm now',
                                     style: GoogleFonts.ubuntu(),
                                   ),
+                                  Spacer(),
+                                  Text(
+                                    "(Nb: 18 % gst applicable)",
+                                    style: TextStyles.ubntu12w400red,
+                                  )
                                 ],
                               ),
                             ),
@@ -1198,11 +1211,13 @@ class _BookingconfirmationScreenState extends State<BookingconfirmationScreen> {
                                             customerNotet: addoncontroller.text,
                                             totalAmount: _selectedPaymentType ==
                                                     'partial'
-                                                ? _formatAmount(widget
-                                                    .datum
-                                                    .bookingTypes?[0]
-                                                    .minAmountToPay)
-                                                : totalPrice.toString(),
+                                                ? PriceHelper.addTax(
+                                                    _formatAmount(widget
+                                                        .datum
+                                                        .bookingTypes?[0]
+                                                        .minAmountToPay))
+                                                : PriceHelper.addTax(
+                                                    totalPrice.toString()),
                                           ),
                                         );
                                   }

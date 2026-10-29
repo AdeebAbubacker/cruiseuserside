@@ -23,7 +23,7 @@ class CollectPhoneNumberScreenState extends State<CollectPhoneNumberScreen> {
   bool isLoading = false;
   String? phoneErrorText;
   bool hasTriedSubmit = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -48,7 +48,9 @@ class CollectPhoneNumberScreenState extends State<CollectPhoneNumberScreen> {
     final phone = _phoneController.text.trim();
     String? newError;
 
-    if (phone.isEmpty || phone.length != 10) {
+    if (phone.isEmpty) {
+      newError = 'Phone number is required';
+    } else if (!RegExp(r'^[0-9]{10}$').hasMatch(phone)) {
       newError = 'Phone number must be exactly 10 digits';
     }
 
@@ -71,7 +73,10 @@ class CollectPhoneNumberScreenState extends State<CollectPhoneNumberScreen> {
               controller: _phoneController,
               focusNode: phoneFocusNode,
               keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(10),
+              ],
               style: TextStyles.ubuntutextfieldText,
               decoration: InputDecoration(
                 hintText: "Enter your phone number",
@@ -83,7 +88,11 @@ class CollectPhoneNumberScreenState extends State<CollectPhoneNumberScreen> {
                 prefixIcon: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: SvgPicture.asset(
-                    'assets/image/auth_img/ion_mail-outline.svg',
+                    'assets/icons/support_settings.svg',
+                    colorFilter: const ColorFilter.mode(
+                      Colors.blue,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),
@@ -106,13 +115,24 @@ class CollectPhoneNumberScreenState extends State<CollectPhoneNumberScreen> {
                     final phoneNumber = success.updateuser.user?.phoneNumber;
 
                     if (phoneNumber != null) {
-                      final userDetails = UserDetailsDB(phone: phoneNumber);
                       final box =
                           await Hive.openBox<UserDetailsDB>('userDetailsBox');
-                      await box.put('user', userDetails);
+
+                      // Get existing user (if any)
+                      final existingUser = box.get('user');
+
+                      // Update only the phone field, preserve other values
+                      final updatedUser = UserDetailsDB(
+                        name: existingUser?.name,
+                        email: existingUser?.email ?? '',
+                        phone: phoneNumber,
+                        image: existingUser?.image ?? '',
+                      );
+
+                      await box.put('user', updatedUser);
                     }
 
-                    Navigator.pop(context, phoneNumber); // return phone
+                    Navigator.pop(context, phoneNumber);
                   },
                   updateFailure: (failure) {
                     setState(() => isLoading = false);
@@ -159,6 +179,7 @@ class CollectPhoneNumberScreenState extends State<CollectPhoneNumberScreen> {
               },
               builder: (context, state) {
                 return FullWidthRectangleBlueButton(
+                  isLoading: isLoading,
                   text: "Continue",
                   onPressed: isLoading
                       ? null

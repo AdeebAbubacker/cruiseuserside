@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CounterPill extends StatefulWidget {
-  final Function(int)? onRoomCountChanged; // 👈 Add this callback
+  final Function(int)? onRoomCountChanged;
 
   const CounterPill({
     super.key,
-    this.onRoomCountChanged, // 👈 Add this to the constructor
+    this.onRoomCountChanged,
   });
 
   @override
@@ -14,6 +14,16 @@ class CounterPill extends StatefulWidget {
 
 class _CounterPillState extends State<CounterPill> {
   int counter = 0;
+  final TextEditingController _controller = TextEditingController(text: "0");
+
+  void _updateCounter(int newValue) {
+    if (newValue < 0) return; 
+    setState(() {
+      counter = newValue;
+      _controller.text = counter.toString();
+    });
+    widget.onRoomCountChanged?.call(counter);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,40 +31,55 @@ class _CounterPillState extends State<CounterPill> {
       width: 155,
       height: 48,
       decoration: BoxDecoration(
-        color: Color(0XFFFAFFFF),
+        color: const Color(0XFFFAFFFF),
         borderRadius: BorderRadius.circular(25),
         border: Border.all(
-          color: Color(0xFFE2E2E2),
+          color: const Color(0xFFE2E2E2),
           width: 1.5,
         ),
       ),
       child: Row(
         children: [
-          Spacer(),
+          const Spacer(),
           IconButton(
             onPressed: () {
-              if (counter > 0) {
-                setState(() {
-                  counter--;
-                });
-                widget.onRoomCountChanged?.call(
-                    counter); // 👈 Call the callback when counter changes
-              }
+              _updateCounter(counter - 1);
             },
-            icon: Icon(Icons.remove),
+            icon: const Icon(Icons.remove),
           ),
-          Text("$counter"),
+          SizedBox(
+            width: 35,
+            child: TextField(
+              controller: _controller,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
+              onChanged: (value) {
+                final parsed = int.tryParse(value);
+                if (parsed != null) {
+                  _updateCounter(parsed);
+                }
+              },
+              onTap: () {
+                _controller.selection = TextSelection(
+                  baseOffset: 0,
+                  extentOffset: _controller.text.length,
+                );
+              },
+            ),
+          ),
+
           IconButton(
             onPressed: () {
-              setState(() {
-                counter++;
-              });
-              widget.onRoomCountChanged
-                  ?.call(counter); // 👈 Call the callback when counter changes
+              _updateCounter(counter + 1);
             },
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
           ),
-          Spacer(),
+          const Spacer(),
         ],
       ),
     );

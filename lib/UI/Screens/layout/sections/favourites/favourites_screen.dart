@@ -446,9 +446,11 @@ class _FavouritesScreenState extends State<FavouritesScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "₹ ${favourite?.package?.bookingTypes?[0].defaultPrice ?? ""}",
-                                        style: TextStyles.ubuntu18bluew700,
-                                      ),
+                                    (favourite?.package?.bookingTypes?.isNotEmpty ?? false)
+                                        ? "₹ ${favourite!.package!.bookingTypes![0].defaultPrice}"
+                                        : "",
+                                    style: TextStyles.ubuntu18bluew700,
+                                  ),
                                       const Text(
                                         "per night",
                                         style: TextStyle(

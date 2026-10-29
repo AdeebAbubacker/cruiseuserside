@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 class FullWidthRectangleBlueButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
+  final bool isLoading;
   const FullWidthRectangleBlueButton({
     super.key,
     required this.text,
     this.onPressed,
+    this.isLoading = false,
   });
 
   @override
@@ -27,10 +29,19 @@ class FullWidthRectangleBlueButton extends StatelessWidget {
           ),
         ),
         onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyles.ubuntu16whiteFFw500,
-        ),
+        child: isLoading
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2.5,
+                ),
+              )
+            : Text(
+                text,
+                style: TextStyles.ubuntu16whiteFFw500,
+              ),
       ),
     );
   }

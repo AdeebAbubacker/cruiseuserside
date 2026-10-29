@@ -1,6 +1,8 @@
 import 'package:cruise_buddy/UI/Widgets/Button/full_width_bluebutton.dart';
 import 'package:cruise_buddy/UI/Widgets/toast/custom_toast.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
+import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
+import 'package:cruise_buddy/core/db/hive_db/boxes/user_details_box.dart';
 import 'package:cruise_buddy/core/routes/app_routes.dart';
 import 'package:cruise_buddy/core/view_model/regsiter/register_bloc.dart';
 import 'package:flutter/gestures.dart';
@@ -24,7 +26,7 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController retypepasswordController = TextEditingController();
   bool isPasswordVisible = false;
   bool isRetypePasswordVisible = false;
-
+  bool isLoading = false;
   bool isTextVisible = false;
   bool isChecked = false;
   FocusNode nameFocusNode = FocusNode();
@@ -43,24 +45,38 @@ class _SignupScreenState extends State<SignupScreen> {
         listener: (context, state) {
           state.map(
             initial: (value) {
-              print(value);
+              setState(() => isLoading = false);
             },
             loading: (value) {
-              print(value);
+              setState(() => isLoading = true);
             },
-            registrationSuccess: (value) {
-              AppRoutes.navigateToMainLayoutScreen(context);
+            registrationSuccess: (value) async {
+              setState(() => isLoading = false);
+              final loginModel = value
+                  .registerModel; // assuming you have loginModel inside state
+
+              if (loginModel.user != null) {
+                // Create UserDetailsDB from LoginModel's user
+                final userDetails = UserDetailsDB(
+                  name: loginModel.user?.name ?? "",
+                  email: loginModel.user?.email ?? '',
+                  phone: loginModel.user?.phoneNumber,
+                  // Assuming you don't have an image in User
+                );
+
+                // Save it to Hive
+                await userDetailsBox.put('user', userDetails);
+                AppRoutes.navigateToMainLayoutScreen(context);
+              } else {}
             },
             registervaldationFailure: (value) {
+              setState(() => isLoading = false);
               CustomToast.showFlushBar(
                 context: context,
                 status: false,
                 title: "Oops",
-                content: '${value.registervaldationFailure.message
-                        .toString()
-                        .split('.')
-                        .first
-                        .trim()}.',
+                content:
+                    '${value.registervaldationFailure.message.toString().split('.').first.trim()}.',
               );
             },
             registrationFailure: (value) {
@@ -136,6 +152,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   const SizedBox(height: 12),
                   TextField(
                     decoration: InputDecoration(
+                        hintText: 'Enter your name',
+                        hintStyle: TextStyles.ubuntuhintText,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(32),
                         ),
@@ -155,6 +173,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   const SizedBox(height: 12),
                   TextField(
                     decoration: InputDecoration(
+                        hintText: 'Enter your email',
+                        hintStyle: TextStyles.ubuntuhintText,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(32),
                         ),
@@ -175,6 +195,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   TextField(
                     obscureText: !isPasswordVisible,
                     decoration: InputDecoration(
+                        hintText: 'Enter your password',
+                        hintStyle: TextStyles.ubuntuhintText,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: SvgPicture.asset(
@@ -205,6 +227,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   TextField(
                     obscureText: !isRetypePasswordVisible,
                     decoration: InputDecoration(
+                        hintText: 'Re-enter your password',
+                        hintStyle: TextStyles.ubuntuhintText,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: SvgPicture.asset(
@@ -278,6 +302,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   const SizedBox(height: 20),
                   FullWidthBlueButton(
                     text: 'Signup',
+                    isLoading: isLoading,
                     onPressed: () {
                       BlocProvider.of<RegisterBloc>(context).add(
                         RegisterEvent.loginRequested(

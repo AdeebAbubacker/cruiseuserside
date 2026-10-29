@@ -49,7 +49,7 @@ class _RazorpayTestScreenState extends State<RazorpayTestScreen> {
   // Open Razorpay payment gateway
   void _openCheckout() {
     var options = {
-      'key': 'rzp_live_9YK0kUaQLzZd55', // Your Razorpay Key
+      'key': 'rzp_live_ZAFN8qKXodIxis', // Your Razorpay Key
       'amount': 50000, // Payment amount in paise (e.g., 50000 = 500 INR)
       'name': 'Test Payment',
       'description': 'Test Transaction',

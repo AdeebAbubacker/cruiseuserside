@@ -25,10 +25,10 @@
 //     _razorpay.clear(); // Clean up Razorpay instance
 //     super.dispose();
 //   }
-//    //'key': 'rzp_test_uQSuZaPnbxof71',
+//    //'key': 'rzp_live_ZAFN8qKXodIxis',
 //   void openCheckout() {
 //     var options = {
-//       'key': 'rzp_test_FHMbJJb5sxQ1Cu',
+//       'key': 'rzp_live_ZAFN8qKXodIxis',
 //       'amount': 100, // Amount should be in paise (e.g., 100 = 1 INR)
 //       'name': 'Cruise Buddy',
 //       'order_id' : "order_PvwS5g5uKP5e4m",

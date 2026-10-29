@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+
 class PassengersPill extends StatefulWidget {
   final String image;
-  final ValueChanged<int>
-      onChanged; // Callback to notify parent of value changes
+  final ValueChanged<int> onChanged;
 
   const PassengersPill({
     super.key,
@@ -18,46 +18,67 @@ class PassengersPill extends StatefulWidget {
 
 class _PassengersPillState extends State<PassengersPill> {
   int counter = 0;
+  final TextEditingController _controller = TextEditingController(text: "0");
 
   void _updateCounter(int newValue) {
+    if (newValue < 0) return; 
     setState(() {
       counter = newValue;
-      widget.onChanged(counter); // Notify parent
+      _controller.text = counter.toString();
+      widget.onChanged(counter);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 155,
+      width: 170,
       height: 48,
       decoration: BoxDecoration(
-        color: Color(0XFFFAFFFF),
+        color: const Color(0XFFFAFFFF),
         borderRadius: BorderRadius.circular(25),
         border: Border.all(
-          color: Color(0xFFE2E2E2),
+          color: const Color(0xFFE2E2E2),
           width: 1.5,
         ),
       ),
       child: Row(
         children: [
-          SizedBox(width: 15),
+          const SizedBox(width: 15),
           SvgPicture.asset(widget.image),
-          Spacer(),
+          const Spacer(),
           IconButton(
             onPressed: () {
-              if (counter > 0) _updateCounter(counter - 1);
+              _updateCounter(counter - 1);
             },
-            icon: Icon(Icons.remove),
+            icon: const Icon(Icons.remove),
           ),
-          Text("$counter"),
+          SizedBox(
+            width: 35,
+            child: TextField(
+              controller: _controller,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
+              onChanged: (value) {
+                final parsed = int.tryParse(value);
+                if (parsed != null) {
+                  _updateCounter(parsed);
+                }
+              },
+            ),
+          ),
           IconButton(
             onPressed: () {
               _updateCounter(counter + 1);
             },
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
           ),
-          Spacer(),
+          const Spacer(),
         ],
       ),
     );

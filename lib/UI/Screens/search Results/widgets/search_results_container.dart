@@ -1,6 +1,7 @@
 import 'package:cruise_buddy/UI/Screens/boat_detail/boat_detail_screen.dart';
 import 'package:cruise_buddy/UI/Screens/layout/sections/boats/widgets/aminities_pill_widget.dart';
 import 'package:cruise_buddy/UI/Screens/payment_steps_screen/booking_confirmation_screen.dart';
+import 'package:cruise_buddy/UI/Screens/search%20Results/book_confirmationbyserach/booking_confirmationbyserach.dart';
 import 'package:cruise_buddy/core/constants/styles/text_styles.dart';
 import 'package:cruise_buddy/core/db/hive_db/adapters/user_details_adapter.dart';
 import 'package:cruise_buddy/core/model/featured_boats_model/featured_boats_model.dart';
@@ -17,6 +18,11 @@ class SearchResultsContainer extends StatefulWidget {
   final bool isFavorite;
   final String? favouriteId;
   final Set<String> loadingFavorites;
+  final int dayorFullDay;
+  final String? startDate;
+  final String? endDate;
+  final int? noOfAdults;
+  final int? noOfChildren;
   final void Function(
       {String? packageId,
       bool? isFavorite,
@@ -32,6 +38,11 @@ class SearchResultsContainer extends StatefulWidget {
     this.favouriteId,
     required this.loadingFavorites,
     required this.toggleFavorite,
+    this.dayorFullDay = 1,
+    this.startDate,
+    this.endDate,
+    this.noOfAdults,
+    this.noOfChildren,
     super.key,
   });
 
@@ -242,9 +253,20 @@ class _SearchResultsContainerState extends State<SearchResultsContainer> {
                   ),
                   Row(
                     children: [
-                      Text(
-                        "${(widget.rooms == 'null') ? "1" : widget.rooms} Room",
-                        style: TextStyles.ubuntu18bluew700,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.datum.bookingTypes?[0].defaultPrice != null
+                                ? "Rs ${widget.datum.bookingTypes?[0].defaultPrice}"
+                                : "N/A",
+                            style: TextStyles.ubuntu18bluew700,
+                          ),
+                           Text(
+                            '(Standard Price*)',
+                            style: TextStyles.ubuntu12greyFFw400,
+                          ),
+                        ],
                       ),
                       Spacer(),
                       SizedBox(
@@ -255,7 +277,12 @@ class _SearchResultsContainerState extends State<SearchResultsContainer> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        BookingconfirmationScreen(
+                                        BookingconfirmationBySearchScreen(
+                                          noOfAdults: widget.noOfAdults,
+                                          noOfChildren: widget.noOfChildren,
+                                          startDate: widget.startDate,
+                                          endDate: widget.endDate,
+                                          dayorFullDay: widget.dayorFullDay,
                                           packageId: widget.packageId ?? "2",
                                           datum: widget.datum ?? DatumTest(),
                                           name: name, // Pass the name

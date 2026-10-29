@@ -111,6 +111,11 @@ class TextStyles {
     fontWeight: FontWeight.w800,
     color: const Color.fromARGB(255, 43, 42, 42),
   );
+  static final TextStyle ubuntu12greyFFw400 = ubuntu.copyWith(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: const Color.fromARGB(255, 43, 42, 42),
+  );
   static final TextStyle ubuntu16whiteE2w2500 = ubuntu.copyWith(
     fontSize: 16,
     fontWeight: FontWeight.w500,
@@ -219,5 +224,11 @@ class TextStyles {
     fontSize: 15,
     fontWeight: FontWeight.w600,
     color: const Color.fromARGB(255, 17, 17, 17),
+  );
+
+  static final TextStyle ubntu12w400red = ubuntu.copyWith(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: const Color.fromARGB(255, 235, 62, 62),
   );
 }
